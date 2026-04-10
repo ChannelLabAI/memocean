@@ -19,7 +19,7 @@
 
 ---
 
-## 為什麼我們要做做 MemOcean
+## 為什麼我們要做 MemOcean
 
 第一次看到 [MemPalace](https://github.com/milla-jovovich/mempalace) 的時候我們非常興奮——終於有人做 LLM 的 long-term memory，而且還是那個蜜拉喬娃。
 
