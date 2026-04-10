@@ -154,7 +154,7 @@ def rerank(query: str, candidates: list[dict], top_k: int = 10) -> list[dict]:
 
     Args:
         query: The search query string
-        candidates: List of dicts from FTS5 search (must have 'slug' and 'aaak' keys)
+        candidates: List of dicts from FTS5 search (must have 'slug' and 'clsc' keys)
         top_k: Number of results to return after reranking
 
     Returns:
@@ -254,7 +254,7 @@ def _rerank_via_vec(query: str, candidates: list[dict], top_k: int) -> Optional[
 def _rerank_in_memory(query: str, candidates: list[dict], top_k: int) -> Optional[list[dict]]:
     """Rerank by computing embeddings on-the-fly and using cosine similarity."""
     # Embed query + all candidate texts together
-    texts = [query] + [c.get("aaak", c.get("slug", "")) for c in candidates]
+    texts = [query] + [c.get("clsc", c.get("slug", "")) for c in candidates]
     embeddings = _embed_texts(texts)
     if embeddings is None:
         return None

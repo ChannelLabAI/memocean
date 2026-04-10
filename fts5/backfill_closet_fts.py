@@ -20,7 +20,7 @@ from lib import DB_PATH, open_db  # noqa: E402
 CREATE_FTS = """
 CREATE VIRTUAL TABLE IF NOT EXISTS closet_fts USING fts5(
   slug,
-  aaak,
+  clsc,
   tokenize = 'trigram case_sensitive 0'
 );
 """
@@ -46,11 +46,11 @@ def main() -> int:
     conn.execute("DELETE FROM closet_fts")
 
     # 3. Backfill from closet
-    cur = conn.execute("SELECT slug, aaak FROM closet")
+    cur = conn.execute("SELECT slug, clsc FROM closet")
     rows = cur.fetchall()
     inserted = 0
-    for slug, aaak in rows:
-        conn.execute("INSERT INTO closet_fts(slug, aaak) VALUES (?, ?)", (slug, aaak))
+    for slug, clsc in rows:
+        conn.execute("INSERT INTO closet_fts(slug, clsc) VALUES (?, ?)", (slug, clsc))
         inserted += 1
 
     if args.dry_run:

@@ -60,7 +60,7 @@ def _db_row(slug: str) -> dict | None:
         conn = sqlite3.connect(str(FTS_DB))
         conn.row_factory = sqlite3.Row
         row = conn.execute(
-            "SELECT slug, aaak, tokens, drawer_path FROM closet WHERE slug = ?",
+            "SELECT slug, clsc, tokens, drawer_path FROM closet WHERE slug = ?",
             (slug,)
         ).fetchone()
         conn.close()
@@ -93,16 +93,16 @@ def verbatim_fetch(slug: str) -> str:
 def skeleton_read(slug: str) -> str:
     """
     Mode (ii): read raw CLSC skeleton text for a slug.
-    Reads the aaak column from the closet DB first (covers all indexed slugs).
+    Reads the clsc column from the closet DB first (covers all indexed slugs).
     Falls back to CLOSET_ROOT file lookup for any legacy bundle files.
     """
     _validate_slug(slug)
     # Primary: read from DB
     row = _db_row(slug)
     if row is not None:
-        aaak = row.get("aaak")
-        if aaak:
-            return aaak
+        clsc = row.get("clsc")
+        if clsc:
+            return clsc
     # Fallback: try legacy CLOSET_ROOT files
     if CLOSET_ROOT.exists():
         for ext in (".json", ".md", ".txt", ""):

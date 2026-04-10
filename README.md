@@ -42,7 +42,7 @@ Search CLSC skeleton closet using multi-term AND matching.
   "limit": 5
 }
 ```
-Returns: `{ "query": "...", "count": 2, "results": [{ "slug": "...", "aaak": "...", "tokens": 42 }, ...] }`
+Returns: `{ "query": "...", "count": 2, "results": [{ "slug": "...", "clsc": "...", "tokens": 42 }, ...] }`
 
 ### `memocean_kg_query`
 Query the temporal knowledge graph.

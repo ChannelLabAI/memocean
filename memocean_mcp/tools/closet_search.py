@@ -2,8 +2,7 @@
 closet_search.py — Search the closet table (CLSC skeletons) in memory.db.
 
 Multi-term OR search: splits query on whitespace, matches rows containing at
-least one term in the aaak column (legacy column name; now holds CLSC skeletons)
-using instr() for Unicode safety. Results ranked by number of matching terms
+least one term in the clsc column using instr() for Unicode safety. Results ranked by number of matching terms
 (most matches first). Handles hyphenated slugs like 'Knowledge-Infra-ADR' that
 LIKE exact-phrase would miss.
 
@@ -12,7 +11,7 @@ Reranker pipeline:
   - Haiku LLM rerank → top-10 (primary)
   - MiniLM embedding rerank → top-10 (fallback if Haiku unavailable)
 
-Returns list of dicts: slug, aaak, tokens, drawer_path, savings_pct (vs verbatim).
+Returns list of dicts: slug, clsc, tokens, drawer_path, savings_pct (vs verbatim).
 """
 import datetime
 import json
@@ -41,7 +40,7 @@ def _log_search(query: str, results: list[dict]) -> None:
         ts = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.') + \
              f"{datetime.datetime.now(datetime.timezone.utc).microsecond // 1000:03d}Z"
 
-        skeleton_tokens = sum(len(row.get('aaak', '') or '') // 4 for row in results)
+        skeleton_tokens = sum(len(row.get('clsc', '') or '') // 4 for row in results)
 
         estimated_verbatim_tokens = 0
         for row in results:
@@ -86,7 +85,7 @@ def _search_fts5(conn: sqlite3.Connection, terms: list[str], limit: int) -> list
     """Primary search via closet_fts with BM25 ranking."""
     fts_query = _escape_fts5_query(terms)
     sql = (
-        "SELECT f.slug, c.aaak, c.tokens, c.drawer_path "
+        "SELECT f.slug, c.clsc, c.tokens, c.drawer_path "
         "FROM closet_fts f "
         "JOIN closet c ON c.slug = f.slug "
         "WHERE closet_fts MATCH ? "
@@ -100,10 +99,10 @@ def _search_fts5(conn: sqlite3.Connection, terms: list[str], limit: int) -> list
 def _search_instr_fallback(conn: sqlite3.Connection, terms: list[str], limit: int) -> list[dict]:
     """Fallback: multi-term OR via instr() + match_count ranking."""
     case_exprs = " + ".join(
-        "CASE WHEN instr(aaak, ?) > 0 THEN 1 ELSE 0 END" for _ in terms
+        "CASE WHEN instr(clsc, ?) > 0 THEN 1 ELSE 0 END" for _ in terms
     )
     sql = (
-        f"SELECT slug, aaak, tokens, drawer_path, "
+        f"SELECT slug, clsc, tokens, drawer_path, "
         f"({case_exprs}) AS match_count "
         f"FROM closet WHERE match_count >= 1 "
         f"ORDER BY match_count DESC LIMIT ?"
@@ -161,7 +160,7 @@ def _search_semantic(query: str, limit: int) -> list[dict]:
         }
         placeholders = ",".join("?" for _ in slugs)
         closet_rows = conn.execute(
-            f"SELECT slug, aaak, tokens, drawer_path FROM closet "
+            f"SELECT slug, clsc, tokens, drawer_path FROM closet "
             f"WHERE slug IN ({placeholders})",
             slugs,
         ).fetchall()
@@ -206,8 +205,8 @@ def _format_haiku_candidates(candidates: list[dict]) -> str:
     lines = []
     for i, c in enumerate(candidates, 1):
         slug = c.get("slug", "")
-        aaak = (c.get("aaak") or "")[:200]  # truncate long skeletons
-        lines.append(f"{i}. [{slug}] {aaak}")
+        clsc = (c.get("clsc") or "")[:200]  # truncate long skeletons
+        lines.append(f"{i}. [{slug}] {clsc}")
     return "\n".join(lines)
 
 
@@ -317,7 +316,7 @@ def closet_search(query: str, limit: int = 10) -> list[dict]:
       2. MiniLM embedding reranker (fallback) → top-K
       3. Raw BM25 order (final fallback) → truncate to limit
 
-    Returns list of dicts with keys: slug, aaak, tokens, drawer_path.
+    Returns list of dicts with keys: slug, clsc, tokens, drawer_path.
     """
     if not query or not query.strip():
         return []

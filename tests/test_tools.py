@@ -340,7 +340,7 @@ def test_closet_search_single_term():
     # If closet is populated, should have results
     if results:
         assert "slug" in results[0]
-        assert "aaak" in results[0]
+        assert "clsc" in results[0]
 
 
 def test_closet_search_multi_term_and():
@@ -351,7 +351,7 @@ def test_closet_search_multi_term_and():
     # With full backfill, should find Knowledge-Infra-ADR notes
     if results:
         for r in results:
-            assert "Knowledge" in r["aaak"] or "Infra" in r["aaak"]
+            assert "Knowledge" in r["clsc"] or "Infra" in r["clsc"]
 
 
 def test_closet_search_empty_query():

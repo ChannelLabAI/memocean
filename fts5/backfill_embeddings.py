@@ -68,7 +68,7 @@ def main():
     _ensure_vec_table(conn)
 
     # Get all closet entries
-    rows = conn.execute("SELECT slug, aaak FROM closet").fetchall()
+    rows = conn.execute("SELECT slug, clsc FROM closet").fetchall()
     total = len(rows)
     print(f"Total closet entries: {total}")
 

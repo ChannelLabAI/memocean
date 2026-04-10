@@ -31,7 +31,7 @@ def get_conn():
     conn = sqlite3.connect(str(DB_PATH))
     conn.execute("""CREATE TABLE IF NOT EXISTS closet (
         slug TEXT PRIMARY KEY,
-        aaak TEXT NOT NULL,
+        clsc TEXT NOT NULL,
         tokens INTEGER NOT NULL,
         drawer_path TEXT,
         source_hash TEXT NOT NULL,
@@ -77,10 +77,10 @@ def encode_file(path: Path) -> dict | None:
     try:
         content = path.read_text(encoding="utf-8")
         note = parse_wiki_note(str(path))
-        aaak = encode_to_skeleton(note)
-        aaak_tokens = len(enc.encode(aaak))
+        clsc = encode_to_skeleton(note)
+        clsc_tokens = len(enc.encode(clsc))
         orig_tokens = note["raw_tokens"]
-        ratio = aaak_tokens / orig_tokens if orig_tokens > 0 else 1.0
+        ratio = clsc_tokens / orig_tokens if orig_tokens > 0 else 1.0
         # Category from path (first subdir under vault)
         try:
             rel = path.relative_to(VAULT_ROOT)
@@ -89,8 +89,8 @@ def encode_file(path: Path) -> dict | None:
             category = "unknown"
         return {
             "slug": note["slug"],
-            "aaak": aaak,
-            "tokens": aaak_tokens,
+            "clsc": clsc,
+            "tokens": clsc_tokens,
             "drawer_path": str(path),
             "source_hash": hashlib.md5(content.encode()).hexdigest(),
             "orig_tokens": orig_tokens,
@@ -155,8 +155,8 @@ def run_backfill(limit: int | None = None, verbose: bool = True):
         # Commit every 50
         if len(batch) >= 50:
             conn.executemany(
-                "INSERT OR REPLACE INTO closet (slug, aaak, tokens, drawer_path, source_hash) "
-                "VALUES (:slug, :aaak, :tokens, :drawer_path, :source_hash)",
+                "INSERT OR REPLACE INTO closet (slug, clsc, tokens, drawer_path, source_hash) "
+                "VALUES (:slug, :clsc, :tokens, :drawer_path, :source_hash)",
                 batch,
             )
             conn.commit()
@@ -167,8 +167,8 @@ def run_backfill(limit: int | None = None, verbose: bool = True):
     # Final batch
     if batch:
         conn.executemany(
-            "INSERT OR REPLACE INTO closet (slug, aaak, tokens, drawer_path, source_hash) "
-            "VALUES (:slug, :aaak, :tokens, :drawer_path, :source_hash)",
+            "INSERT OR REPLACE INTO closet (slug, clsc, tokens, drawer_path, source_hash) "
+            "VALUES (:slug, :clsc, :tokens, :drawer_path, :source_hash)",
             batch,
         )
         conn.commit()
@@ -178,14 +178,14 @@ def run_backfill(limit: int | None = None, verbose: bool = True):
     # Report
     if rows:
         total_orig = sum(r["orig_tokens"] for r in rows)
-        total_aaak = sum(r["tokens"] for r in rows)
-        overall_ratio = total_aaak / total_orig if total_orig > 0 else 1.0
+        total_clsc = sum(r["tokens"] for r in rows)
+        overall_ratio = total_clsc / total_orig if total_orig > 0 else 1.0
 
         print(f"\n{'='*60}")
         print(f"SAMPLE REPORT ({encoded} files encoded, {skipped} skipped, {errors} errors)")
         print(f"{'='*60}")
         print(f"Total original tokens : {total_orig:,}")
-        print(f"Total AAAK tokens     : {total_aaak:,}")
+        print(f"Total CLSC tokens     : {total_clsc:,}")
         print(f"Overall ratio         : {overall_ratio:.1%}  (savings: {(1-overall_ratio):.1%})")
 
         # Per-category
@@ -193,22 +193,22 @@ def run_backfill(limit: int | None = None, verbose: bool = True):
         for r in rows:
             c = r["category"]
             if c not in cats:
-                cats[c] = {"count": 0, "orig": 0, "aaak": 0}
+                cats[c] = {"count": 0, "orig": 0, "clsc": 0}
             cats[c]["count"] += 1
             cats[c]["orig"] += r["orig_tokens"]
-            cats[c]["aaak"] += r["tokens"]
+            cats[c]["clsc"] += r["tokens"]
 
-        print(f"\n{'Category':<30} {'Count':>6} {'Orig':>8} {'AAAK':>8} {'Ratio':>8}")
+        print(f"\n{'Category':<30} {'Count':>6} {'Orig':>8} {'CLSC':>8} {'Ratio':>8}")
         print("-" * 65)
         for cat, v in sorted(cats.items()):
-            ratio = v["aaak"] / v["orig"] if v["orig"] > 0 else 1.0
-            print(f"{cat:<30} {v['count']:>6} {v['orig']:>8,} {v['aaak']:>8,} {ratio:>7.1%}")
+            ratio = v["clsc"] / v["orig"] if v["orig"] > 0 else 1.0
+            print(f"{cat:<30} {v['count']:>6} {v['orig']:>8,} {v['clsc']:>8,} {ratio:>7.1%}")
 
         print(f"\nFirst 10 rows:")
-        print(f"{'Slug':<35} {'Orig':>6} {'AAAK':>5} {'Ratio':>7}  Preview")
+        print(f"{'Slug':<35} {'Orig':>6} {'CLSC':>5} {'Ratio':>7}  Preview")
         print("-" * 100)
         for r in rows[:10]:
-            preview = r["aaak"][:60].replace("\n", " ")
+            preview = r["clsc"][:60].replace("\n", " ")
             print(f"{r['slug'][:35]:<35} {r['orig_tokens']:>6} {r['tokens']:>5} {r['ratio']:>7.1%}  {preview}")
 
     return rows
@@ -221,14 +221,14 @@ def run_query_comparison(queries: list[str]):
     print("-" * 58)
     results = []
     for q in queries:
-        # Closet: full-text search on aaak column (LIKE fallback)
+        # Closet: full-text search on clsc column (LIKE fallback)
         rows_closet = conn.execute(
-            "SELECT aaak, tokens FROM closet WHERE aaak LIKE ? LIMIT 5",
+            "SELECT clsc, tokens FROM closet WHERE clsc LIKE ? LIMIT 5",
             (f"%{q}%",)
         ).fetchall()
         # Verbatim: read drawer files for matched slugs
         slugs = [r for r in conn.execute(
-            "SELECT slug, drawer_path FROM closet WHERE aaak LIKE ? LIMIT 5",
+            "SELECT slug, drawer_path FROM closet WHERE clsc LIKE ? LIMIT 5",
             (f"%{q}%",)
         ).fetchall()]
         verbatim_tokens = 0
@@ -249,9 +249,9 @@ def run_query_comparison(queries: list[str]):
 def run_stats():
     conn = get_conn()
     count = conn.execute("SELECT COUNT(*) FROM closet").fetchone()[0]
-    total_aaak = conn.execute("SELECT SUM(tokens) FROM closet").fetchone()[0] or 0
+    total_clsc = conn.execute("SELECT SUM(tokens) FROM closet").fetchone()[0] or 0
     print(f"Closet rows: {count}")
-    print(f"Total AAAK tokens: {total_aaak:,}")
+    print(f"Total CLSC tokens: {total_clsc:,}")
     conn.close()
 
 
