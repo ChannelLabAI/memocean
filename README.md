@@ -1,6 +1,14 @@
-# memocean-mcp
+# MemOcean MCP
 
-MemOcean MCP server — a local-only library-mode server that wraps FTS5 message search, closet content retrieval, temporal knowledge graph queries, learned skill access, and FATQ（File-Atomic Task Queue）task creation into a single Claude Code MCP integration.
+> A memory system built for CJK developers.
+
+Most AI memory frameworks are designed for English: whitespace tokenization, uppercase acronyms as entities, LIKE string matching — none of these work in Chinese. MemOcean forks MemPalace's skeleton-memory architecture and rewrites the full NER + search pipeline for Chinese (Traditional, Simplified, mixed CJK-English), so your agents can actually remember and retrieve things in Chinese conversations.
+
+**Core capabilities:**
+- FTS5 + BM25 + Haiku reranker hybrid search — 87.5% Hit@5 on Chinese
+- CLSC semantic skeleton extraction — 87% token reduction, semantic links preserved
+- Temporal knowledge graph with non-destructive invalidation
+- Cross-bot memory sharing via a single shared `memory.db`
 
 ## Install
 
@@ -8,6 +16,18 @@ MemOcean MCP server — a local-only library-mode server that wraps FTS5 message
 pip install -e ~/.claude-bots/shared/memocean-mcp
 claude mcp add memocean python -m memocean_mcp
 ```
+
+## How it compares
+
+| | [MemPalace](https://github.com/milla-jovovich/mempalace) | [GBrain](https://github.com/garrytan/gbrain) | MemOcean |
+|---|---|---|---|
+| CJK-first design | ❌ | ❌ | ✅ |
+| Search architecture | BM25 + LIKE | Vector search | FTS5 + BM25 + Haiku reranker |
+| Chinese Hit@5 | ~60% (est.) | ~75% (est.) | **87.5%** |
+| Knowledge graph | ❌ | ✅ | ✅ temporal |
+| Nightly consolidation | ❌ | ✅ Dream Cycle | 🔄 planned |
+| Multi-bot sharing | ❌ | ❌ | ✅ |
+| MCP integration | ❌ | ❌ | ✅ |
 
 ## Tools
 

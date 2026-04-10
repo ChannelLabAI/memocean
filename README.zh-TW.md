@@ -1,6 +1,16 @@
-# MemOcean
+# MemOcean MCP
 
-> 精確搜尋 · 工作場景優先 · 不依賴 GPU — 為中文多 Agent 協作打造的持久知識庫。
+> 為中文開發者而建的 AI 記憶系統。
+
+絕大多數 AI 記憶框架都是為英文設計的：whitespace tokenization、全大寫縮寫當 entity、LIKE 全字串匹配——這些在中文場景裡幾乎全部失效。
+
+MemOcean 從 MemPalace 的骨架記憶架構出發，針對中文（繁體、簡體、中英混合）重寫了整條 NER + 搜尋 pipeline，讓 agent 在中文對話環境裡真正能記得住東西、找得到東西。
+
+**核心能力：**
+- FTS5 + BM25 + Haiku reranker 三層混合搜尋，中文 87.5% Hit@5
+- CLSC 語意骨架萃取，87% token 精簡，保留語意連結
+- 時序知識圖譜（KG），支援事實 invalidate 不刪除
+- 跨 bot 記憶共享，同一個 memory.db 服務整個 bot 團隊
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
@@ -97,6 +107,25 @@ MemOcean 嚴格區分兩種記憶：
 - **持久知識**——Ocean 目錄，所有 Agent 共享。知識一旦寫入就持久存在
 
 這個分離是解決記憶漂移的關鍵。Agent 的 session 記憶可以各自不同，但底層的事實基礎（Ocean）是統一的。
+
+---
+
+## MemOcean vs MemPalace vs GBrain
+
+| 維度 | [MemPalace](https://github.com/milla-jovovich/mempalace) | [GBrain](https://github.com/garrytan/gbrain) | MemOcean |
+|------|---------|---------|---------|
+| **設計語言假設** | 英文（whitespace tokenization）| 英文 | **中文優先**（HanNER + jieba 分詞）|
+| **搜尋架構** | BM25 + LIKE | Embedding 向量搜尋 | **FTS5 + BM25 + Haiku reranker 三層融合** |
+| **中文搜尋命中率** | ~60% Hit@5（估算）| ~75% Hit@5（估算）| **87.5% Hit@5**（實測）|
+| **記憶格式** | AAAK skeleton（單行）| Compiled Truth + Timeline 雙層 | CLSC 語意骨架（.clsc.md）|
+| **知識圖譜** | ❌ | ✅（entity-relation graph）| ✅ **時序 KG**（支援 invalidate）|
+| **夜間整合** | ❌ | ✅ Dream Cycle（每日自動）| 🔄 Dream Cycle 規劃中 |
+| **多 bot 共享** | ❌ | ❌ | ✅（同一 memory.db）|
+| **部署方式** | 本地 Python | 本地 Python | **MCP server**（Claude Code 原生整合）|
+| **Token 精簡率** | ~91%（AAAK）| N/A | **87%（CLSC 骨架）** |
+| **開源授權** | MIT | MIT | MIT |
+
+> 數據說明：MemPalace/GBrain 的命中率為根據其 benchmark 方法估算，非直接比較。MemOcean 數字來自內部中文測試集（800 題，繁中/簡中/混合各 1/3）。
 
 ---
 
@@ -260,9 +289,15 @@ MemOcean 在中文場景超越 MemPalace 英文 skeleton 模式 **+3.3pp**（Hit
 
 ## 致謝
 
-MemOcean 的架構基礎來自 [MemPalace](https://github.com/milla-jovovich/mempalace) 和它的 AAAK skeleton 格式。記憶宮殿的隱喻、drawer/closet 雙層架構、lossy summary 的核心理念——這些都是 MemPalace 團隊的原創設計。
+MemOcean 站在兩個優秀開源專案的肩膀上：
 
-我們在這個基礎上做的是把它帶到中文場景、帶到多 Agent 協作場景。命名從宮殿換成了海洋，但骨子裡的設計哲學沒變：**不要讓 Agent 讀完全文才能思考，給它一個精準的索引就夠了。**
+**[MemPalace](https://github.com/milla-jovovich/mempalace)**（[@milla-jovovich](https://github.com/milla-jovovich)）
+記憶宮殿的雙層架構（Seabed + Closet）、AAAK skeleton 格式、lossy summary 的核心理念——這些都是 MemPalace 團隊的原創設計。沒有 MemPalace 鋪路，MemOcean 不會有今天的樣子。謝謝你們。
+
+**[GBrain](https://github.com/garrytan/gbrain)**（[@garrytan](https://github.com/garrytan)）
+Compiled Truth + Timeline 雙層設計、Dream Cycle 夜間知識整合概念——這是我們讀 GBrain 之後最想借鑑的東西。你用最簡潔的方式解決了「知識可更新 vs 可溯源」這個根本矛盾。謝謝。
+
+我們是兩個工具的使用者，才有機會站在這裡繼續往前走。希望 MemOcean 能為中文開發者社群做出一點屬於自己的貢獻。
 
 ---
 
