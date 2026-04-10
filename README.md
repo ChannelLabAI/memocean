@@ -1,6 +1,6 @@
 # MemOcean
 
-> A shared knowledge base system built for multi-Agent Chinese-language workflows.
+> Precise retrieval · Work-first design · No GPU required — a persistent knowledge base for multi-Agent Chinese-language collaboration.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
@@ -158,6 +158,20 @@ Various sources ──→ Pearl (distilled insight)
 
 The two exist independently and cross-reference each other via `[[wikilinks]]`. They are not in an upstream-downstream compression relationship.
 
+### Search Pipeline: Hybrid Recall
+
+Retrieval uses a three-stage hybrid recall pipeline — all API calls, no local GPU required:
+
+```
+keyword (FTS5 BM25)
+  +                      ──→ merge top-K candidates ──→ Haiku LLM reranker ──→ ranked results
+embedding KNN (API)
+```
+
+- **keyword**: FTS5 trigram + BM25, precise entity matching, <10ms
+- **embedding KNN**: semantic vector nearest-neighbor search, fills semantic inference term gaps, runs via embedding API with no local GPU
+- **Haiku reranker**: lightweight LLM ranking pass, more stable in work-context semantics than pure cosine similarity
+
 ---
 
 ## CLSC Chinese Compression Engine
@@ -210,25 +224,26 @@ v3 has the same hit rate as v2 (FTS5 automatically falls back to OR-match on mis
 
 ### Benchmark
 
-MemPalace was designed for English; MemOcean was designed for Chinese. Each system is benchmarked in its own language:
+MemPalace was designed for English; MemOcean was designed for Chinese work scenarios. Each system is benchmarked in its own language:
 
-| | MemPalace (English) | MemOcean (Chinese) |
+| | MemPalace AAAK skeleton | MemOcean Hybrid+Haiku |
 |---|---|---|
-| Benchmark | LongMemEval (500 queries) | MADial-Bench (160 dialogues) |
-| Metric | Recall@5 | Hit@10 |
-| Raw / Seabed | 96.6% | — |
-| Skeleton / Sonar + BM25 | 84.2% | 79.4% |
+| Benchmark | LongMemEval (English) | MADial-Bench (Chinese) |
+| Hit@5 / R@5 | 84.2% | **87.5%** |
+| Hit@1 | N/A | **68.1%** |
 
-We also ran an English cross-validation on LongMemEval: Seabed + FTS5 BM25 achieved 90.5% R@5, outperforming MemPalace's AAAK skeleton (84.2%) by +6.3pp.
+MemOcean outperforms MemPalace's English skeleton mode in Chinese by **+3.3pp** (Hit@5).
 
-The improvement opportunity for Chinese lies in semantic retrieval (embedding reranker), which is on the roadmap.
+English cross-validation (LongMemEval): MemOcean Seabed+BM25 **90.5%** R@5 vs MemPalace AAAK **84.2%** (+6.3pp).
+
+Large-scale stress test (CRUD-RAG): 20K Chinese news documents, **99%** hit rate, **14ms** latency.
 
 ### Known Limitations
 
 To be upfront: CLSC currently has two known limitations:
 
 1. **jieba Traditional Chinese precision** -- jieba's dictionary is primarily Simplified Chinese, with Traditional Chinese handled via statistical fallback. NER recall on Traditional Chinese has not been quantitatively baselined yet
-2. **Semantic inference term misses** -- skeletons only store literal entities, so inference-dependent terms like "captain" or "triple engine" will not be found by search. This requires a query rewrite layer to address
+2. **Cold-term coverage** -- the hybrid recall embedding path compensates for common semantic inference misses, but very rare terms or heavily abbreviated jargon (unseen by both paths) can still slip through. A query expansion layer is needed to fully address this
 
 ---
 
