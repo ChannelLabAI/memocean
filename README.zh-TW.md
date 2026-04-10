@@ -10,7 +10,7 @@
 
 ## Table of Contents
 
-- [為什麼做 MemOcean](#為什麼做-memocean)
+- [為什麼我們要做 MemOcean](#為什麼做-memocean)
 - [MemOcean 是什麼](#memocean-是什麼)
 - [多 Agent 協作設計](#多-agent-協作設計)
 - [架構：海洋隱喻 + 雙引擎檢索](#架構海洋隱喻--雙引擎檢索)
@@ -19,7 +19,7 @@
 
 ---
 
-## 為什麼做 MemOcean
+## 為什麼我們要做做 MemOcean
 
 第一次看到 [MemPalace](https://github.com/milla-jovovich/mempalace) 的時候我們非常興奮——終於有人做 LLM 的 long-term memory，而且還是那個蜜拉喬娃。
 
