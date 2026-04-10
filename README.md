@@ -124,3 +124,10 @@ Derived paths (all under `BOTS_ROOT`):
 | `shared/fts5/` | FTS5 search module |
 | `shared/clsc/v0.7/` | Closet decoder module |
 | `shared/kg/` | KG helper module |
+
+## Recent updates
+
+### 2026-04-11
+- **Removed `memocean_ask_opus`**: replaced by native `Agent` tool with `model: "opus"` in Claude Code — more direct, fewer tokens
+- **Terminology fix**: CLSC is "skeleton extraction" not "compression" — lossy and irreversible by design
+- **Dream Cycle (planned)**: nightly knowledge consolidation pipeline inspired by GBrain — auto-enriches KG, refreshes Closet skeletons, stitches cross-references. Spec in review, not yet implemented.

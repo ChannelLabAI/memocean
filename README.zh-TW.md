@@ -14,7 +14,7 @@
 - [MemOcean 是什麼](#memocean-是什麼)
 - [多 Agent 協作設計](#多-agent-協作設計)
 - [架構：海洋隱喻 + 雙引擎檢索](#架構海洋隱喻--雙引擎檢索)
-- [CLSC 中文壓縮引擎](#clsc-中文壓縮引擎)
+- [CLSC 中文骨架萃取引擎](#clsc-中文骨架萃取引擎)
 - [致謝](#致謝)
 
 ---
@@ -111,7 +111,7 @@ MemPalace 用宮殿隱喻（Palace > Wing > Room > Skeleton > Drawer）。MemOce
 | 知識總庫 | Ocean | `Ocean/` | Palace |
 | 專案分類 | Current（洋流） | `Currents/` | Wing |
 | 子分類 | Reef（珊瑚礁） | Current 下子目錄 | Room |
-| 壓縮骨架 | Sonar（聲納） | `*.clsc` | Skeleton |
+| 語意骨架 | Sonar（聲納） | `*.clsc` | Skeleton |
 | 原始素材 | Seabed（海床） | `Seabed/` | Drawer |
 | 洞見卡片 | Pearl（珍珠） | `Pearl/` | Cards |
 | 技術文檔 | Chart（海圖） | `Chart/` | Concepts |
@@ -155,7 +155,7 @@ Seabed（原始素材）──→ Sonar（機器索引）
   └── 原文閱讀後的領悟
 ```
 
-- **Sonar** 是機器壓縮——從 Seabed 原文自動產生 skeleton 索引（~9% token），幫 Agent 快速找到東西
+- **Sonar** 是語意骨架萃取——從 Seabed 原文自動產生 skeleton 索引（~9% token），幫 Agent 快速找到東西
 - **Pearl** 是人類蒸餾——從對話、調研、會議、工作討論中提煉出的原子洞見（100-300 字），教 Agent 用老闆的邏輯思考
 
 兩者獨立存在、互相 `[[連結]]`，不是上下游壓縮關係。
@@ -176,9 +176,9 @@ embedding KNN（API）
 
 ---
 
-## CLSC 中文壓縮引擎
+## CLSC 中文骨架萃取引擎
 
-**CLSC**（Chinese Lossy Summary Compression）是 MemOcean 的核心引擎，fork 自 MemPalace 的 AAAK skeleton 格式，針對中文場景重寫了整條 NER + 搜尋 pipeline。
+**CLSC**（Chinese Lossy Skeleton Codec）是 MemOcean 的核心引擎，fork 自 MemPalace 的 AAAK skeleton 格式，針對中文場景重寫了整條 NER + 搜尋 pipeline。
 
 ### 跟 upstream AAAK 的差異
 
@@ -191,7 +191,7 @@ embedding KNN（API）
 
 ### Skeleton 格式
 
-每篇素材壓縮成單行 skeleton，存為 `.clsc` 檔：
+每篇素材萃取成單行骨架，存為 `.clsc` 檔：
 
 ```
 [SLUG|ENTITIES|topics|"key_quote"|WEIGHT|EMOTIONS|FLAGS]
@@ -206,7 +206,7 @@ embedding KNN（API）
 | 測試規模 | 148 篇文件 |
 | 原始 token 總量 | 459,490 |
 | Sonar token 總量 | 43,392 |
-| 整體壓縮率 | **9.4%** |
+| 骨架精簡率 | **9.4%** |
 | Token 節省 | **90.6%** |
 | 搜尋場景平均節省 | **78.2%** |
 
@@ -246,6 +246,15 @@ MemOcean 在中文場景超越 MemPalace 英文 skeleton 模式 **+3.3pp**（Hit
 
 1. **jieba 繁體精度**——jieba 字典以簡中為主，繁體靠統計回退，NER recall 還沒有量化 baseline
 2. **冷詞覆蓋**——hybrid recall 的 embedding 路徑可補一般推斷詞 miss，但極罕見術語或高度縮寫的冷詞（兩路都沒見過）仍可能漏網，需 query expansion 輔助
+
+---
+
+## 最近更新
+
+### 2026-04-11
+- **移除 `memocean_ask_opus` 工具**：已改用 Claude Code 原生 `Agent` tool + `model: "opus"` 直接開 Opus sub-agent，比 MCP 工具更直接、更省 token
+- **術語修正**：CLSC 正式名稱從「中文壓縮引擎」改為「中文骨架萃取引擎」——skeleton 是語意骨架萃取（lossy、不可逆），非可逆壓縮
+- **Dream Cycle（規劃中）**：仿照 GBrain 概念設計的夜間知識整合 pipeline，每日 03:00 自動掃描對話、補強 KG 三元組、更新 Closet 骨架、修補 wikilink 引用。Spec 撰寫中，尚未實作。
 
 ---
 
