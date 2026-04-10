@@ -210,24 +210,18 @@ v3 has the same hit rate as v2 (FTS5 automatically falls back to OR-match on mis
 
 ### Benchmark
 
-**English: LongMemEval (500 queries, Recall@5)**
+MemPalace was designed for English; MemOcean was designed for Chinese. Each system is benchmarked in its own language:
 
-| System | Mode | R@5 |
-|--------|------|-----|
-| MemPalace | raw (long context) | 96.6% |
-| **MemOcean** | **Seabed + FTS5 BM25** | **90.5%** |
-| MemPalace | AAAK skeleton | 84.2% |
+| | MemPalace (English) | MemOcean (Chinese) |
+|---|---|---|
+| Benchmark | LongMemEval (500 queries) | MADial-Bench (160 dialogues) |
+| Metric | Recall@5 | Hit@10 |
+| Raw / Seabed | 96.6% | — |
+| Skeleton / Sonar + BM25 | 84.2% | 79.4% |
 
-MemOcean's BM25 retrieval outperforms MemPalace's AAAK skeleton by +6.3pp on the same benchmark, approaching the performance of raw long-context retrieval.
+We also ran an English cross-validation on LongMemEval: Seabed + FTS5 BM25 achieved 90.5% R@5, outperforming MemPalace's AAAK skeleton (84.2%) by +6.3pp.
 
-**Chinese: MADial-Bench (160 dialogues, Hit@K)**
-
-| Method | Hit@1 | Hit@5 | Hit@10 |
-|--------|-------|-------|--------|
-| Embedding (best) | 64.4% | 90.0% | 96.2% |
-| **MemOcean keyword** | **28.1%** | **65.6%** | **79.4%** |
-
-Keyword retrieval achieves 79.4% Hit@10 in Chinese scenarios -- sufficient as a first-stage retriever. The precision gap can be closed by adding an embedding reranker (roadmap phases C/D).
+The improvement opportunity for Chinese lies in semantic retrieval (embedding reranker), which is on the roadmap.
 
 ### Known Limitations
 
