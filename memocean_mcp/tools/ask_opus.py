@@ -18,7 +18,7 @@ logger = logging.getLogger("memocean_mcp.ask_opus")
 
 _OPUS_MODEL = "claude-opus-4-6"
 _DAILY_CAP = 20
-_LOG_PATH = Path("/home/oldrabbit/.claude-bots/logs/opus-advisor-usage.jsonl")
+_LOG_PATH = Path(os.environ.get("CLAUDE_BOTS_ROOT", str(Path.home() / ".claude-bots"))) / "logs" / "opus-advisor-usage.jsonl"
 _CONTEXT_CHAR_LIMIT = 6000  # ~2000 tokens for Chinese text (3 chars/token)
 _TIMEOUT_SECONDS = 30
 _MAX_TOKENS_CAP = 4000  # prevent accidental runaway costs (~$0.30/call ceiling)

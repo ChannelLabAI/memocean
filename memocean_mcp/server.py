@@ -130,7 +130,7 @@ TOOLS = {
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "FTS5 query string. E.g. 'NOX OR Bonk', '\"主廚 重啟\"', 'NEAR(川哥 桃桃, 5)'",
+                    "description": "FTS5 query string. E.g. 'ProjectA OR ProjectB', '\"deploy 重啟\"', 'NEAR(AgentA AgentB, 5)'",
                 },
                 "limit": {
                     "type": "integer",
@@ -201,7 +201,7 @@ TOOLS = {
             "properties": {
                 "entity": {
                     "type": "string",
-                    "description": "Entity to query (e.g. '老兔', 'Wes', 'anna', 'ChannelLab')",
+                    "description": "Entity to query (e.g. 'ProjectName', 'agent-name', 'ChannelLab')",
                 },
                 "as_of": {
                     "type": "string",

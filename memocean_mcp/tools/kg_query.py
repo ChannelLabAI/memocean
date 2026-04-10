@@ -23,7 +23,7 @@ def _import_kg_helper():
 def kg_query(entity: str, as_of: Optional[str] = None, direction: str = "outgoing") -> list[dict]:
     """
     Query facts about an entity at a point in time.
-    entity: e.g. '老兔', 'Wes', 'anna'
+    entity: e.g. 'ProjectName', 'agent-name'
     as_of: ISO date string YYYY-MM-DD (defaults to today)
     direction: 'outgoing' (default), 'incoming', or 'both'
     Returns list of fact dicts.
