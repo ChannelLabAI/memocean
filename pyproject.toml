@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "memocean"
-version = "0.1.0"
+version = "0.2.0"
 description = "MemOcean MCP server — library mode, local only"
 requires-python = ">=3.10"
 dependencies = [
@@ -16,3 +16,4 @@ memocean-mcp = "memocean_mcp.server:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
+include = ["memocean_mcp*", "fts5*", "kg*", "clsc*"]
