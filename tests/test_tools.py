@@ -253,7 +253,7 @@ def test_server_import():
     """server.py imports cleanly and TOOLS dict is populated."""
     from memocean_mcp.server import TOOLS, handle_request
 
-    assert len(TOOLS) == 7
+    assert len(TOOLS) == 6
     expected = {
         "memocean_fts_search",
         "memocean_closet_get",
@@ -261,13 +261,12 @@ def test_server_import():
         "memocean_kg_query",
         "memocean_skill_list",
         "memocean_task_create",
-        "memocean_ask_opus",
     }
     assert set(TOOLS.keys()) == expected
 
 
 def test_server_tools_list():
-    """handle_request('tools/list') returns all 7 tools."""
+    """handle_request('tools/list') returns all 6 tools."""
     from memocean_mcp.server import handle_request
 
     request = {"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}
@@ -275,7 +274,7 @@ def test_server_tools_list():
 
     assert response["id"] == 1
     tools = response["result"]["tools"]
-    assert len(tools) == 7
+    assert len(tools) == 6
     names = {t["name"] for t in tools}
     assert "memocean_fts_search" in names
     assert "memocean_task_create" in names

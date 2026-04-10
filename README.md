@@ -1,6 +1,6 @@
 # memocean-mcp
 
-MemOcean MCP server — a local-only library-mode server that wraps FTS5 message search, closet content retrieval, temporal knowledge graph queries, learned skill access, FATQ（File-Atomic Task Queue）task creation, and Opus advisor into a single Claude Code MCP integration.
+MemOcean MCP server — a local-only library-mode server that wraps FTS5 message search, closet content retrieval, temporal knowledge graph queries, learned skill access, and FATQ（File-Atomic Task Queue）task creation into a single Claude Code MCP integration.
 
 ## Install
 
@@ -81,18 +81,6 @@ Create a new task in the pending queue.
 }
 ```
 Returns: `{ "task_id": "20260408-120000-a1b2", "filename": "...", "file_path": "...", "status": "pending" }`
-
-### `memocean_ask_opus`
-Ask Claude Opus for high-level business judgment or strategic advice.
-
-```json
-{
-  "question": "Should we prioritize the GEO service or the NOX staking dashboard?",
-  "context": "Current sprint has 3 days left. GEO has a client waiting. NOX has no deadline.",
-  "max_tokens": 1000
-}
-```
-Returns: `{ "question": "...", "response": "..." }`
 
 ## Security model
 
