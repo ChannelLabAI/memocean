@@ -208,6 +208,27 @@ We went through three iterations of search:
 
 v3 has the same hit rate as v2 (FTS5 automatically falls back to OR-match on miss), but ranking quality improved substantially -- BM25 pushes the most relevant document to top-1 instead of surfacing high-frequency but imprecise results. The improvement in top-1 accuracy is especially notable for English-language queries.
 
+### Benchmark
+
+**English: LongMemEval (500 queries, Recall@5)**
+
+| System | Mode | R@5 |
+|--------|------|-----|
+| MemPalace | raw (long context) | 96.6% |
+| **MemOcean** | **Seabed + FTS5 BM25** | **90.5%** |
+| MemPalace | AAAK skeleton | 84.2% |
+
+MemOcean's BM25 retrieval outperforms MemPalace's AAAK skeleton by +6.3pp on the same benchmark, approaching the performance of raw long-context retrieval.
+
+**Chinese: MADial-Bench (160 dialogues, Hit@K)**
+
+| Method | Hit@1 | Hit@5 | Hit@10 |
+|--------|-------|-------|--------|
+| Embedding (best) | 64.4% | 90.0% | 96.2% |
+| **MemOcean keyword** | **28.1%** | **65.6%** | **79.4%** |
+
+Keyword retrieval achieves 79.4% Hit@10 in Chinese scenarios -- sufficient as a first-stage retriever. The precision gap can be closed by adding an embedding reranker (roadmap phases C/D).
+
 ### Known Limitations
 
 To be upfront: CLSC currently has two known limitations:
