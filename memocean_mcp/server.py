@@ -8,8 +8,6 @@ Registered tools:
   memocean_kg_query      — Temporal knowledge graph query
   memocean_skill_list    — List/get approved learned skills
   memocean_task_create   — Create task in pending queue
-  memocean_ask_opus      — Ask Opus for high-level business judgment (Anya advisor mode)
-
 Run via:
   python -m memocean_mcp
   memocean-mcp
@@ -104,16 +102,6 @@ def tool_task_create(
         )
     except Exception as e:
         return {"error": f"Task creation failed: {e}"}
-
-
-def tool_ask_opus(question: str, context: str = "", max_tokens: int = 1000):
-    """Ask Opus for high-level decision advice."""
-    try:
-        from .tools.ask_opus import ask_opus
-        result = ask_opus(question=question, context=context, max_tokens=max_tokens)
-        return {"question": question[:100], "response": result}
-    except Exception as e:
-        return {"error": str(e), "response": "Opus 暫時無法回應，Sonnet 先自行判斷。"}
 
 
 # ==================== MCP PROTOCOL ====================
@@ -271,33 +259,6 @@ TOOLS = {
             "required": ["title", "description", "assigned_to"],
         },
         "handler": tool_task_create,
-    },
-    "memocean_ask_opus": {
-        "description": (
-            "Ask Claude Opus for high-level business judgment, strategic advice, or intent clarification. "
-            "Use when: intent is unclear, decision involves >NT$100K, writing spec/proposal, "
-            "team escalation ([ESCALATION] scenario), or first-principles thinking needed. "
-            "Has daily cap (20 calls). Returns Opus's advice as a string."
-        ),
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "question": {
-                    "type": "string",
-                    "description": "The question or decision to ask Opus about",
-                },
-                "context": {
-                    "type": "string",
-                    "description": "Relevant background context (optional, max ~2000 tokens)",
-                },
-                "max_tokens": {
-                    "type": "integer",
-                    "description": "Response length limit (default: 1000)",
-                },
-            },
-            "required": ["question"],
-        },
-        "handler": tool_ask_opus,
     },
 }
 
