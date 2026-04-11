@@ -150,4 +150,6 @@ Derived paths (all under `BOTS_ROOT`):
 ### 2026-04-11
 - **Removed `memocean_ask_opus`**: replaced by native `Agent` tool with `model: "opus"` in Claude Code — more direct, fewer tokens
 - **Terminology fix**: CLSC is "skeleton extraction" not "compression" — lossy and irreversible by design
-- **Dream Cycle (planned)**: nightly knowledge consolidation pipeline inspired by GBrain — auto-enriches KG, refreshes Closet skeletons, stitches cross-references. Spec in review, not yet implemented.
+- **Dream Cycle (Phase 1 shipped)**: nightly knowledge consolidation pipeline (`shared/scripts/dream_cycle.py`). 6-step pipeline: Collect → Extract → Normalize → Diff → Write → Report. Features: lock file, 30-min timeout, crash-recovery checkpoint, content-hash idempotency, dry-run/live modes, TG notification, graceful LLM degradation. Runs daily at 19:00 UTC via system crontab (`shared/scripts/install_cron.sh`). 39 tests passing.
+- **`closet.py` FTS sync fix**: `store_skeleton()` now syncs to `memory.db` closet table + `closet_fts` (with `source_hash`, DELETE-before-INSERT on FTS). Applied to both `shared/clsc/v0.7/closet.py` and `shared/memocean-mcp/clsc/closet.py`.
+- **Alias table**: `shared/config/alias_table.yaml` — 19-entity alias table for entity normalization in Dream Cycle.
