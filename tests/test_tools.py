@@ -435,3 +435,66 @@ def test_expansion_cache():
     _EXPANSION_CACHE["test-query"] = ["test-query", "variant1"]
     result = _expand_query("test-query")
     assert result == ["test-query", "variant1"]
+
+
+# ==================== MERGE CANDIDATES (P5 RRF) ====================
+
+def test_merge_candidates_empty():
+    """Both empty → empty list."""
+    from memocean_mcp.tools.closet_search import _merge_candidates
+    assert _merge_candidates([], []) == []
+
+
+def test_merge_candidates_fts_only():
+    """sem empty → returns fts results in RRF order (single list preserves order)."""
+    from memocean_mcp.tools.closet_search import _merge_candidates
+    fts = [{"slug": "a"}, {"slug": "b"}]
+    result = _merge_candidates(fts, [])
+    assert [r["slug"] for r in result] == ["a", "b"]
+    assert result[0]["sources"] == ["fts"]
+    assert result[1]["sources"] == ["fts"]
+
+
+def test_merge_candidates_sem_only():
+    """fts empty → returns sem results in RRF order."""
+    from memocean_mcp.tools.closet_search import _merge_candidates
+    sem = [{"slug": "x"}, {"slug": "y"}]
+    result = _merge_candidates([], sem)
+    assert [r["slug"] for r in result] == ["x", "y"]
+    assert result[0]["sources"] == ["sem"]
+
+
+def test_merge_candidates_cross_path_ranks_above_single():
+    """Items appearing in both fts and sem rank above single-path items."""
+    from memocean_mcp.tools.closet_search import _merge_candidates
+    fts = [{"slug": "shared"}, {"slug": "fts-only"}]
+    sem = [{"slug": "shared"}, {"slug": "sem-only"}]
+    result = _merge_candidates(fts, sem)
+    slugs = [r["slug"] for r in result]
+    # shared appears in both → highest RRF score
+    assert slugs[0] == "shared"
+
+
+def test_merge_candidates_sources_tracking():
+    """sources field correctly reflects which retrieval paths hit each doc."""
+    from memocean_mcp.tools.closet_search import _merge_candidates
+    fts = [{"slug": "a"}, {"slug": "b"}]
+    sem = [{"slug": "b"}, {"slug": "c"}]
+    result = _merge_candidates(fts, sem)
+    by_slug = {r["slug"]: r["sources"] for r in result}
+    assert by_slug["a"] == ["fts"]
+    assert set(by_slug["b"]) == {"fts", "sem"}
+    assert by_slug["c"] == ["sem"]
+
+
+def test_merge_candidates_rrf_order():
+    """Verify RRF score order: item ranked #1 in both > item ranked #1 in one."""
+    from memocean_mcp.tools.closet_search import _merge_candidates
+    # 'top' is #1 in fts, #1 in sem → max possible RRF score
+    # 'mid' is #2 in fts only
+    fts = [{"slug": "top"}, {"slug": "mid"}]
+    sem = [{"slug": "top"}, {"slug": "other"}]
+    result = _merge_candidates(fts, sem)
+    slugs = [r["slug"] for r in result]
+    assert slugs.index("top") < slugs.index("mid")
+    assert slugs.index("top") < slugs.index("other")

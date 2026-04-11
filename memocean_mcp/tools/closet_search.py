@@ -35,6 +35,28 @@ def _has_cjk(text: str) -> bool:
     return bool(re.search(r'[\u4e00-\u9fff\u3400-\u4dbf\u20000-\u2a6df]', text))
 
 
+def _update_last_accessed(slugs: list[str]) -> None:
+    """Update last_accessed timestamp for slugs that appeared in search results."""
+    if not slugs or not FTS_DB.exists():
+        return
+    now = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+    try:
+        conn = sqlite3.connect(str(FTS_DB))
+        # Check if column exists first (migration may not have run yet)
+        cols = {row[1] for row in conn.execute("PRAGMA table_info(closet)")}
+        if "last_accessed" not in cols:
+            conn.close()
+            return
+        conn.executemany(
+            "UPDATE closet SET last_accessed=? WHERE slug=?",
+            [(now, slug) for slug in slugs]
+        )
+        conn.commit()
+        conn.close()
+    except Exception:
+        pass
+
+
 def _log_search(query: str, results: list[dict]) -> None:
     """Append one JSON line to the usage log. Swallows all exceptions."""
     try:
@@ -352,23 +374,32 @@ def _haiku_rerank(query: str, candidates: list[dict], top_k: int) -> list[dict] 
 
 def _merge_candidates(fts_results: list[dict], sem_results: list[dict]) -> list[dict]:
     """
-    Merge FTS5 and semantic candidates, deduplicating by slug.
-    FTS5 candidates appear first (explicit keyword match), then embedding-only.
+    Merge FTS5 and semantic candidates using RRF (Reciprocal Rank Fusion).
+    score(d) = sum(1 / (k + rank_i(d))), k=60 (standard constant).
+    Adds 'sources' field: list of retrieval paths that returned each doc
+    (e.g. ["fts"], ["sem"], or ["fts", "sem"] for cross-path hits).
     """
-    seen_slugs: set[str] = set()
-    merged: list[dict] = []
+    if not fts_results and not sem_results:
+        return []
 
+    # Track which retrieval paths each slug appeared in (before RRF modifies dicts)
+    sources_map: dict[str, list[str]] = {}
     for row in fts_results:
         slug = row.get("slug", "")
-        if slug not in seen_slugs:
-            seen_slugs.add(slug)
-            merged.append(row)
-
+        if slug:
+            sources_map.setdefault(slug, []).append("fts")
     for row in sem_results:
         slug = row.get("slug", "")
-        if slug not in seen_slugs:
-            seen_slugs.add(slug)
-            merged.append(row)
+        if slug:
+            sources_map.setdefault(slug, []).append("sem")
+
+    # RRF merge across both ranked lists
+    lists = [lst for lst in [fts_results, sem_results] if lst]
+    merged = _rrf_merge(lists)
+
+    # Attach sources metadata to each result
+    for item in merged:
+        item["sources"] = sources_map.get(item.get("slug", ""), [])
 
     return merged
 
@@ -487,4 +518,10 @@ def closet_search(query: str, limit: int = 10) -> list[dict]:
         results = merged[:limit]
 
     _log_search(query, results)
+    # Update last_accessed for returned slugs
+    if results:
+        try:
+            _update_last_accessed([r["slug"] for r in results if r.get("slug")])
+        except Exception:
+            pass
     return results
