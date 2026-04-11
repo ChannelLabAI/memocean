@@ -392,3 +392,46 @@ def test_closet_search_sql_injection_safe():
         assert isinstance(result, list), f"Raised on payload: {payload!r}"
         # Paranoia check: no more than limit results (not a full table dump)
         assert len(result) <= 5, f"Too many results for payload: {payload!r}"
+
+
+# ==================== MULTI-QUERY EXPANSION ====================
+
+def test_expand_query_no_api_key(monkeypatch):
+    """Without API key, _expand_query returns [original_query]."""
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    from memocean_mcp.tools.closet_search import _expand_query, _EXPANSION_CACHE
+    _EXPANSION_CACHE.clear()
+    result = _expand_query("ChannelLab GEO")
+    assert result == ["ChannelLab GEO"]
+
+def test_rrf_merge_basic():
+    """RRF merge gives highest score to items appearing in all lists."""
+    from memocean_mcp.tools.closet_search import _rrf_merge
+    list1 = [{"slug": "a"}, {"slug": "b"}, {"slug": "c"}]
+    list2 = [{"slug": "b"}, {"slug": "a"}, {"slug": "d"}]
+    merged = _rrf_merge([list1, list2])
+    slugs = [r["slug"] for r in merged]
+    # a and b appear in both lists → should rank above c and d
+    assert slugs.index("a") < slugs.index("c")
+    assert slugs.index("b") < slugs.index("d")
+
+def test_rrf_merge_empty():
+    """RRF merge handles empty lists."""
+    from memocean_mcp.tools.closet_search import _rrf_merge
+    assert _rrf_merge([]) == []
+    assert _rrf_merge([[]]) == []
+
+def test_rrf_merge_single_list():
+    """RRF merge with single list preserves order."""
+    from memocean_mcp.tools.closet_search import _rrf_merge
+    items = [{"slug": "x"}, {"slug": "y"}]
+    result = _rrf_merge([items])
+    assert [r["slug"] for r in result] == ["x", "y"]
+
+def test_expansion_cache():
+    """Same query is cached and not re-expanded."""
+    from memocean_mcp.tools.closet_search import _expand_query, _EXPANSION_CACHE
+    _EXPANSION_CACHE.clear()
+    _EXPANSION_CACHE["test-query"] = ["test-query", "variant1"]
+    result = _expand_query("test-query")
+    assert result == ["test-query", "variant1"]

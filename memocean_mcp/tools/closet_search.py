@@ -27,6 +27,8 @@ logger = logging.getLogger("memocean_mcp.closet_search")
 
 _LOG_PATH = os.path.expanduser('~/.claude-bots/logs/clsc-usage.jsonl')
 
+_EXPANSION_CACHE: dict[str, list[str]] = {}
+
 
 def _has_cjk(text: str) -> bool:
     """Detect CJK characters (Chinese/Japanese/Korean) in text."""
@@ -180,6 +182,71 @@ _HAIKU_RECALL_LIMIT = 20  # candidates per source (FTS5 + embedding)
 _anthropic_client = None  # lazy singleton
 
 
+def _expand_query(query: str) -> list[str]:
+    """
+    Use Haiku to generate 3 semantically similar alternative queries.
+    Returns list of expanded queries (including original). Cached per session.
+    Falls back to [query] if Haiku unavailable.
+    """
+    if query in _EXPANSION_CACHE:
+        return _EXPANSION_CACHE[query]
+
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        return [query]
+
+    try:
+        import anthropic  # noqa: F401
+    except ImportError:
+        return [query]
+
+    prompt = f"""你是一個搜尋查詢擴展助手。給定一個查詢，生成 3 個語意相近的替代查詢（繁體中文），幫助找到相關文件。
+
+原始查詢：{query}
+
+輸出格式：每行一個替代查詢，只輸出查詢本身，不要編號或解釋。輸出 3 行。"""
+
+    try:
+        client = _get_anthropic_client()
+        response = client.messages.create(
+            model=_HAIKU_MODEL,
+            max_tokens=100,
+            temperature=0.3,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        lines = [l.strip() for l in response.content[0].text.strip().splitlines() if l.strip()]
+        expanded = [query] + lines[:3]
+        _EXPANSION_CACHE[query] = expanded
+        logger.debug("_expand_query: %r → %d variants", query, len(expanded))
+        return expanded
+    except Exception as e:
+        logger.debug("_expand_query failed: %s", e)
+        _EXPANSION_CACHE[query] = [query]
+        return [query]
+
+
+def _rrf_merge(ranked_lists: list[list[dict]], k: int = 60) -> list[dict]:
+    """
+    Reciprocal Rank Fusion: merge multiple ranked lists by RRF score.
+    score(d) = sum(1 / (k + rank_i(d))) across all lists where d appears.
+    Returns merged list sorted by RRF score descending.
+    """
+    scores: dict[str, float] = {}
+    by_slug: dict[str, dict] = {}
+
+    for ranked in ranked_lists:
+        for rank, item in enumerate(ranked, start=1):
+            slug = item.get("slug", "")
+            if not slug:
+                continue
+            scores[slug] = scores.get(slug, 0.0) + 1.0 / (k + rank)
+            if slug not in by_slug:
+                by_slug[slug] = item
+
+    merged = sorted(by_slug.values(), key=lambda x: scores.get(x.get("slug", ""), 0), reverse=True)
+    return merged
+
+
 def _get_anthropic_client():
     global _anthropic_client
     if _anthropic_client is None:
@@ -330,28 +397,47 @@ def closet_search(query: str, limit: int = 10) -> list[dict]:
 
     cjk_query = _has_cjk(query)
 
-    # --- Keyword recall ---
+    # --- Multi-Query Expansion (if API available) ---
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if api_key and _has_cjk(query):
+        # Only expand CJK queries — English FTS5 already handles variations well
+        expanded_queries = _expand_query(query)
+    else:
+        expanded_queries = [query]
+
+    # --- Keyword recall (multi-query) ---
+    all_keyword_results: list[list[dict]] = []
     try:
         conn = sqlite3.connect(str(FTS_DB))
         conn.row_factory = sqlite3.Row
 
-        if cjk_query:
-            # CJK path: instr() OR-match (FTS5 trigram unreliable for CJK)
-            keyword_results = _search_instr_fallback(conn, terms, _HAIKU_RECALL_LIMIT)
-        else:
-            # Latin path: FTS5 BM25 first, fallback to instr()
-            try:
-                keyword_results = _search_fts5(conn, terms, _HAIKU_RECALL_LIMIT)
-            except sqlite3.OperationalError:
-                keyword_results = []
-
-            if not keyword_results:
-                keyword_results = _search_instr_fallback(conn, terms, _HAIKU_RECALL_LIMIT)
+        for eq in expanded_queries:
+            eq_terms = [t.strip() for t in eq.split() if t.strip()]
+            if not eq_terms:
+                continue
+            if cjk_query:
+                eq_results = _search_instr_fallback(conn, eq_terms, _HAIKU_RECALL_LIMIT)
+            else:
+                try:
+                    eq_results = _search_fts5(conn, eq_terms, _HAIKU_RECALL_LIMIT)
+                except sqlite3.OperationalError:
+                    eq_results = []
+                if not eq_results:
+                    eq_results = _search_instr_fallback(conn, eq_terms, _HAIKU_RECALL_LIMIT)
+            if eq_results:
+                all_keyword_results.append(eq_results)
 
         conn.close()
     except sqlite3.OperationalError:
-        # closet table not yet created
         return []
+
+    # RRF merge if multiple query results, otherwise use single list
+    if len(all_keyword_results) > 1:
+        keyword_results = _rrf_merge(all_keyword_results)[:_HAIKU_RECALL_LIMIT]
+    elif all_keyword_results:
+        keyword_results = all_keyword_results[0]
+    else:
+        keyword_results = []
 
     # --- Semantic (embedding KNN) recall ---
     sem_results: list[dict] = []
