@@ -3,11 +3,12 @@ server.py — MemOcean MCP Server (library mode, local only).
 
 Registered tools:
   memocean_messages_search — FTS5 cross-bot message search
-  memocean_seabed_get      — Seabed content retrieval (verbatim/skeleton)
-  memocean_seabed_search   — Multi-term AND search over CLSC skeleton seabed
+  memocean_seabed_get      — Seabed content retrieval (verbatim/sonar)
+  memocean_seabed_search   — Multi-term AND search over CLSC sonar seabed
   memocean_kg_query      — Temporal knowledge graph query
   memocean_skill_list    — List/get approved learned skills
   memocean_task_create   — Create task in pending queue
+  memocean_ingest_file   — Ingest local file (PDF/PPT/Word/Excel/HTML/CSV/JSON) into MemOcean
 Run via:
   python -m memocean_mcp
   memocean-mcp
@@ -34,21 +35,21 @@ def tool_fts_search(query: str, limit: int = 10, bot: str = None):
         return {"error": f"Search failed: {e}", "results": []}
 
 
-def tool_closet_get(slug: str, mode: str = "verbatim"):
-    """Retrieve closet content by slug."""
+def tool_radar_get(slug: str, mode: str = "verbatim"):
+    """Retrieve radar (Seabed) content by slug."""
     try:
-        from .tools.closet_get import closet_get
-        content = closet_get(slug, mode=mode)
+        from .tools.radar_get import radar_get
+        content = radar_get(slug, mode=mode)
         return {"slug": slug, "mode": mode, "content": content}
     except Exception as e:
         return {"error": str(e)}
 
 
-def tool_closet_search(query: str, limit: int = 5):
-    """Search CLSC skeletons via multi-term AND query."""
+def tool_radar_search(query: str, limit: int = 5):
+    """Search Radar (CLSC sonar index) via multi-term AND query."""
     try:
-        from .tools.closet_search import closet_search
-        results = closet_search(query, limit=limit)
+        from .tools.radar_search import radar_search
+        results = radar_search(query, limit=limit)
         return {"query": query, "count": len(results), "results": results}
     except Exception as e:
         return {"error": str(e)}
@@ -79,6 +80,15 @@ def tool_skill_list(name: str = None):
             return {"count": len(skills), "skills": skills}
     except Exception as e:
         return {"error": str(e)}
+
+
+def tool_ingest_file(file_path: str):
+    """Ingest a local file into MemOcean via MarkItDown."""
+    try:
+        from .tools.ingest_file import ingest_file
+        return ingest_file(file_path)
+    except Exception as e:
+        return {"error": f"Ingest failed: {e}", "code": "MARKITDOWN_FAIL"}
 
 
 def tool_task_create(
@@ -137,7 +147,7 @@ TOOLS = {
         "description": (
             "Retrieve content from MemOcean's seabed knowledge store by slug. "
             "mode='verbatim' returns the original drawer content (Obsidian Wiki or fallback). "
-            "mode='skeleton' returns raw closet bundle skeleton."
+            "mode='sonar' returns raw radar bundle sonar index."
         ),
         "input_schema": {
             "type": "object",
@@ -148,19 +158,19 @@ TOOLS = {
                 },
                 "mode": {
                     "type": "string",
-                    "description": "'verbatim' (default) or 'skeleton'",
+                    "description": "'verbatim' (default) or 'sonar'",
                 },
             },
             "required": ["slug"],
         },
-        "handler": tool_closet_get,
+        "handler": tool_radar_get,
     },
     "memocean_seabed_search": {
         "description": (
-            "Search MemOcean's CLSC skeleton seabed using multi-term AND matching. "
-            "Splits query on whitespace; all terms must appear in the skeleton. "
+            "Search MemOcean's Radar (CLSC sonar index) using multi-term AND matching. "
+            "Splits query on whitespace; all terms must appear in the radar sonar index. "
             "Handles hyphenated slugs that exact-phrase LIKE would miss. "
-            "Returns compact CLSC skeletons (~13% of verbatim token count)."
+            "Returns compact CLSC sonar entries (~13% of verbatim token count)."
         ),
         "input_schema": {
             "type": "object",
@@ -176,7 +186,7 @@ TOOLS = {
             },
             "required": ["query"],
         },
-        "handler": tool_closet_search,
+        "handler": tool_radar_search,
     },
     "memocean_kg_query": {
         "description": (
@@ -220,6 +230,25 @@ TOOLS = {
             },
         },
         "handler": tool_skill_list,
+    },
+    "memocean_ingest_file": {
+        "description": (
+            "Ingest a local file (PDF, PPT, Word, Excel, HTML, CSV, JSON) into MemOcean. "
+            "Converts to markdown via MarkItDown, stores in radar group='files'. "
+            "Returns slug, chars, radar_id, format, truncated. "
+            "Errors: FILE_NOT_FOUND | FILE_TOO_LARGE | MARKITDOWN_FAIL | EMPTY_CONTENT"
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Absolute path (or ~-expanded) to the local file to ingest.",
+                },
+            },
+            "required": ["file_path"],
+        },
+        "handler": tool_ingest_file,
     },
     "memocean_task_create": {
         "description": (
