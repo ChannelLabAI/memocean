@@ -32,7 +32,7 @@ _EXPANSION_CACHE: dict[str, list[str]] = {}
 
 def _has_cjk(text: str) -> bool:
     """Detect CJK characters (Chinese/Japanese/Korean) in text."""
-    return bool(re.search(r'[\u4e00-\u9fff\u3400-\u4dbf]', text))
+    return bool(re.search(r'[\u4e00-\u9fff\u3400-\u4dbf\u20000-\u2a6df]', text))
 
 
 def _log_search(query: str, results: list[dict]) -> None:
@@ -190,6 +190,8 @@ def _expand_query(query: str) -> list[str]:
     """
     if query in _EXPANSION_CACHE:
         return _EXPANSION_CACHE[query]
+    if len(_EXPANSION_CACHE) > 500:
+        _EXPANSION_CACHE.clear()
 
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
     if not api_key:
@@ -212,6 +214,7 @@ def _expand_query(query: str) -> list[str]:
             model=_HAIKU_MODEL,
             max_tokens=100,
             temperature=0.3,
+            timeout=5.0,
             messages=[{"role": "user", "content": prompt}],
         )
         lines = [l.strip() for l in response.content[0].text.strip().splitlines() if l.strip()]
