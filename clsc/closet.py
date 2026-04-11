@@ -23,6 +23,29 @@ def store_skeleton(group: str, slug: str, skeleton: str) -> None:
     lines[slug] = skeleton
     path.write_text('\n'.join(lines.values()) + '\n', encoding='utf-8')
 
+    # DB upsert — memory.db closet + closet_fts
+    try:
+        import hashlib
+        import sqlite3 as _sqlite3
+        _source_hash = hashlib.sha256(skeleton.encode()).hexdigest()
+        _tokens = len(skeleton) // 4
+        _drawer_path = str(path)
+        _db_path = Path.home() / ".claude-bots" / "memory.db"
+        _conn = _sqlite3.connect(str(_db_path))
+        _conn.execute(
+            "INSERT OR REPLACE INTO closet (slug, clsc, tokens, drawer_path, source_hash) VALUES (?, ?, ?, ?, ?)",
+            (slug, skeleton, _tokens, _drawer_path, _source_hash)
+        )
+        _conn.execute("DELETE FROM closet_fts WHERE slug = ?", (slug,))
+        _conn.execute(
+            "INSERT INTO closet_fts (slug, clsc) VALUES (?, ?)",
+            (slug, skeleton)
+        )
+        _conn.commit()
+        _conn.close()
+    except Exception:
+        pass  # DB sync is best-effort; file write already succeeded
+
 def read_closet(group: str) -> str:
     """Read full closet bundle as a string (for bot context injection)."""
     path = closet_path(group)

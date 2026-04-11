@@ -25,7 +25,7 @@ claude mcp add memocean python -m memocean_mcp
 | Search architecture | BM25 + LIKE | Vector search | FTS5 + BM25 + Haiku reranker |
 | Chinese Hit@5 | ~60% (est.) | ~75% (est.) | **87.5%** |
 | Knowledge graph | ❌ | ✅ | ✅ temporal |
-| Nightly consolidation | ❌ | ✅ Dream Cycle | 🔄 planned |
+| Nightly consolidation | ❌ | ✅ Dream Cycle | ✅ Dream Cycle |
 | Multi-bot sharing | ❌ | ❌ | ✅ |
 | MCP integration | ❌ | ❌ | ✅ |
 
