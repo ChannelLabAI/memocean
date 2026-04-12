@@ -25,7 +25,7 @@ def test_fts_search_basic():
     from memocean_mcp.tools.fts_search import fts_search
 
     # Try a few likely terms
-    for query in ("anna", "NOX", "老兔"):
+    for query in ("anna", "NOX", "owner"):
         results = fts_search(query, limit=5)
         if results:
             # Validate result structure
@@ -66,19 +66,19 @@ def test_fts_search_missing_db(tmp_path, monkeypatch):
 
 
 @pytest.mark.skipif(not KG_DB.exists(), reason=f"kg.db not found at {KG_DB}")
-def test_kg_query_laotu():
-    """Query 老兔 and confirm role=CEO fact exists."""
+def test_kg_query_owner():
+    """Query owner and confirm role=CEO fact exists."""
     from memocean_mcp.tools.kg_query import kg_query
 
-    facts = kg_query("老兔", direction="outgoing")
+    facts = kg_query("owner", direction="outgoing")
     assert isinstance(facts, list), "kg_query must return a list"
-    assert len(facts) > 0, "老兔 should have at least one fact in KG"
+    assert len(facts) > 0, "owner should have at least one fact in KG"
 
     predicates = {f.get("predicate") for f in facts}
     objects = {f.get("obj") or f.get("object") for f in facts}
 
     assert "role" in predicates or any("CEO" in str(o) for o in objects), \
-        f"Expected role=CEO for 老兔, got predicates={predicates} objects={objects}"
+        f"Expected role=CEO for owner, got predicates={predicates} objects={objects}"
 
 
 @pytest.mark.skipif(not KG_DB.exists(), reason=f"kg.db not found at {KG_DB}")

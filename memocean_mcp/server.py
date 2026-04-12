@@ -192,7 +192,7 @@ TOOLS = {
         "description": (
             "Query the ChannelLab temporal knowledge graph. Returns typed facts with "
             "time validity windows. Filter by date to see what was true at any point in time. "
-            "Example: entity='老兔' → role=CEO, direction='both' shows all relationships."
+            "Example: entity='owner' → role=CEO, direction='both' shows all relationships."
         ),
         "input_schema": {
             "type": "object",
