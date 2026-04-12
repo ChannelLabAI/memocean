@@ -110,7 +110,7 @@ Ingest a local file (PDF, PPT, Word, Excel, HTML, CSV, JSON) into MemOcean's Rad
   "file_path": "/home/user/Documents/report.pdf"
 }
 ```
-Returns (success): `{ "slug": "file:report-20260412", "group": "files", "chars": 12500, "radar_id": 341, "format": "pdf", "truncated": false }`
+Returns (success): `{ "slug": "file:report-a3f9c2", "group": "files", "chars": 12500, "radar_id": 341, "format": "pdf", "truncated": false }`
 
 Returns (error): `{ "error": "File not found: /path/to/file", "code": "FILE_NOT_FOUND" }`
 
@@ -181,7 +181,7 @@ Tide 是 MemOcean 的第三層輸出格式。資料流向：
 ## Recent updates
 
 ### 2026-04-12
-- **`memocean_ingest_file` (Phase 1)**: new MCP tool to ingest local files into MemOcean Radar. Converts PDF/PPT/Word/Excel/HTML/CSV/JSON to markdown via MarkItDown, stores in `group='files'` radar seabed. Deduplicates by file path — re-ingest updates both DB row and `.clsc.md` sonar. Slug format: `file:{stem}-{YYYYMMDD}`. Truncates at 50 k chars with `truncated: true` flag. Requires `markitdown[all]` in environment.
+- **`memocean_ingest_file` (Phase 1)**: new MCP tool to ingest local files into MemOcean Radar. Converts PDF/PPT/Word/Excel/HTML/CSV/JSON to markdown via MarkItDown, stores in `group='files'` radar seabed. Deduplicates by file path — re-ingest updates both DB row and `.clsc.md` sonar. Slug format: `file:{stem}-{hash6}` (last 6 hex chars of MD5 of abs path — stable across days). Truncates at 50 k chars with `truncated: true` flag. Requires `markitdown[all]` in environment.
 - **Closet → Radar rename sweep**: all internal references (`closet_fts` → `radar_fts`, `closet_vec` → `radar_vec`, SQL tables, variable names, shell vars) updated across `shared/clsc/`, `shared/fts5/`, `shared/scripts/`, and `memocean_mcp/`.
 
 ### 2026-04-11

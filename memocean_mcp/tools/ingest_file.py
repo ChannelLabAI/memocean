@@ -10,7 +10,6 @@ Error codes:
   MARKITDOWN_FAIL   — MarkItDown conversion raised an exception
   EMPTY_CONTENT     — converted content < 100 chars
 """
-import datetime
 import hashlib
 import logging
 import re
@@ -30,13 +29,17 @@ _GROUP = "files"
 # ── slug helper ──────────────────────────────────────────────────────────────
 
 def _make_slug(path: Path) -> str:
-    """Build slug: file:{stem}-{YYYYMMDD}, stem ≤40 chars, lowercase, spaces→-."""
+    """Build slug: file:{stem}-{hash6}, stem ≤40 chars, lowercase, spaces→-.
+
+    Uses last 6 hex chars of MD5(abs path) instead of date so that
+    the slug is stable across days and dedup works by identity, not time.
+    """
     stem = path.stem.lower()
     stem = re.sub(r"[^a-z0-9\-_]", "-", stem.replace(" ", "-"))
     stem = re.sub(r"-{2,}", "-", stem).strip("-")
     stem = stem[:40]
-    date = datetime.date.today().strftime("%Y%m%d")
-    return f"file:{stem}-{date}"
+    path_hash = hashlib.md5(str(path).encode()).hexdigest()[-6:]
+    return f"file:{stem}-{path_hash}"
 
 
 # ── seabed store_from_string ─────────────────────────────────────────────────
