@@ -33,9 +33,9 @@ MemOcean 從 MemPalace 的骨架記憶架構出發，針對中文（繁體、簡
 
 第一次看到 [MemPalace](https://github.com/milla-jovovich/mempalace) 的時候我們非常興奮——終於有人做 LLM 的 long-term memory，而且還是那個蜜拉喬娃。
 
-試跑過程中，我們發現了兩個不好克服的現實問題：
+然而 試跑過程中，我們卻發現了兩個不好克服的問題：
 
-**1. 中文 token 稅**
+**1. 中文 token 消耗真大**
 
 主流 tokenizer 對中文極不友善——同一語意的內容，中文 token 數量是英文的 2-3 倍。MemPalace 原始設計假設英文 whitespace tokenization（`text.split()` 切 token、全大寫縮寫當 entity、LIKE 全字串匹配），這些在中文場景全部失效。我們嘗試過字典壓縮，但走不通（替換後的 tag 在 BPE tokenizer 上比原文還長），最後轉向 skeleton lossy summary 才真正解決。
 
