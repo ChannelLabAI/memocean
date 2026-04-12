@@ -5,7 +5,7 @@
 Most AI memory frameworks are designed for English: whitespace tokenization, uppercase acronyms as entities, LIKE string matching — none of these work in Chinese. MemOcean forks MemPalace's sonar-memory architecture (MemPalace 稱為 Skeleton) and rewrites the full NER + search pipeline for Chinese (Traditional, Simplified, mixed CJK-English), so your agents can actually remember and retrieve things in Chinese conversations.
 
 **Core capabilities:**
-- FTS5 + BM25 + Haiku reranker hybrid search — 87.5% Hit@5 on Chinese
+- FTS5 + BM25 + Haiku reranker hybrid search — 86.2% Hit@5 on Chinese
 - CLSC semantic sonar extraction — 87% token reduction, semantic links preserved
 - Temporal knowledge graph with non-destructive invalidation
 - Cross-bot memory sharing via a single shared `memory.db`
@@ -23,7 +23,7 @@ claude mcp add memocean python -m memocean_mcp
 |---|---|---|---|
 | CJK-first design | ❌ | ❌ | ✅ |
 | Search architecture | BM25 + LIKE | Vector search | FTS5 + BM25 + Haiku reranker |
-| Chinese Hit@5 | ~60% (est.) | ~75% (est.) | **87.5%** |
+| Chinese Hit@5 | ~60% (est.) | ~75% (est.) | **86.2%** |
 | Knowledge graph | ❌ | ✅ | ✅ temporal |
 | Nightly consolidation | ❌ | ✅ Dream Cycle | ✅ Dream Cycle |
 | Multi-bot sharing | ❌ | ❌ | ✅ |
@@ -183,6 +183,8 @@ Tide 是 MemOcean 的第三層輸出格式。資料流向：
 ### 2026-04-12
 - **`memocean_ingest_file` (Phase 1)**: new MCP tool to ingest local files into MemOcean Radar. Converts PDF/PPT/Word/Excel/HTML/CSV/JSON to markdown via MarkItDown, stores in `group='files'` radar seabed. Deduplicates by file path — re-ingest updates both DB row and `.clsc.md` sonar. Slug format: `file:{stem}-{hash6}` (last 6 hex chars of MD5 of abs path — stable across days). Truncates at 50 k chars with `truncated: true` flag. Requires `markitdown[all]` in environment.
 - **Closet → Radar rename sweep**: all internal references (`closet_fts` → `radar_fts`, `closet_vec` → `radar_vec`, SQL tables, variable names, shell vars) updated across `shared/clsc/`, `shared/fts5/`, `shared/scripts/`, and `memocean_mcp/`.
+- **Dream Cycle FTS gap monitoring**: `_check_fts_gap()` added to Dream Cycle, runs at end of each Dream Cycle execution to detect radar→FTS sync gaps. Additional daily cron at 18:00 for standalone gap monitoring.
+- **Dream Cycle Phase 2 — stale knowledge detection**: compares contradictory triples in the KG, marks `valid_to` on superseded facts. Non-destructive invalidation of stale knowledge.
 
 ### 2026-04-11
 - **Removed `memocean_ask_opus`**: replaced by native `Agent` tool with `model: "opus"` in Claude Code — more direct, fewer tokens
