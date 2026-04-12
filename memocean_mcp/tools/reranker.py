@@ -1,15 +1,14 @@
 """
-reranker.py — Embedding-based reranker for radar_search results.
+reranker.py — Embedding-based recall and reranker for radar_search results.
 
-Architecture: FTS5 BM25 provides recall (top-N candidates) → embedding cosine
-similarity provides precision (rerank to top-K).
+Architecture: FTS5 BM25 provides recall (top-N candidates) + BGE-m3 KNN
+provides semantic recall → RRF merge → optional reranker for precision.
 
-Uses fastembed (ONNX) with paraphrase-multilingual-MiniLM-L12-v2 for
-Chinese/English multilingual embeddings, and sqlite-vec for persistent
-vector storage in memory.db.
+Uses FlagEmbedding BGE-m3 for multilingual embeddings (Chinese/English),
+and sqlite-vec for persistent vector storage in memory.db.
 
-Graceful degradation: if fastembed or sqlite-vec unavailable, returns
-candidates unchanged.
+Graceful degradation: if BGE-m3 or sqlite-vec unavailable, falls back to
+pure BM25 ordering.
 """
 import logging
 import struct
@@ -22,29 +21,29 @@ logger = logging.getLogger("memocean_mcp.reranker")
 
 # Lazy-loaded singletons
 _embed_model = None
-_MODEL_NAME = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-_EMBED_DIM = 384
+_BGE_MODEL_NAME = "BAAI/bge-m3"
+_EMBED_DIM = 1024
 _VEC_TABLE = "radar_vec"
 
 # Track availability
-_fastembed_available: Optional[bool] = None
+_bge_available: Optional[bool] = None
 _sqlite_vec_available: Optional[bool] = None
 
 
 def _get_embed_model():
-    """Lazy-load the embedding model (first call takes ~2s)."""
-    global _embed_model, _fastembed_available
+    """Lazy-load the BGE-m3 embedding model (first call downloads/loads model)."""
+    global _embed_model, _bge_available
     if _embed_model is not None:
         return _embed_model
     try:
-        from fastembed import TextEmbedding
-        _embed_model = TextEmbedding(_MODEL_NAME)
-        _fastembed_available = True
-        logger.info("reranker: embedding model loaded")
+        from FlagEmbedding import BGEM3FlagModel
+        _embed_model = BGEM3FlagModel(_BGE_MODEL_NAME, use_fp16=True)
+        _bge_available = True
+        logger.info("reranker: BGE-m3 model loaded")
         return _embed_model
     except Exception as e:
-        _fastembed_available = False
-        logger.warning("reranker: fastembed unavailable: %s", e)
+        _bge_available = False
+        logger.warning("reranker: BGE-m3 unavailable: %s", e)
         return None
 
 
@@ -84,12 +83,14 @@ def _float_vec_to_blob(vec) -> bytes:
 
 
 def _embed_texts(texts: list[str]) -> Optional[list[np.ndarray]]:
-    """Embed a list of texts. Returns None if model unavailable."""
+    """Embed a list of texts using BGE-m3. Returns None if model unavailable."""
     model = _get_embed_model()
     if model is None:
         return None
     try:
-        return list(model.embed(texts))
+        result = model.encode(texts, batch_size=8, max_length=512, return_dense=True)
+        vecs = result['dense_vecs']  # numpy array (n, 1024)
+        return [vecs[i] for i in range(len(vecs))]
     except Exception as e:
         logger.warning("reranker: embedding failed: %s", e)
         return None
@@ -281,8 +282,8 @@ def _rerank_in_memory(query: str, candidates: list[dict], top_k: int) -> Optiona
 
 
 def is_available() -> bool:
-    """Check if the reranker can function (model loadable)."""
-    global _fastembed_available
-    if _fastembed_available is not None:
-        return _fastembed_available
+    """Check if BGE-m3 KNN recall can function (model loadable)."""
+    global _bge_available
+    if _bge_available is not None:
+        return _bge_available
     return _get_embed_model() is not None

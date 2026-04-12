@@ -484,15 +484,15 @@ def radar_search(query: str, limit: int = 10) -> list[dict]:
     else:
         keyword_results = []
 
-    # --- Semantic (embedding KNN) recall ---
+    # --- Semantic (BGE-m3 KNN) recall ---
     sem_results: list[dict] = []
     try:
-        from .reranker import is_available as reranker_available
-        use_reranker = reranker_available()
+        from .reranker import is_available as knn_available
+        use_knn = knn_available()
     except Exception:
-        use_reranker = False
+        use_knn = False
 
-    if use_reranker:
+    if use_knn:
         try:
             sem_results = _search_semantic(query, _HAIKU_RECALL_LIMIT)
         except Exception:
@@ -520,7 +520,7 @@ def radar_search(query: str, limit: int = 10) -> list[dict]:
             if os.environ.get("ENABLE_HAIKU_RERANKER") else None
         if haiku_result is not None:
             results = haiku_result
-        elif use_reranker and os.environ.get("ENABLE_MINIML_RERANKER"):
+        elif use_knn and os.environ.get("ENABLE_MINIML_RERANKER"):
             # MiniLM embedding reranker (only if explicitly enabled)
             try:
                 from .reranker import rerank
