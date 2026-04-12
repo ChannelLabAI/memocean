@@ -114,7 +114,7 @@ try:
 
         # Check closet was updated
         # Note: encoder truncates slugs to 20 chars, so "CZ-Memoir-Personal-Story" -> "CZ-Memoir-Personal-S"
-        from closet import read_closet
+        from radar import read_radar as read_closet
         research_closet = read_closet("research")
         slug_prefix = "CZ-Memoir-Personal-S"  # first 20 chars of slug
         check("closet updated with note slug", slug_prefix in research_closet,
@@ -127,7 +127,7 @@ except Exception as e:
 # ─── P0-4: group_from_path() ─────────────────────────────────────────────────
 print("\n=== P0-4: group_from_path() ===")
 try:
-    from closet import group_from_path
+    from radar import group_from_path
     base = str(WIKI_ROOT)
     tests_gfp = [
         (f"{base}/Research/CZ-Memoir.md", "research"),

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-backfill_embeddings.py — Generate embeddings for all closet entries and store
-them in the closet_vec table (sqlite-vec) inside memory.db.
+backfill_embeddings.py — Generate embeddings for all radar entries and store
+them in the radar_vec table (sqlite-vec) inside memory.db.
 
 Usage:
     python3 backfill_embeddings.py [--db PATH] [--batch-size N] [--force]
@@ -9,7 +9,7 @@ Usage:
 Options:
     --db PATH       Path to memory.db (default: ~/.claude-bots/memory.db)
     --batch-size N  Embedding batch size (default: 32)
-    --force         Re-embed all entries, even if already in closet_vec
+    --force         Re-embed all entries, even if already in radar_vec
 """
 import argparse
 import os
@@ -21,7 +21,7 @@ import time
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "memocean-mcp"))
 
 def main():
-    parser = argparse.ArgumentParser(description="Backfill closet embeddings")
+    parser = argparse.ArgumentParser(description="Backfill radar embeddings")
     parser.add_argument(
         "--db",
         default=os.path.expanduser("~/.claude-bots/memory.db"),
@@ -67,8 +67,8 @@ def main():
 
     _ensure_vec_table(conn)
 
-    # Get all closet entries
-    rows = conn.execute("SELECT slug, clsc FROM closet").fetchall()
+    # Get all radar entries
+    rows = conn.execute("SELECT slug, clsc FROM radar").fetchall()
     total = len(rows)
     print(f"Total closet entries: {total}")
 
@@ -99,7 +99,7 @@ def main():
 
     # Verify
     count = conn.execute(f"SELECT count(*) FROM {_VEC_TABLE}").fetchone()[0]
-    print(f"Total embeddings in closet_vec: {count}")
+    print(f"Total embeddings in radar_vec: {count}")
     conn.close()
 
 

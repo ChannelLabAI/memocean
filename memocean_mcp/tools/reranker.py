@@ -1,5 +1,5 @@
 """
-reranker.py — Embedding-based reranker for closet_search results.
+reranker.py — Embedding-based reranker for radar_search results.
 
 Architecture: FTS5 BM25 provides recall (top-N candidates) → embedding cosine
 similarity provides precision (rerank to top-K).
@@ -24,7 +24,7 @@ logger = logging.getLogger("memocean_mcp.reranker")
 _embed_model = None
 _MODEL_NAME = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 _EMBED_DIM = 384
-_VEC_TABLE = "closet_vec"
+_VEC_TABLE = "radar_vec"
 
 # Track availability
 _fastembed_available: Optional[bool] = None
@@ -66,7 +66,7 @@ def _load_sqlite_vec(conn):
 
 
 def _ensure_vec_table(conn):
-    """Create the closet_vec virtual table if it doesn't exist."""
+    """Create the radar_vec virtual table if it doesn't exist."""
     try:
         conn.execute(f"SELECT count(*) FROM {_VEC_TABLE}").fetchone()
     except Exception:
@@ -96,7 +96,7 @@ def _embed_texts(texts: list[str]) -> Optional[list[np.ndarray]]:
 
 
 def embed_and_store(conn, slug: str, text: str) -> bool:
-    """Embed a single closet entry and store in closet_vec. Returns success."""
+    """Embed a single radar entry and store in radar_vec. Returns success."""
     if not _load_sqlite_vec(conn):
         return False
     _ensure_vec_table(conn)
@@ -148,7 +148,7 @@ def rerank(query: str, candidates: list[dict], top_k: int = 10) -> list[dict]:
     Rerank FTS5 candidates by embedding similarity to the query.
 
     Strategy:
-    1. Try sqlite-vec KNN lookup (if embeddings pre-computed in closet_vec)
+    1. Try sqlite-vec KNN lookup (if embeddings pre-computed in radar_vec)
     2. Fall back to in-memory cosine similarity
     3. If embedding unavailable, return candidates unchanged (graceful degradation)
 
@@ -185,7 +185,7 @@ def rerank(query: str, candidates: list[dict], top_k: int = 10) -> list[dict]:
 
 
 def _rerank_via_vec(query: str, candidates: list[dict], top_k: int) -> Optional[list[dict]]:
-    """Rerank using pre-computed embeddings in closet_vec via sqlite-vec KNN."""
+    """Rerank using pre-computed embeddings in radar_vec via sqlite-vec KNN."""
     from ..config import FTS_DB
 
     try:

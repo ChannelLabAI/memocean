@@ -12,7 +12,7 @@ def search_fts5(query: str, limit: int = 5) -> list:
     """Search FTS5 and return results with closet skeletons if available."""
     import sys
     sys.path.insert(0, str(Path(__file__).parent))
-    from closet import read_closet, list_closets
+    from radar import read_radar as read_closet, list_radars as list_closets
     from decoder import parse_skeleton
 
     results = []

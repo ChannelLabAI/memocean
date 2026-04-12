@@ -91,39 +91,39 @@ def test_kg_query_returns_list():
     assert isinstance(results, list)
 
 
-# ==================== CLOSET GET ====================
+# ==================== RADAR GET ====================
 
 
-def test_closet_get_stub_verbatim():
+def test_radar_get_stub_verbatim():
     """verbatim_fetch runs without crashing; returns string."""
-    from memocean_mcp.tools.closet_get import verbatim_fetch
+    from memocean_mcp.tools.radar_get import verbatim_fetch
 
     result = verbatim_fetch("test-slug-that-does-not-exist")
     assert isinstance(result, str)
     assert len(result) > 0
 
 
-def test_closet_get_mode_verbatim():
-    """closet_get with mode=verbatim returns string."""
-    from memocean_mcp.tools.closet_get import closet_get
+def test_radar_get_mode_verbatim():
+    """radar_get with mode=verbatim returns string."""
+    from memocean_mcp.tools.radar_get import radar_get
 
-    result = closet_get("test-slug", mode="verbatim")
+    result = radar_get("test-slug", mode="verbatim")
     assert isinstance(result, str)
 
 
-def test_closet_get_mode_skeleton():
-    """closet_get with mode=skeleton returns string."""
-    from memocean_mcp.tools.closet_get import closet_get
+def test_radar_get_mode_sonar():
+    """radar_get with mode=sonar returns string."""
+    from memocean_mcp.tools.radar_get import radar_get
 
-    result = closet_get("test-slug", mode="skeleton")
+    result = radar_get("test-slug", mode="sonar")
     assert isinstance(result, str)
 
 
-def test_closet_get_bad_mode():
-    """closet_get with unknown mode returns error string."""
-    from memocean_mcp.tools.closet_get import closet_get
+def test_radar_get_bad_mode():
+    """radar_get with unknown mode returns error string."""
+    from memocean_mcp.tools.radar_get import radar_get
 
-    result = closet_get("test-slug", mode="invalid_mode")
+    result = radar_get("test-slug", mode="invalid_mode")
     assert "unknown mode" in result.lower() or "invalid" in result.lower()
 
 
@@ -255,9 +255,9 @@ def test_server_import():
 
     assert len(TOOLS) == 6
     expected = {
-        "memocean_fts_search",
-        "memocean_closet_get",
-        "memocean_closet_search",
+        "memocean_messages_search",
+        "memocean_seabed_get",
+        "memocean_seabed_search",
         "memocean_kg_query",
         "memocean_skill_list",
         "memocean_task_create",
@@ -276,7 +276,7 @@ def test_server_tools_list():
     tools = response["result"]["tools"]
     assert len(tools) == 6
     names = {t["name"] for t in tools}
-    assert "memocean_fts_search" in names
+    assert "memocean_messages_search" in names
     assert "memocean_task_create" in names
 
 
@@ -293,15 +293,15 @@ def test_server_initialize():
 
 # ── Security tests (v0.1.1) ─────────────────────────────────────────────────
 
-def test_closet_get_path_traversal_blocked():
+def test_radar_get_path_traversal_blocked():
     """C1 fix: path traversal slugs must raise ValueError."""
     import pytest
-    from memocean_mcp.tools.closet_get import verbatim_fetch, skeleton_read
+    from memocean_mcp.tools.radar_get import verbatim_fetch, sonar_read
     for bad in ["../../etc/passwd", "../secrets", "/abs/path", "a" * 101]:
         with pytest.raises(ValueError):
             verbatim_fetch(bad)
         with pytest.raises(ValueError):
-            skeleton_read(bad)
+            sonar_read(bad)
 
 
 def test_skill_get_path_traversal_blocked():
@@ -329,23 +329,23 @@ def test_task_create_invalid_priority():
         task_create("test", "desc", assigned_to="anna", priority="critical")  # type: ignore
 
 
-# ── closet_search tests (v0.1.3) ─────────────────────────────────────────────
+# ── radar_search tests (v0.1.3) ─────────────────────────────────────────────
 
-def test_closet_search_single_term():
-    """Single term returns results from closet."""
-    from memocean_mcp.tools.closet_search import closet_search
-    results = closet_search("ChannelLab", limit=5)
+def test_radar_search_single_term():
+    """Single term returns results from radar."""
+    from memocean_mcp.tools.radar_search import radar_search
+    results = radar_search("ChannelLab", limit=5)
     assert isinstance(results, list)
-    # If closet is populated, should have results
+    # If radar is populated, should have results
     if results:
         assert "slug" in results[0]
         assert "clsc" in results[0]
 
 
-def test_closet_search_multi_term_and():
+def test_radar_search_multi_term_and():
     """Multi-term AND: 'Knowledge Infra' matches hyphenated slug content."""
-    from memocean_mcp.tools.closet_search import closet_search
-    results = closet_search("Knowledge Infra", limit=5)
+    from memocean_mcp.tools.radar_search import radar_search
+    results = radar_search("Knowledge Infra", limit=5)
     assert isinstance(results, list)
     # With full backfill, should find Knowledge-Infra-ADR notes
     if results:
@@ -353,41 +353,41 @@ def test_closet_search_multi_term_and():
             assert "Knowledge" in r["clsc"] or "Infra" in r["clsc"]
 
 
-def test_closet_search_empty_query():
+def test_radar_search_empty_query():
     """Empty query returns empty list."""
-    from memocean_mcp.tools.closet_search import closet_search
-    assert closet_search("") == []
-    assert closet_search("   ") == []
+    from memocean_mcp.tools.radar_search import radar_search
+    assert radar_search("") == []
+    assert radar_search("   ") == []
 
 
-def test_closet_search_no_match():
+def test_radar_search_no_match():
     """Query with no matching content returns empty list."""
-    from memocean_mcp.tools.closet_search import closet_search
-    results = closet_search("xyzzy_nonexistent_term_12345", limit=5)
+    from memocean_mcp.tools.radar_search import radar_search
+    results = radar_search("xyzzy_nonexistent_term_12345", limit=5)
     assert results == []
 
 
-def test_closet_search_via_server():
-    """closet_search tool is registered in server TOOLS dict."""
+def test_radar_search_via_server():
+    """radar_search tool is registered in server TOOLS dict."""
     from memocean_mcp.server import TOOLS
-    assert "memocean_closet_search" in TOOLS
-    spec = TOOLS["memocean_closet_search"]
+    assert "memocean_seabed_search" in TOOLS
+    spec = TOOLS["memocean_seabed_search"]
     assert "handler" in spec
     assert "query" in spec["input_schema"]["properties"]
 
 
-def test_closet_search_sql_injection_safe():
+def test_radar_search_sql_injection_safe():
     """SQL injection via query must not raise or return unexpected results."""
-    from memocean_mcp.tools.closet_search import closet_search
+    from memocean_mcp.tools.radar_search import radar_search
     # These payloads should be treated as literal search terms, not SQL
     payloads = [
-        "'; DROP TABLE closet; --",
+        "'; DROP TABLE radar; --",
         "1 OR 1=1",
-        "' UNION SELECT * FROM closet --",
+        "' UNION SELECT * FROM radar --",
         "\\x00null",
     ]
     for payload in payloads:
-        result = closet_search(payload, limit=5)
+        result = radar_search(payload, limit=5)
         # Must return a list (not raise), and not return all rows
         assert isinstance(result, list), f"Raised on payload: {payload!r}"
         # Paranoia check: no more than limit results (not a full table dump)
@@ -399,14 +399,14 @@ def test_closet_search_sql_injection_safe():
 def test_expand_query_no_api_key(monkeypatch):
     """Without API key, _expand_query returns [original_query]."""
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    from memocean_mcp.tools.closet_search import _expand_query, _EXPANSION_CACHE
+    from memocean_mcp.tools.radar_search import _expand_query, _EXPANSION_CACHE
     _EXPANSION_CACHE.clear()
     result = _expand_query("ChannelLab GEO")
     assert result == ["ChannelLab GEO"]
 
 def test_rrf_merge_basic():
     """RRF merge gives highest score to items appearing in all lists."""
-    from memocean_mcp.tools.closet_search import _rrf_merge
+    from memocean_mcp.tools.radar_search import _rrf_merge
     list1 = [{"slug": "a"}, {"slug": "b"}, {"slug": "c"}]
     list2 = [{"slug": "b"}, {"slug": "a"}, {"slug": "d"}]
     merged = _rrf_merge([list1, list2])
@@ -417,20 +417,20 @@ def test_rrf_merge_basic():
 
 def test_rrf_merge_empty():
     """RRF merge handles empty lists."""
-    from memocean_mcp.tools.closet_search import _rrf_merge
+    from memocean_mcp.tools.radar_search import _rrf_merge
     assert _rrf_merge([]) == []
     assert _rrf_merge([[]]) == []
 
 def test_rrf_merge_single_list():
     """RRF merge with single list preserves order."""
-    from memocean_mcp.tools.closet_search import _rrf_merge
+    from memocean_mcp.tools.radar_search import _rrf_merge
     items = [{"slug": "x"}, {"slug": "y"}]
     result = _rrf_merge([items])
     assert [r["slug"] for r in result] == ["x", "y"]
 
 def test_expansion_cache():
     """Same query is cached and not re-expanded."""
-    from memocean_mcp.tools.closet_search import _expand_query, _EXPANSION_CACHE
+    from memocean_mcp.tools.radar_search import _expand_query, _EXPANSION_CACHE
     _EXPANSION_CACHE.clear()
     _EXPANSION_CACHE["test-query"] = ["test-query", "variant1"]
     result = _expand_query("test-query")
@@ -441,13 +441,13 @@ def test_expansion_cache():
 
 def test_merge_candidates_empty():
     """Both empty → empty list."""
-    from memocean_mcp.tools.closet_search import _merge_candidates
+    from memocean_mcp.tools.radar_search import _merge_candidates
     assert _merge_candidates([], []) == []
 
 
 def test_merge_candidates_fts_only():
     """sem empty → returns fts results in RRF order (single list preserves order)."""
-    from memocean_mcp.tools.closet_search import _merge_candidates
+    from memocean_mcp.tools.radar_search import _merge_candidates
     fts = [{"slug": "a"}, {"slug": "b"}]
     result = _merge_candidates(fts, [])
     assert [r["slug"] for r in result] == ["a", "b"]
@@ -457,7 +457,7 @@ def test_merge_candidates_fts_only():
 
 def test_merge_candidates_sem_only():
     """fts empty → returns sem results in RRF order."""
-    from memocean_mcp.tools.closet_search import _merge_candidates
+    from memocean_mcp.tools.radar_search import _merge_candidates
     sem = [{"slug": "x"}, {"slug": "y"}]
     result = _merge_candidates([], sem)
     assert [r["slug"] for r in result] == ["x", "y"]
@@ -466,7 +466,7 @@ def test_merge_candidates_sem_only():
 
 def test_merge_candidates_cross_path_ranks_above_single():
     """Items appearing in both fts and sem rank above single-path items."""
-    from memocean_mcp.tools.closet_search import _merge_candidates
+    from memocean_mcp.tools.radar_search import _merge_candidates
     fts = [{"slug": "shared"}, {"slug": "fts-only"}]
     sem = [{"slug": "shared"}, {"slug": "sem-only"}]
     result = _merge_candidates(fts, sem)
@@ -477,7 +477,7 @@ def test_merge_candidates_cross_path_ranks_above_single():
 
 def test_merge_candidates_sources_tracking():
     """sources field correctly reflects which retrieval paths hit each doc."""
-    from memocean_mcp.tools.closet_search import _merge_candidates
+    from memocean_mcp.tools.radar_search import _merge_candidates
     fts = [{"slug": "a"}, {"slug": "b"}]
     sem = [{"slug": "b"}, {"slug": "c"}]
     result = _merge_candidates(fts, sem)
@@ -489,7 +489,7 @@ def test_merge_candidates_sources_tracking():
 
 def test_merge_candidates_rrf_order():
     """Verify RRF score order: item ranked #1 in both > item ranked #1 in one."""
-    from memocean_mcp.tools.closet_search import _merge_candidates
+    from memocean_mcp.tools.radar_search import _merge_candidates
     # 'top' is #1 in fts, #1 in sem → max possible RRF score
     # 'mid' is #2 in fts only
     fts = [{"slug": "top"}, {"slug": "mid"}]

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Backfill closet_fts — FTS5 virtual table for BM25-ranked closet search.
+"""Backfill radar_fts — FTS5 virtual table for BM25-ranked radar search.
 
-Creates the closet_fts table (trigram tokenizer, CJK-friendly) and copies
-all rows from the closet table into it.
+Creates the radar_fts table (trigram tokenizer, CJK-friendly) and copies
+all rows from the radar table into it.
 
 Usage:
-    python3 ~/.claude-bots/shared/fts5/backfill_closet_fts.py [--dry-run]
+    python3 ~/.claude-bots/shared/fts5/backfill_radar_fts.py [--dry-run]
 """
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from lib import DB_PATH, open_db  # noqa: E402
 
 CREATE_FTS = """
-CREATE VIRTUAL TABLE IF NOT EXISTS closet_fts USING fts5(
+CREATE VIRTUAL TABLE IF NOT EXISTS radar_fts USING fts5(
   slug,
   clsc,
   tokenize = 'trigram case_sensitive 0'
@@ -40,17 +40,17 @@ def main() -> int:
 
     # 1. Create FTS5 table
     conn.executescript(CREATE_FTS)
-    print(f'closet_fts table ensured in {DB_PATH}')
+    print(f'radar_fts table ensured in {DB_PATH}')
 
     # 2. Clear existing FTS data (idempotent re-run)
-    conn.execute("DELETE FROM closet_fts")
+    conn.execute("DELETE FROM radar_fts")
 
-    # 3. Backfill from closet
-    cur = conn.execute("SELECT slug, clsc FROM closet")
+    # 3. Backfill from radar
+    cur = conn.execute("SELECT slug, clsc FROM radar")
     rows = cur.fetchall()
     inserted = 0
     for slug, clsc in rows:
-        conn.execute("INSERT INTO closet_fts(slug, clsc) VALUES (?, ?)", (slug, clsc))
+        conn.execute("INSERT INTO radar_fts(slug, clsc) VALUES (?, ?)", (slug, clsc))
         inserted += 1
 
     if args.dry_run:
@@ -58,7 +58,7 @@ def main() -> int:
         print(f'(dry-run: rolled back) would insert {inserted} rows')
     else:
         conn.commit()
-        print(f'Inserted {inserted} rows into closet_fts ({time.time() - t0:.2f}s)')
+        print(f'Inserted {inserted} rows into radar_fts ({time.time() - t0:.2f}s)')
 
     conn.close()
     return 0

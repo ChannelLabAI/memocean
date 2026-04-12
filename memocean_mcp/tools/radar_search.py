@@ -1,5 +1,5 @@
 """
-closet_search.py — Search the closet table (CLSC skeletons) in memory.db.
+radar_search.py — Search the radar table (CLSC sonar index) in memory.db.
 
 Multi-term OR search: splits query on whitespace, matches rows containing at
 least one term in the clsc column using instr() for Unicode safety. Results ranked by number of matching terms
@@ -23,7 +23,7 @@ from pathlib import Path
 
 from ..config import FTS_DB
 
-logger = logging.getLogger("memocean_mcp.closet_search")
+logger = logging.getLogger("memocean_mcp.radar_search")
 
 _LOG_PATH = os.path.expanduser('~/.claude-bots/logs/clsc-usage.jsonl')
 
@@ -43,12 +43,12 @@ def _update_last_accessed(slugs: list[str]) -> None:
     try:
         conn = sqlite3.connect(str(FTS_DB))
         # Check if column exists first (migration may not have run yet)
-        cols = {row[1] for row in conn.execute("PRAGMA table_info(closet)")}
+        cols = {row[1] for row in conn.execute("PRAGMA table_info(radar)")}
         if "last_accessed" not in cols:
             conn.close()
             return
         conn.executemany(
-            "UPDATE closet SET last_accessed=? WHERE slug=?",
+            "UPDATE radar SET last_accessed=? WHERE slug=?",
             [(now, slug) for slug in slugs]
         )
         conn.commit()
@@ -64,7 +64,7 @@ def _log_search(query: str, results: list[dict]) -> None:
         ts = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.') + \
              f"{datetime.datetime.now(datetime.timezone.utc).microsecond // 1000:03d}Z"
 
-        skeleton_tokens = sum(len(row.get('clsc', '') or '') // 4 for row in results)
+        sonar_tokens = sum(len(row.get('clsc', '') or '') // 4 for row in results)
 
         estimated_verbatim_tokens = 0
         for row in results:
@@ -75,17 +75,17 @@ def _log_search(query: str, results: list[dict]) -> None:
                 except OSError:
                     pass  # file doesn't exist or unreadable — skip
 
-        saved_tokens = estimated_verbatim_tokens - skeleton_tokens
+        saved_tokens = estimated_verbatim_tokens - sonar_tokens
         saving_pct = round(saved_tokens / estimated_verbatim_tokens * 100, 1) \
             if estimated_verbatim_tokens > 0 else None
 
         entry = {
             'ts': ts,
-            'event': 'closet_search',
+            'event': 'radar_search',
             'bot': bot,
             'query': query,
             'hits': len(results),
-            'skeleton_tokens': skeleton_tokens,
+            'sonar_tokens': sonar_tokens,
             'estimated_verbatim_tokens': estimated_verbatim_tokens,
             'saved_tokens': saved_tokens,
             'saving_pct': saving_pct,
@@ -106,14 +106,14 @@ def _escape_fts5_query(terms: list[str]) -> str:
 
 
 def _search_fts5(conn: sqlite3.Connection, terms: list[str], limit: int) -> list[dict]:
-    """Primary search via closet_fts with BM25 ranking."""
+    """Primary search via radar_fts with BM25 ranking."""
     fts_query = _escape_fts5_query(terms)
     sql = (
         "SELECT f.slug, c.clsc, c.tokens, c.drawer_path "
-        "FROM closet_fts f "
-        "JOIN closet c ON c.slug = f.slug "
-        "WHERE closet_fts MATCH ? "
-        "ORDER BY bm25(closet_fts) "
+        "FROM radar_fts f "
+        "JOIN radar c ON c.slug = f.slug "
+        "WHERE radar_fts MATCH ? "
+        "ORDER BY bm25(radar_fts) "
         "LIMIT ?"
     )
     rows = conn.execute(sql, (fts_query, limit)).fetchall()
@@ -128,7 +128,7 @@ def _search_instr_fallback(conn: sqlite3.Connection, terms: list[str], limit: in
     sql = (
         f"SELECT slug, clsc, tokens, drawer_path, "
         f"({case_exprs}) AS match_count "
-        f"FROM closet WHERE match_count >= 1 "
+        f"FROM radar WHERE match_count >= 1 "
         f"ORDER BY match_count DESC LIMIT ?"
     )
     params = terms + [limit]
@@ -138,7 +138,7 @@ def _search_instr_fallback(conn: sqlite3.Connection, terms: list[str], limit: in
 
 def _search_semantic(query: str, limit: int) -> list[dict]:
     """
-    Pure semantic search via closet_vec (sqlite-vec KNN).
+    Pure semantic search via radar_vec (sqlite-vec KNN).
     Used when FTS5 and instr both return 0 results — the key path for
     Chinese queries where keywords don't overlap but meaning does.
     """
@@ -174,7 +174,7 @@ def _search_semantic(query: str, limit: int) -> list[dict]:
             conn.close()
             return []
 
-        # Fetch full closet data for matched slugs
+        # Fetch full radar data for matched slugs
         slugs = [r["slug"] if hasattr(r, "keys") else r[0] for r in rows]
         slug_dist = {
             (r["slug"] if hasattr(r, "keys") else r[0]): (
@@ -183,15 +183,15 @@ def _search_semantic(query: str, limit: int) -> list[dict]:
             for r in rows
         }
         placeholders = ",".join("?" for _ in slugs)
-        closet_rows = conn.execute(
-            f"SELECT slug, clsc, tokens, drawer_path FROM closet "
+        radar_rows = conn.execute(
+            f"SELECT slug, clsc, tokens, drawer_path FROM radar "
             f"WHERE slug IN ({placeholders})",
             slugs,
         ).fetchall()
         conn.close()
 
         # Sort by embedding distance (ascending = most similar first)
-        results = [dict(r) for r in closet_rows]
+        results = [dict(r) for r in radar_rows]
         results.sort(key=lambda r: slug_dist.get(r["slug"], 999))
         return results
 
@@ -297,7 +297,7 @@ def _format_haiku_candidates(candidates: list[dict]) -> str:
     lines = []
     for i, c in enumerate(candidates, 1):
         slug = c.get("slug", "")
-        clsc = (c.get("clsc") or "")[:200]  # truncate long skeletons
+        clsc = (c.get("clsc") or "")[:200]  # truncate long sonar entries
         lines.append(f"{i}. [{slug}] {clsc}")
     return "\n".join(lines)
 
@@ -404,9 +404,9 @@ def _merge_candidates(fts_results: list[dict], sem_results: list[dict]) -> list[
     return merged
 
 
-def closet_search(query: str, limit: int = 10) -> list[dict]:
+def radar_search(query: str, limit: int = 10) -> list[dict]:
     """
-    Search CLSC skeletons in the closet table.
+    Search CLSC sonar index in the radar table.
 
     Recall pipeline (hybrid):
       - Chinese query: FTS5 BM25 instr-OR top-20 + embedding KNN top-20 → merge

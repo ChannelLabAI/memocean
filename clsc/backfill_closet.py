@@ -1,5 +1,5 @@
 """
-backfill_closet.py — Encode Obsidian wiki notes → closet table in memory.db.
+backfill_closet.py — Encode Obsidian wiki notes → radar table in memory.db.
 
 Usage:
   python3 backfill_closet.py --sample 100   # encode first N notes, print report
@@ -29,7 +29,7 @@ DB_PATH = Path.home() / ".claude-bots" / "memory.db"
 
 def get_conn():
     conn = sqlite3.connect(str(DB_PATH))
-    conn.execute("""CREATE TABLE IF NOT EXISTS closet (
+    conn.execute("""CREATE TABLE IF NOT EXISTS radar (
         slug TEXT PRIMARY KEY,
         clsc TEXT NOT NULL,
         tokens INTEGER NOT NULL,
@@ -37,7 +37,7 @@ def get_conn():
         source_hash TEXT NOT NULL,
         encoded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )""")
-    conn.execute("CREATE INDEX IF NOT EXISTS closet_encoded_at ON closet(encoded_at)")
+    conn.execute("CREATE INDEX IF NOT EXISTS radar_encoded_at ON radar(encoded_at)")
     # v0.1.1: widen slug column to support relative-path slugs (up to 200 chars)
     # SQLite TEXT has no enforced length limit, but we document the intent here
     conn.commit()
@@ -67,7 +67,7 @@ def source_hash(path: Path) -> str:
 
 def already_encoded(conn, slug: str, sh: str) -> bool:
     row = conn.execute(
-        "SELECT source_hash FROM closet WHERE slug = ?", (slug,)
+        "SELECT source_hash FROM radar WHERE slug = ?", (slug,)
     ).fetchone()
     return row is not None and row[0] == sh
 
@@ -155,7 +155,7 @@ def run_backfill(limit: int | None = None, verbose: bool = True):
         # Commit every 50
         if len(batch) >= 50:
             conn.executemany(
-                "INSERT OR REPLACE INTO closet (slug, clsc, tokens, drawer_path, source_hash) "
+                "INSERT OR REPLACE INTO radar (slug, clsc, tokens, drawer_path, source_hash) "
                 "VALUES (:slug, :clsc, :tokens, :drawer_path, :source_hash)",
                 batch,
             )
@@ -167,7 +167,7 @@ def run_backfill(limit: int | None = None, verbose: bool = True):
     # Final batch
     if batch:
         conn.executemany(
-            "INSERT OR REPLACE INTO closet (slug, clsc, tokens, drawer_path, source_hash) "
+            "INSERT OR REPLACE INTO radar (slug, clsc, tokens, drawer_path, source_hash) "
             "VALUES (:slug, :clsc, :tokens, :drawer_path, :source_hash)",
             batch,
         )
@@ -223,12 +223,12 @@ def run_query_comparison(queries: list[str]):
     for q in queries:
         # Closet: full-text search on clsc column (LIKE fallback)
         rows_closet = conn.execute(
-            "SELECT clsc, tokens FROM closet WHERE clsc LIKE ? LIMIT 5",
+            "SELECT clsc, tokens FROM radar WHERE clsc LIKE ? LIMIT 5",
             (f"%{q}%",)
         ).fetchall()
         # Verbatim: read drawer files for matched slugs
         slugs = [r for r in conn.execute(
-            "SELECT slug, drawer_path FROM closet WHERE clsc LIKE ? LIMIT 5",
+            "SELECT slug, drawer_path FROM radar WHERE clsc LIKE ? LIMIT 5",
             (f"%{q}%",)
         ).fetchall()]
         verbatim_tokens = 0
@@ -248,8 +248,8 @@ def run_query_comparison(queries: list[str]):
 
 def run_stats():
     conn = get_conn()
-    count = conn.execute("SELECT COUNT(*) FROM closet").fetchone()[0]
-    total_clsc = conn.execute("SELECT SUM(tokens) FROM closet").fetchone()[0] or 0
+    count = conn.execute("SELECT COUNT(*) FROM radar").fetchone()[0]
+    total_clsc = conn.execute("SELECT SUM(tokens) FROM radar").fetchone()[0] or 0
     print(f"Closet rows: {count}")
     print(f"Total CLSC tokens: {total_clsc:,}")
     conn.close()

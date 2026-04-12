@@ -1,11 +1,11 @@
 """
-closet_get.py — Closet content retrieval wrapper.
+radar_get.py — Radar content retrieval wrapper.
 
 Modes:
   verbatim — fetch original drawer content by slug (no LLM)
-              Looks up drawer_path from the closet DB table directly,
-              so slugs returned by closet_search() always work.
-  skeleton — read raw CLSC skeleton text from the closet DB table.
+              Looks up drawer_path from the radar DB table directly,
+              so slugs returned by radar_search() always work.
+  sonar — read raw CLSC sonar text from the radar DB table.
 """
 import datetime
 import json
@@ -29,12 +29,12 @@ def _log_verbatim_get(slug: str, content: str) -> None:
 
         entry = {
             'ts': ts,
-            'event': 'closet_get_verbatim',
+            'event': 'radar_get_verbatim',
             'bot': bot,
             'slug': slug,
             'mode': 'verbatim',
             'verbatim_tokens': len(content) // 4,
-            'reason': 'skeleton不夠需要原文',
+            'reason': 'sonar不夠需要原文',
         }
 
         os.makedirs(os.path.dirname(_LOG_PATH), exist_ok=True)
@@ -53,14 +53,14 @@ def _validate_slug(slug: str) -> None:
 
 
 def _db_row(slug: str) -> dict | None:
-    """Look up the closet row for slug directly in the DB. Returns None if not found."""
+    """Look up the radar row for slug directly in the DB. Returns None if not found."""
     if not FTS_DB.exists():
         return None
     try:
         conn = sqlite3.connect(str(FTS_DB))
         conn.row_factory = sqlite3.Row
         row = conn.execute(
-            "SELECT slug, clsc, tokens, drawer_path FROM closet WHERE slug = ?",
+            "SELECT slug, clsc, tokens, drawer_path, content FROM radar WHERE slug = ?",
             (slug,)
         ).fetchone()
         conn.close()
@@ -72,13 +72,21 @@ def _db_row(slug: str) -> dict | None:
 def verbatim_fetch(slug: str) -> str:
     """
     Mode (i): fetch original drawer content by slug.
-    Uses drawer_path stored in the closet DB — no slug re-normalization needed.
+    Priority: DB content column → drawer_path file fallback.
     Returns file content or an error message.
     """
     _validate_slug(slug)
     row = _db_row(slug)
     if row is None:
         return f"[drawer not found for slug: {slug}]"
+
+    # Primary: read from DB content column
+    db_content = row.get("content")
+    if db_content is not None:
+        _log_verbatim_get(slug, db_content)
+        return db_content
+
+    # Fallback: read from drawer_path file
     drawer_path = row.get("drawer_path")
     if not drawer_path:
         return f"[drawer_path missing in DB for slug: {slug}]"
@@ -90,10 +98,10 @@ def verbatim_fetch(slug: str) -> str:
     return content
 
 
-def skeleton_read(slug: str) -> str:
+def sonar_read(slug: str) -> str:
     """
-    Mode (ii): read raw CLSC skeleton text for a slug.
-    Reads the clsc column from the closet DB first (covers all indexed slugs).
+    Mode (ii): read raw CLSC sonar text for a slug.
+    Reads the clsc column from the radar DB first (covers all indexed slugs).
     Falls back to CLOSET_ROOT file lookup for any legacy bundle files.
     """
     _validate_slug(slug)
@@ -109,18 +117,18 @@ def skeleton_read(slug: str) -> str:
             path = CLOSET_ROOT / f"{slug}{ext}"
             if path.resolve().is_relative_to(CLOSET_ROOT.resolve()) and path.exists():
                 return path.read_text(encoding="utf-8")
-    return f"[closet bundle not found for slug: {slug}]"
+    return f"[radar bundle not found for slug: {slug}]"
 
 
-def closet_get(slug: str, mode: Literal["verbatim", "skeleton"] = "verbatim") -> str:
+def radar_get(slug: str, mode: Literal["verbatim", "sonar"] = "verbatim") -> str:
     """
     Unified entry point.
     mode='verbatim' → verbatim_fetch(slug)
-    mode='skeleton' → skeleton_read(slug)
+    mode='sonar' → sonar_read(slug)
     """
     if mode == "verbatim":
         return verbatim_fetch(slug)
-    elif mode == "skeleton":
-        return skeleton_read(slug)
+    elif mode == "sonar":
+        return sonar_read(slug)
     else:
-        return f"[unknown mode: {mode}. Use 'verbatim' or 'skeleton']"
+        return f"[unknown mode: {mode}. Use 'verbatim' or 'sonar']"

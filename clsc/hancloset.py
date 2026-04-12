@@ -2,7 +2,7 @@
 hancloset.py — Main wrapper for CLSC v0.6 HanCloset.
 Bot-facing API: get_wiki_summary(slug, mode)
 """
-from closet import read_closet, store_skeleton, list_closets
+from radar import read_radar as read_closet, store_sonar as store_skeleton, list_radars as list_closets
 from encoder import encode_note
 from decoder import verbatim_fetch, narrative_expand, parse_skeleton, find_drawer
 from pathlib import Path
