@@ -1,14 +1,365 @@
 # MemOcean MCP
 
 > A memory system built for CJK developers.
+> 為中文開發者而建的 AI 記憶系統。
 
-Most AI memory frameworks are designed for English: whitespace tokenization, uppercase acronyms as entities, LIKE string matching — none of these work in Chinese. MemOcean forks MemPalace's sonar-memory architecture (MemPalace 稱為 Skeleton) and rewrites the full NER + search pipeline for Chinese (Traditional, Simplified, mixed CJK-English), so your agents can actually remember and retrieve things in Chinese conversations.
+[English](#why-memocean) | [繁體中文](#為什麼做-memocean)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Status: Production](https://img.shields.io/badge/Status-Production-green.svg)]()
+
+---
+
+## Why MemOcean
+
+We were excited when we first saw [MemPalace](https://github.com/milla-jovovich/mempalace) — finally, someone building long-term memory for LLMs, and it was Milla Jovovich's team no less.
+
+But during testing, we hit two problems that were hard to work around:
+
+**1. Chinese token costs are brutal.**
+
+Mainstream tokenizers are hostile to Chinese — the same semantic content costs 2-3x the tokens in Chinese vs English. MemPalace assumes English whitespace tokenization (`text.split()`, uppercase acronyms as entities, LIKE string matching), none of which work for Chinese. We tried dictionary compression but it was a dead end (BPE-encoded replacement tags ended up longer than the originals). We finally solved it by pivoting to lossy sonar summaries.
+
+**2. Multi-agent memory drift.**
+
+We run 10+ agents daily — assistants, builders, reviewers, designers, each with their own role. Since each agent's session memory is isolated, after a few days their "memories" start diverging. One agent remembers last week's decision, another doesn't; one cites outdated info, another has contradictory context.
+
+This isn't a prompting problem — it's an architecture problem: **we needed a single source of truth as a persistent knowledge base, shared across all agents**.
+
+MemOcean is what we built to solve these two things.
+
+---
+
+*繁體中文*
+
+## 為什麼做 MemOcean
+
+第一次看到 [MemPalace](https://github.com/milla-jovovich/mempalace) 的時候我們非常興奮——終於有人做 LLM 的 long-term memory，而且還是那個蜜拉喬娃。
+
+然而試跑過程中，我們卻發現了兩個不好克服的問題：
+
+**1. 中文 token 消耗真大**
+
+主流 tokenizer 對中文極不友善——同一語意的內容，中文 token 數量是英文的 2-3 倍。MemPalace 原始設計假設英文 whitespace tokenization（`text.split()` 切 token、全大寫縮寫當 entity、LIKE 全字串匹配），這些在中文場景全部失效。我們嘗試過字典壓縮，但走不通（替換後的 tag 在 BPE tokenizer 上比原文還長），最後轉向 sonar lossy summary 才真正解決。
+
+**2. 多 Agent 記憶漂移**
+
+我們日常跑十多隻 Agent——特助、Builder、Reviewer、Designer 各司其職。每隻 Agent 的 session memory 是隔離的，跑幾天之後各自的「記憶」開始分叉。某隻 Agent 記得上週的決策，另一隻不記得；有的引用了過期的資訊，有的拿到矛盾的上下文。
+
+這不是 prompt 寫得不好的問題，是架構問題：**我們需要一個 single source of truth 的持久知識庫，讓所有 Agent 共享同一份事實基礎**。
+
+MemOcean 就是我們為了解決這兩件事而做的。
+
+---
+
+## What is MemOcean
+
+MemOcean is a Chinese fork of MemPalace, with three core changes:
+
+1. **Chinese NER pipeline** — jieba POS tagging replaces `text.split()` for entity extraction, handling Traditional Chinese + Simplified Chinese + mixed CJK-English
+2. **Multi-agent support** — multiple agents read/write concurrently, append-only writes eliminate conflicts
+3. **Ocean metaphor naming** — from palaces to oceans, a naming system that better reflects how knowledge flows
+
+The knowledge base is built on [Obsidian](https://obsidian.md) vaults — everything is Markdown + `[[wikilink]]`, readable and writable by both humans and agents with the same tools, no proprietary database or format required.
 
 **Core capabilities:**
 - FTS5 + BM25 + Haiku reranker hybrid search — 86.2% Hit@5 on Chinese
 - CLSC semantic sonar extraction — 87% token reduction, semantic links preserved
 - Temporal knowledge graph with non-destructive invalidation
 - Cross-bot memory sharing via a single shared `memory.db`
+
+---
+
+*繁體中文*
+
+## MemOcean 是什麼
+
+MemOcean 是 MemPalace 的中文 fork，核心改動有三：
+
+1. **中文 NER pipeline**——用 jieba POS tagging 替代 `text.split()` 做 entity 抽取，處理繁體+簡體+英文混語
+2. **多 Agent 支援**——支援多隻 Agent 同時讀寫，append-only 寫入規則避免衝突
+3. **海洋隱喻命名**——從宮殿到海洋，命名體系更貼合「知識流動」的本質
+
+知識庫基於 [Obsidian](https://obsidian.md) vault——所有內容都是 Markdown + `[[wikilink]]`，人類和 Agent 用同一套工具讀寫，不需要額外的資料庫或專用格式。
+
+命名從宮殿轉到海洋，不只是品牌差異。宮殿是靜態的、封閉的；海洋是流動的、開放的。當多隻 Agent 同時往知識庫寫入，知識的狀態更像洋流而不是房間。
+
+**核心能力：**
+- FTS5 + BM25 + Haiku reranker 三層混合搜尋，中文 86.2% Hit@5
+- CLSC 語意 Sonar 萃取，87% token 精簡，保留語意連結
+- 時序知識圖譜（KG），支援事實 invalidate 不刪除
+- 跨 bot 記憶共享，同一個 memory.db 服務整個 bot 團隊
+
+---
+
+## Multi-Agent Design
+
+This is the most fundamental difference between MemOcean and MemPalace. MemPalace is designed for a single LLM session; MemOcean was built for multi-agent scenarios from day one.
+
+### Shared knowledge across the agent team
+
+Agents are organized by function — Assistant (requirements analysis, task dispatch), Builder (development), Reviewer (code review, QA), Designer (UI/UX). Each role can scale horizontally, communicating via [claude-telegram-bots](https://github.com/ChannelLabAI/claude-telegram-bots).
+
+All agents read and write the same Ocean directory. Knowledge written by any agent is immediately available to all others.
+
+### Write rules
+
+The biggest risk with multi-agent writes is conflict. MemOcean solves this with three rules:
+
+1. **Append-only** — only append, never overwrite. Each write adds a timestamp and source tag at the bottom
+2. **Source tagging** — `<!-- appended by {agent_id} at {datetime} -->`, full traceability of who wrote what and when
+3. **Periodic lint** — automated dedup, formatting cleanup, and cross-reference insertion
+
+No locks, no conflict resolution — append-only eliminates write conflicts at the root.
+
+### Five search paths
+
+Different scenarios need different search strategies. MemOcean provides five paths:
+
+| Path | What it searches | Speed | Use case |
+|------|-----------------|-------|----------|
+| `memocean_seabed_search` | Radar (CLSC sonar) | Fast | Quick locate: "Is there anything about X?" |
+| `memocean_seabed_get` | Full verbatim content | Medium | Get full text: "Give me the complete doc on X" |
+| `fts_search` | Cross-agent messages | <10ms | History search: "Who said X and when?" |
+| `kg_query` | Temporal knowledge graph | Medium | Relationship query: "What's the relation between X and Y?" |
+| Direct read | Vault files | Fast | When you know the exact path |
+
+An agent's first step on any task is to query Ocean (we call it Step 0) — check for related past decisions or precedent, avoiding redundant work or contradictory decisions.
+
+### Session memory vs persistent knowledge
+
+MemOcean strictly separates two kinds of memory:
+
+- **Session memory** — each agent's own `session.json`, storing current work state and in-flight tasks. Isolated, clearable on restart
+- **Persistent knowledge** — the Ocean directory, shared by all agents. Once written, knowledge persists
+
+This separation is key to solving memory drift. Agents' session memories can differ, but the underlying factual foundation (Ocean) is unified.
+
+---
+
+*繁體中文*
+
+## 多 Agent 協作設計
+
+這是 MemOcean 跟 MemPalace 最根本的差異。MemPalace 設計給單一 LLM session 用；MemOcean 從第一天就是為多 Agent 場景設計的。
+
+### Agent 團隊共用同一知識體系
+
+Agent 團隊按職能分工——Assistant（需求分析、任務調度）、Builder（開發實作）、Reviewer（Code review、QA）、Designer（UI/UX 設計）。各角色可橫向擴展，透過 [claude-telegram-bots](https://github.com/ChannelLabAI/claude-telegram-bots) 實現跨 Agent 通訊。
+
+所有 Agent 讀寫同一個 Ocean 目錄。任何一隻 Agent 寫入的知識，其他 Agent 立即可讀。
+
+### 寫入規則
+
+多 Agent 同時寫入最怕衝突。MemOcean 用三條規則解決：
+
+1. **Append-only**——只追加，不覆蓋。每次寫入在底部加時間戳和來源標記
+2. **來源標記**——`<!-- appended by {agent_id} at {datetime} -->`，可追溯誰在什麼時候寫了什麼
+3. **定期 lint**——自動合併重複、整理格式、補交叉索引
+
+沒有鎖機制、沒有 conflict resolution——append-only 從根本上消除了寫入衝突。
+
+### 五條搜尋路徑
+
+不同場景需要不同的搜尋策略。MemOcean 提供五條路徑：
+
+| 路徑 | 搜什麼 | 速度 | 場景 |
+|------|--------|------|------|
+| `memocean_seabed_search` | Radar（CLSC sonar）| 快 | 快速定位：「有沒有關於 X 的素材？」 |
+| `memocean_seabed_get` | 原文 verbatim | 中 | 拿完整內容：「把那篇 X 的全文給我」 |
+| `fts_search` | 跨 Agent 訊息 | <10ms | 歷史搜尋：「誰什麼時候說過 X？」 |
+| `kg_query` | 時序知識圖譜 | 中 | 關係查詢：「X 跟 Y 什麼關係？」 |
+| 直接讀取 | vault 檔案 | 快 | 知道確切路徑時直接讀 |
+
+Agent 接到任務的第一步是查 Ocean（我們叫 Step 0），看有沒有相關的歷史決策或前例，避免重複勞動或做出矛盾的決策。
+
+### Session 記憶 vs 持久知識
+
+MemOcean 嚴格區分兩種記憶：
+
+- **Session 記憶**——每隻 Agent 自己的 `session.json`，存當前工作狀態、in-flight 任務。隔離的，重啟可清
+- **持久知識**——Ocean 目錄，所有 Agent 共享。知識一旦寫入就持久存在
+
+這個分離是解決記憶漂移的關鍵。Agent 的 session 記憶可以各自不同，但底層的事實基礎（Ocean）是統一的。
+
+---
+
+## Comparison / 比較表
+
+| Dimension | [MemPalace](https://github.com/milla-jovovich/mempalace) | [GBrain](https://github.com/garrytan/gbrain) | MemOcean |
+|-----------|---------|---------|---------|
+| **Language assumption** / 設計語言假設 | English (whitespace tokenization) | English | **CJK-first** (HanNER + jieba) |
+| **Search architecture** / 搜尋架構 | BM25 + LIKE | Vector search | **FTS5 + BM25 + Haiku reranker** |
+| **Chinese Hit@5** / 中文搜尋命中率 | ~60% (est.) | ~75% (est.) | **86.2%** (measured) |
+| **Memory format** / 記憶格式 | AAAK skeleton (Closet) | Compiled Truth + Timeline | CLSC Radar (.clsc.md) |
+| **Knowledge graph** / 知識圖譜 | -- | Entity-relation graph | **Temporal KG** (with invalidation) |
+| **Nightly consolidation** / 夜間整合 | -- | Dream Cycle | Dream Cycle (Phase 1 live) |
+| **Multi-bot sharing** / 多 bot 共享 | -- | -- | **Shared memory.db** |
+| **Deployment** / 部署方式 | Local Python | Local Python | **MCP server** (Claude Code native) |
+| **Token reduction** / Token 精簡率 | ~91% (AAAK) | N/A | **87% (CLSC Sonar)** |
+| **License** / 授權 | MIT | MIT | MIT |
+
+> **Note / 說明：** MemPalace and GBrain hit rates are estimated from their benchmark methodology, not direct comparison. MemOcean numbers come from an internal Chinese test set (800 queries, 1/3 each Traditional/Simplified/mixed).
+>
+> MemPalace/GBrain 的命中率為根據其 benchmark 方法估算，非直接比較。MemOcean 數字來自內部中文測試集（800 題，繁中/簡中/混合各 1/3）。
+
+---
+
+## Architecture / 架構
+
+### Ocean naming system / 海洋命名體系
+
+MemPalace uses a palace metaphor (Palace > Wing > Room > Skeleton > Drawer). MemOcean uses an ocean metaphor:
+
+MemPalace 用宮殿隱喻，MemOcean 用海洋隱喻，對應關係如下：
+
+| Function / 功能 | Ocean name / 海洋名 | Path / 路徑 | MemPalace equivalent |
+|----------------|---------------------|-------------|---------------------|
+| Knowledge base / 知識總庫 | Ocean | `Ocean/` | Palace |
+| Project category / 專案分類 | Current (洋流) | `Currents/` | Wing |
+| Subcategory / 子分類 | Reef (珊瑚礁) | Current subdirectory | Room |
+| Semantic index / 語意骨架 | Radar (聲納) | `*.clsc` | Skeleton (Closet) |
+| Raw material / 原始素材 | Seabed (海床) | `Seabed/` | Drawer |
+| Insight cards / 洞見卡片 | Pearl (珍珠) | `Pearl/` | Cards |
+| Technical docs / 技術文檔 | Chart (海圖) | `Chart/` | Concepts |
+| Research reports / 研究報告 | Research | `Research/` | Research |
+| Archive / 封存 | Depth (深處) | `Depth/` | Archive |
+
+### Directory structure / 目錄結構
+
+```
+Ocean/
+├── Currents/
+│   ├── ProjectAlpha/
+│   │   ├── Sales/             # Reef: sales / 業務
+│   │   ├── Product/           # Reef: product / 產品線
+│   │   └── Org/               # Reef: internal / 組織內部
+│   ├── ProjectBeta/
+│   └── ProjectGamma/
+├── Pearl/                      # Insight cards (cross-project) / 洞見卡片（跨專案）
+├── Chart/                      # Technical docs (cross-project) / 技術文檔（跨專案）
+├── Research/                   # Research reports (cross-project) / 研究報告（跨專案）
+├── Seabed/                     # Raw material / 原始素材
+├── Depth/                      # Archive / 封存
+├── _schema.md                  # Write schema / 寫入規範
+└── _index.md                   # Auto-generated index / 自動生成索引
+```
+
+**Boundary principle / 分界原則：** Project-bound content goes inside Currents (People, Companies, Deals, raw material). Cross-project content goes at the top level (Pearl, Chart, Research). Currents link to each other via `[[wikilink]]` — no file moves.
+
+專案綁定的內容放 Current 內，跨專案通用的放頂層。Current 之間用 `[[wikilink]]` 連結，不搬檔。
+
+### Dual-engine retrieval / 雙引擎檢索架構
+
+MemOcean has two independent retrieval engines, each serving a different purpose:
+
+```
+Seabed (raw material) ──→ Radar (machine index)
+                         Teaches agents "what exists": fact location, fast retrieval
+
+Various sources ──→ Pearl (distilled insights)
+  ├── Conversations     Teaches agents "how to think": judgment frameworks, decision logic
+  ├── Research
+  ├── Meetings
+  └── Insights from reading
+```
+
+- **Radar** is semantic sonar extraction (MemPalace calls it Closet) — auto-generates sonar indexes from Seabed originals (~9% tokens), helping agents find things fast
+- **Pearl** is human distillation — atomic insights (100-300 words) refined from conversations, research, meetings, and work discussions, teaching agents to think like the boss
+
+Both exist independently, `[[linked]]` to each other — they are not an upstream/downstream compression pipeline.
+
+### Search pipeline: Hybrid Recall / 搜尋管線
+
+Three-stage hybrid recall, all via API calls, no local GPU required:
+
+```
+keyword (FTS5 BM25)
+  +                     ──→ merge top-K candidates ──→ Haiku LLM reranker ──→ ranked results
+embedding KNN (API)
+```
+
+- **keyword**: FTS5 trigram + BM25, exact entity matching, <10ms
+- **embedding KNN**: semantic nearest-neighbor search via embedding API, catches inference-word misses, no local GPU
+- **Haiku reranker**: lightweight LLM reranking, stable ordering in work contexts, better Chinese context fit than pure vector cosine
+
+---
+
+## CLSC Engine / CLSC 中文 Sonar 萃取引擎
+
+**CLSC** (Chinese Lossy Skeleton Codec) is MemOcean's core engine, forked from MemPalace's AAAK skeleton format (MemPalace calls it Closet), with the entire NER + search pipeline rewritten for Chinese.
+
+CLSC 是 MemOcean 的核心引擎，fork 自 MemPalace 的 AAAK skeleton 格式，針對中文場景重寫了整條 NER + 搜尋 pipeline。
+
+### Differences from upstream AAAK / 跟 upstream AAAK 的差異
+
+| Upstream AAAK assumption | CLSC Chinese implementation |
+|--------------------------|----------------------------|
+| `text.split()` tokenization | jieba POS tagging + auto NER |
+| Uppercase acronyms as entities | Chinese entities via pinyin initials + token-aware gate |
+| LIKE full-string matching | FTS5 trigram + BM25 ranking, fallback OR-match |
+| Fixed budget truncation | Content-proportional scaling (dynamic adjustment by source length) |
+
+### Sonar format / Sonar 格式
+
+Each piece of material is extracted into a single-line sonar entry, stored as `.clsc`:
+
+```
+[SLUG|ENTITIES|topics|"key_quote"|WEIGHT|EMOTIONS|FLAGS]
+```
+
+### Performance data / 效果數據
+
+Measured on real Chinese corpora (148 Obsidian vault documents):
+
+在真實中文語料上的實測表現（148 篇 Obsidian vault 文件）：
+
+| Metric / 指標 | Value / 數值 |
+|--------------|-------------|
+| Test scale / 測試規模 | 148 documents |
+| Original tokens / 原始 token 總量 | 459,490 |
+| Sonar tokens / Sonar token 總量 | 43,392 |
+| Sonar reduction / Sonar 精簡率 | **9.4%** |
+| Token savings / Token 節省 | **90.6%** |
+| Average search savings / 搜尋場景平均節省 | **78.2%** |
+
+Sonar-first search (read sonar first, fetch originals on demand) saves ~78% token consumption vs reading originals directly.
+
+### Search iterations / 搜尋迭代
+
+| Query type / 查詢類型 | v1 ALL-match | v2 OR-match | v3 FTS5+BM25 |
+|----------------------|-------------|-------------|--------------|
+| Structured queries / 結構化查詢 | 50% | 89% | 89% |
+| Natural language / 自然語言查詢 | 0% | 55% | 55% |
+| Known document / 已知文件查詢 | 85% | 95% | 95% |
+
+v3 hit rates match v2 (FTS5 auto-fallbacks to OR-match on miss), but ranking quality improves dramatically — BM25 pushes the most relevant document to top-1 instead of high-frequency but imprecise results.
+
+### Benchmark
+
+MemPalace is designed for English; MemOcean is designed for Chinese work scenarios. Each validated on its strongest language:
+
+| | MemPalace AAAK skeleton | MemOcean Hybrid+Haiku |
+|---|---|---|
+| Benchmark | LongMemEval (English) | MADial-Bench (Chinese) |
+| Hit@5 / R@5 | 84.2% | **87.5%** |
+| Hit@1 | N/A | **68.1%** |
+
+MemOcean exceeds MemPalace English skeleton mode by **+2.0pp** (Hit@5) on Chinese scenarios.
+
+Cross-validation (English LongMemEval): MemOcean Seabed+BM25 **90.5%** R@5 vs MemPalace AAAK **84.2%** (+6.3pp).
+
+Large-scale stress test (CRUD-RAG): 20K Chinese news documents, **99%** hit rate, **14ms** latency.
+
+### Known limitations / 已知限制
+
+Two known limitations, stated honestly:
+
+1. **jieba Traditional Chinese accuracy** — jieba's dictionary is Simplified Chinese-primary; Traditional Chinese relies on statistical fallback. NER recall has no quantified baseline yet.
+2. **Cold word coverage** — the hybrid recall embedding path handles common inference-word misses, but extremely rare terminology or heavy abbreviations (unseen by both paths) can still slip through. Query expansion is needed as a supplement.
+
+---
 
 ## Install
 
@@ -17,22 +368,17 @@ pip install -e ~/.claude-bots/shared/memocean-mcp
 claude mcp add memocean python -m memocean_mcp
 ```
 
-## How it compares
+> **安裝說明：** 安裝至本地環境後，用 `claude mcp add` 註冊為 MCP server 即可使用。
 
-| | [MemPalace](https://github.com/milla-jovovich/mempalace) | [GBrain](https://github.com/garrytan/gbrain) | MemOcean |
-|---|---|---|---|
-| CJK-first design | ❌ | ❌ | ✅ |
-| Search architecture | BM25 + LIKE | Vector search | FTS5 + BM25 + Haiku reranker |
-| Chinese Hit@5 | ~60% (est.) | ~75% (est.) | **86.2%** |
-| Knowledge graph | ❌ | ✅ | ✅ temporal |
-| Nightly consolidation | ❌ | ✅ Dream Cycle | ✅ Dream Cycle |
-| Multi-bot sharing | ❌ | ❌ | ✅ |
-| MCP integration | ❌ | ❌ | ✅ |
+---
 
-## Tools
+## Tools / 工具
 
 ### `memocean_fts_search`
+
 Full-text search over cross-bot Telegram message history.
+
+跨 bot Telegram 訊息全文搜尋。
 
 ```json
 {
@@ -43,7 +389,10 @@ Full-text search over cross-bot Telegram message history.
 Returns: `{ "query": "...", "count": 3, "results": [{ "bot_name": "anna", "ts": "...", "snippet": "...", "rank": -0.4 }, ...] }`
 
 ### `memocean_seabed_get`
+
 Retrieve knowledge content (Radar/Seabed) by slug.
+
+以 slug 取得知識內容（Radar/Seabed）。
 
 ```json
 {
@@ -54,7 +403,10 @@ Retrieve knowledge content (Radar/Seabed) by slug.
 Returns: `{ "slug": "channellab-pricing", "mode": "verbatim", "content": "# ChannelLab GEO pricing..." }`
 
 ### `memocean_seabed_search`
+
 Search Radar (CLSC sonar index) using multi-term AND matching.
+
+搜尋 Radar（CLSC sonar 索引），多詞 AND 匹配。
 
 ```json
 {
@@ -65,7 +417,10 @@ Search Radar (CLSC sonar index) using multi-term AND matching.
 Returns: `{ "query": "...", "count": 2, "results": [{ "slug": "...", "clsc": "...", "tokens": 42 }, ...] }`
 
 ### `memocean_kg_query`
+
 Query the temporal knowledge graph.
+
+查詢時序知識圖譜。
 
 ```json
 {
@@ -76,7 +431,10 @@ Query the temporal knowledge graph.
 Returns: `{ "entity": "老兔", "count": 4, "facts": [{ "subject": "老兔", "predicate": "role", "object": "CEO", ... }] }`
 
 ### `memocean_skill_list`
+
 List approved skills, or get a specific skill's content.
+
+列出已核准的技能，或取得特定技能的內容。
 
 ```json
 {}
@@ -89,7 +447,10 @@ Returns: `{ "count": 2, "skills": ["parallel-builder-reviewer-pools", "tg-superg
 Returns: `{ "name": "parallel-builder-reviewer-pools", "content": "# Parallel Builder..." }`
 
 ### `memocean_task_create`
+
 Create a new task in the pending queue.
+
+在待辦佇列建立新任務。
 
 ```json
 {
@@ -103,7 +464,10 @@ Create a new task in the pending queue.
 Returns: `{ "task_id": "20260408-120000-a1b2", "filename": "...", "file_path": "...", "status": "pending" }`
 
 ### `memocean_ingest_file`
+
 Ingest a local file (PDF, PPT, Word, Excel, HTML, CSV, JSON) into MemOcean's Radar seabed. Converts to markdown via [MarkItDown](https://github.com/microsoft/markitdown), stores in `group='files'`. Deduplicates by file path — re-ingesting the same path updates both the DB row and the `.clsc.md` sonar file.
+
+將本地檔案（PDF、PPT、Word、Excel、HTML、CSV、JSON）透過 MarkItDown 轉成 Markdown，存入 MemOcean Radar seabed。同路徑重複 ingest 自動更新。
 
 ```json
 {
@@ -117,22 +481,26 @@ Returns (error): `{ "error": "File not found: /path/to/file", "code": "FILE_NOT_
 **Error codes:**
 | Code | Meaning |
 |---|---|
-| `FILE_NOT_FOUND` | Path does not exist |
-| `FILE_TOO_LARGE` | File exceeds 50 MB |
-| `MARKITDOWN_FAIL` | MarkItDown conversion raised an exception |
-| `EMPTY_CONTENT` | Converted content is under 100 characters |
+| `FILE_NOT_FOUND` | Path does not exist / 路徑不存在 |
+| `FILE_TOO_LARGE` | File exceeds 50 MB / 檔案超過 50 MB |
+| `MARKITDOWN_FAIL` | MarkItDown conversion raised an exception / MarkItDown 轉換失敗 |
+| `EMPTY_CONTENT` | Converted content is under 100 characters / 轉換後內容不足 100 字 |
 
-**Supported formats:** PDF, PPTX, DOCX, XLSX, HTML, CSV, JSON (and any format MarkItDown supports).
+**Supported formats / 支援格式:** PDF, PPTX, DOCX, XLSX, HTML, CSV, JSON (and any format MarkItDown supports).
 
 **Requires:** `markitdown[all]` installed in the active Python environment (`pip install "markitdown[all]"`).
 
-## Security model
+---
 
-**Data locality.** Your data never leaves your machine. The MCP server runs as a local subprocess over stdio — no outbound network connections, no telemetry, no cloud sync. The code is open source; your data is not.
+## Security model / 安全模型
 
-**Trust boundary.** This library assumes the caller (Claude Code / your local Claude session) is trusted. Tool inputs such as `slug` and `skill name` may originate from LLM-generated content or indexed external data. To prevent prompt-injection-driven path traversal, all slug/name parameters are validated against `[A-Za-z0-9_-]{1,100}` before any filesystem access. `task_create` validates `assigned_to` and `priority` at runtime against allowlists.
+**Data locality / 資料本地性。** Your data never leaves your machine. The MCP server runs as a local subprocess over stdio — no outbound network connections, no telemetry, no cloud sync. The code is open source; your data is not.
 
-**Install isolation.** We recommend installing inside a dedicated virtual environment to avoid PEP 668 conflicts with system Python packages:
+你的資料不會離開你的機器。MCP server 以本地 subprocess 透過 stdio 執行——無對外網路連線、無遙測、無雲端同步。程式碼開源，你的資料不開源。
+
+**Trust boundary / 信任邊界。** This library assumes the caller (Claude Code / your local Claude session) is trusted. Tool inputs such as `slug` and `skill name` may originate from LLM-generated content or indexed external data. To prevent prompt-injection-driven path traversal, all slug/name parameters are validated against `[A-Za-z0-9_-]{1,100}` before any filesystem access. `task_create` validates `assigned_to` and `priority` at runtime against allowlists.
+
+**Install isolation / 安裝隔離。** We recommend installing inside a dedicated virtual environment to avoid PEP 668 conflicts with system Python packages:
 
 ```bash
 python3 -m venv ~/.venvs/memocean-mcp
@@ -148,13 +516,17 @@ claude mcp add memocean ~/.venvs/memocean-mcp/bin/python -m memocean_mcp
 
 **What this library does NOT do:** multi-tenant isolation, authentication, rate limiting, or network access. It is designed for single-user local use only.
 
-## Configuration
+本工具不做：多租戶隔離、身分驗證、速率限制、網路存取。僅供單一使用者本地使用。
+
+---
+
+## Configuration / 設定
 
 Environment variable overrides (all optional):
 
 | Variable | Default | Description |
 |---|---|---|
-| `CHANNELLAB_BOTS_ROOT` | `~/.claude-bots` | Root of the bots directory |
+| `CHANNELLAB_BOTS_ROOT` | `~/.claude-bots` | Root of the bots directory / bots 根目錄 |
 
 Derived paths (all under `BOTS_ROOT`):
 
@@ -162,33 +534,70 @@ Derived paths (all under `BOTS_ROOT`):
 |---|---|
 | `memory.db` | FTS5 SQLite database |
 | `kg.db` | Temporal knowledge graph SQLite |
-| `tasks/` | Task queue directories |
+| `tasks/` | Task queue directories / 任務佇列目錄 |
 | `seabed/` | Radar bundle storage (sonar index) |
-| `shared/learned-skills/approved/` | Approved skill markdown files |
+| `shared/learned-skills/approved/` | Approved skill markdown files / 已核准技能檔 |
 | `shared/fts5/` | FTS5 search module |
 | `shared/clsc/v0.7/` | Radar decoder module (CLSC sonar) |
 | `shared/kg/` | KG helper module |
 
-## Tide（潮汐文件）
+---
 
-Tide 是 MemOcean 的第三層輸出格式。資料流向：
-- Seabed 存原始素材（訊息、對話）
-- Radar 做壓縮索引（CLSC sonar）
-- **Tide** 是有時間維度的整合文件，每份 TideDoc 包含：
-  - 上層 Compiled Truth：當前最佳理解，可覆寫，標記更新日期
-  - 下層 Timeline：append-only 事件紀錄，只增不改
+## Tide (潮汐文件)
 
-## Recent updates
+Tide is MemOcean's third-layer output format. Data flows:
+- Seabed stores raw material (messages, conversations)
+- Radar creates compressed indexes (CLSC sonar)
+- **Tide** is a time-dimensional integrated document. Each TideDoc contains:
+  - Upper layer — Compiled Truth: current best understanding, overwritable, date-stamped
+  - Lower layer — Timeline: append-only event log, never modified
+
+Tide 是 MemOcean 的第三層輸出格式。資料流向：Seabed 存原始素材 → Radar 做壓縮索引 → Tide 是有時間維度的整合文件。每份 TideDoc 包含上層 Compiled Truth（當前最佳理解，可覆寫）和下層 Timeline（append-only 事件紀錄，只增不改）。
+
+---
+
+## Recent updates / 最近更新
 
 ### 2026-04-12
-- **`memocean_ingest_file` (Phase 1)**: new MCP tool to ingest local files into MemOcean Radar. Converts PDF/PPT/Word/Excel/HTML/CSV/JSON to markdown via MarkItDown, stores in `group='files'` radar seabed. Deduplicates by file path — re-ingest updates both DB row and `.clsc.md` sonar. Slug format: `file:{stem}-{hash6}` (last 6 hex chars of MD5 of abs path — stable across days). Truncates at 50 k chars with `truncated: true` flag. Requires `markitdown[all]` in environment.
-- **Closet → Radar rename sweep**: all internal references (`closet_fts` → `radar_fts`, `closet_vec` → `radar_vec`, SQL tables, variable names, shell vars) updated across `shared/clsc/`, `shared/fts5/`, `shared/scripts/`, and `memocean_mcp/`.
-- **Dream Cycle FTS gap monitoring**: `_check_fts_gap()` added to Dream Cycle, runs at end of each Dream Cycle execution to detect radar→FTS sync gaps. Additional daily cron at 18:00 for standalone gap monitoring.
-- **Dream Cycle Phase 2 — stale knowledge detection**: compares contradictory triples in the KG, marks `valid_to` on superseded facts. Non-destructive invalidation of stale knowledge.
+- **`memocean_ingest_file` (Phase 1)**: New MCP tool to ingest local files into MemOcean Radar. Converts PDF/PPT/Word/Excel/HTML/CSV/JSON to markdown via MarkItDown, stores in `group='files'`. Deduplicates by file path. Slug format: `file:{stem}-{hash6}`. Truncates at 50k chars. Requires `markitdown[all]`.
+- **Closet → Radar rename sweep**: All internal references updated across `shared/clsc/`, `shared/fts5/`, `shared/scripts/`, and `memocean_mcp/`.
+- **Dream Cycle FTS gap monitoring**: `_check_fts_gap()` runs at end of each Dream Cycle to detect radar→FTS sync gaps. Additional daily cron at 18:00.
+- **Dream Cycle Phase 2 — stale knowledge detection**: Compares contradictory triples in the KG, marks `valid_to` on superseded facts. Non-destructive invalidation.
+- **Benchmark 86.2% Hit@5**: Hybrid+Haiku reranker stable baseline (LongMemEval 90.5% / MADial 87.5% / CRUD-RAG 99%).
 
 ### 2026-04-11
-- **Removed `memocean_ask_opus`**: replaced by native `Agent` tool with `model: "opus"` in Claude Code — more direct, fewer tokens
-- **Terminology fix**: CLSC is "sonar extraction" not "compression" — lossy and irreversible by design
-- **Dream Cycle (Phase 1 shipped)**: nightly knowledge consolidation pipeline (`shared/scripts/dream_cycle.py`). 6-step pipeline: Collect → Extract → Normalize → Diff → Write → Report. Features: lock file, 30-min timeout, crash-recovery checkpoint, content-hash idempotency, dry-run/live modes, TG notification, graceful LLM degradation. Runs daily at 19:00 UTC via system crontab (`shared/scripts/install_cron.sh`). 39 tests passing.
-- **Radar FTS sync fix**: `store_sonar()` now syncs to `memory.db` radar table + `radar_fts` (with `source_hash`, DELETE-before-INSERT on FTS). Applied to both `shared/clsc/v0.7/radar.py` and `shared/memocean-mcp/clsc/radar.py`.
+- **Removed `memocean_ask_opus`**: Replaced by native `Agent` tool with `model: "opus"` in Claude Code — more direct, fewer tokens.
+- **Terminology fix**: CLSC is "sonar extraction" not "compression" — lossy and irreversible by design. Closet → Radar rename (MemPalace original term preserved as Closet).
+- **Dream Cycle (Phase 1 shipped)**: Nightly knowledge consolidation pipeline (`shared/scripts/dream_cycle.py`). 6-step pipeline: Collect → Extract → Normalize → Diff → Write → Report. Lock file, 30-min timeout, crash-recovery checkpoint, content-hash idempotency, dry-run/live modes, TG notification, graceful LLM degradation. Runs daily at 19:00 UTC. 39 tests passing.
+- **Radar FTS sync fix**: `store_sonar()` now syncs to `memory.db` radar table + `radar_fts` (with `source_hash`, DELETE-before-INSERT on FTS).
 - **Alias table**: `shared/config/alias_table.yaml` — 19-entity alias table for entity normalization in Dream Cycle.
+
+---
+
+## Acknowledgements / 致謝
+
+MemOcean stands on the shoulders of two excellent open-source projects:
+
+MemOcean 站在兩個優秀開源專案的肩膀上：
+
+**[MemPalace](https://github.com/milla-jovovich/mempalace)** ([@milla-jovovich](https://github.com/milla-jovovich))
+
+The dual-layer architecture (Seabed + Closet), AAAK skeleton format, and the core idea of lossy summary — these are all original designs from the MemPalace team. Without MemPalace paving the way, MemOcean wouldn't exist. Thank you.
+
+記憶宮殿的雙層架構（Seabed + Closet）、AAAK skeleton 格式、lossy summary 的核心理念——這些都是 MemPalace 團隊的原創設計。沒有 MemPalace 鋪路，MemOcean 不會有今天的樣子。謝謝你們。
+
+**[GBrain](https://github.com/garrytan/gbrain)** ([@garrytan](https://github.com/garrytan))
+
+The Compiled Truth + Timeline dual-layer design and the Dream Cycle nightly consolidation concept — this is what we most wanted to learn from after reading GBrain. You solved the fundamental tension between "knowledge should be updatable" and "knowledge should be traceable" in the most elegant way. Thank you.
+
+Compiled Truth + Timeline 雙層設計、Dream Cycle 夜間知識整合概念——這是我們讀 GBrain 之後最想借鑑的東西。你用最簡潔的方式解決了「知識可更新 vs 可溯源」這個根本矛盾。謝謝。
+
+We are users of both tools, and that's how we got the chance to stand here and keep pushing forward. We hope MemOcean can make its own small contribution to the Chinese developer community.
+
+我們是兩個工具的使用者，才有機會站在這裡繼續往前走。希望 MemOcean 能為中文開發者社群做出一點屬於自己的貢獻。
+
+---
+
+## License
+
+MIT
