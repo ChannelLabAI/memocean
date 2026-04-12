@@ -279,11 +279,21 @@ def _get_anthropic_client():
         _anthropic_client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", ""))
     return _anthropic_client
 
-_HAIKU_RERANK_PROMPT = """You are a knowledge retrieval ranker. Below is a search query and {n} candidate entries.
-Rank the candidates by relevance to the query, most relevant first.
+_HAIKU_RERANK_PROMPT = """You are ranking entries from a compressed knowledge base (CLSC sonar format).
+Each entry has a slug (hierarchical file path) and a compressed summary of the original document.
 
-Query:
-{query}
+Slug structure hints:
+- BOT-bots-{{name}}-CLAUDE: bot persona / role definition
+- Chart-ADR-*: architectural decision records (why a decision was made)
+- Chart-CLSC-*: CLSC technical specs and tests
+- Ocean-Research-*: research reports and proposals
+- Ocean-Currents-*: ongoing projects and status updates
+- Wiki-Cards-*: reference cards and howtos
+
+Rank by how well each entry answers the query's INTENT — not just keyword overlap.
+Prefer entries that directly address what the query is asking about, even if exact words differ.
+
+Query: {query}
 
 Candidates (numbered 1-{n}):
 {candidates}
@@ -431,9 +441,10 @@ def radar_search(query: str, limit: int = 10) -> list[dict]:
 
     cjk_query = _has_cjk(query)
 
-    # --- Multi-Query Expansion (if API available) ---
+    # --- Multi-Query Expansion (if API available and not disabled) ---
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
-    if api_key and _has_cjk(query):
+    expansion_disabled = bool(os.environ.get("DISABLE_QUERY_EXPANSION"))
+    if api_key and _has_cjk(query) and not expansion_disabled:
         # Only expand CJK queries — English FTS5 already handles variations well
         expanded_queries = _expand_query(query)
     else:
@@ -500,13 +511,17 @@ def radar_search(query: str, limit: int = 10) -> list[dict]:
         return []
 
     # --- Rerank: Haiku first, MiniLM fallback ---
+    # Both rerankers are disabled by default — benchmarks show BM25 RRF ordering
+    # outperforms both on this corpus. Enable with ENABLE_HAIKU_RERANKER=1 or
+    # ENABLE_MINIML_RERANKER=1.
     if len(merged) > 1:
-        # Attempt Haiku LLM rerank
-        haiku_result = _haiku_rerank(query, merged, top_k=limit)
+        # Attempt Haiku LLM rerank (only if explicitly enabled)
+        haiku_result = _haiku_rerank(query, merged, top_k=limit) \
+            if os.environ.get("ENABLE_HAIKU_RERANKER") else None
         if haiku_result is not None:
             results = haiku_result
-        elif use_reranker:
-            # Fallback to MiniLM embedding reranker
+        elif use_reranker and os.environ.get("ENABLE_MINIML_RERANKER"):
+            # MiniLM embedding reranker (only if explicitly enabled)
             try:
                 from .reranker import rerank
                 results = rerank(query, merged, top_k=limit)
