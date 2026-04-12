@@ -25,7 +25,7 @@ def test_fts_search_basic():
     from memocean_mcp.tools.fts_search import fts_search
 
     # Try a few likely terms
-    for query in ("anna", "NOX", "owner"):
+    for query in ("builder", "NOX", "owner"):
         results = fts_search(query, limit=5)
         if results:
             # Validate result structure
@@ -187,14 +187,14 @@ def test_task_create_dry_run(tmp_path, monkeypatch):
     result = tc_mod.task_create(
         title="TEST TASK DELETE ME",
         description="Automated test task — safe to delete",
-        assigned_to="anna",
+        assigned_to="builder",
         assigned_by="test_runner",
         priority="low",
         acceptance_criteria=["Test passes", "File is created"],
     )
 
     assert result.get("status") == "pending"
-    assert result.get("assigned_to") == "anna"
+    assert result.get("assigned_to") == "builder"
     assert result.get("title") == "TEST TASK DELETE ME"
     assert "task_id" in result
     assert "file_path" in result
@@ -206,7 +206,7 @@ def test_task_create_dry_run(tmp_path, monkeypatch):
     # Validate JSON structure
     task_data = json.loads(file_path.read_text())
     assert task_data["title"] == "TEST TASK DELETE ME"
-    assert task_data["assigned_to"] == "anna"
+    assert task_data["assigned_to"] == "builder"
     assert task_data["status"] == "pending"
     assert task_data["priority"] == "low"
     assert "history" in task_data
@@ -229,7 +229,7 @@ def test_task_create_real_pending(tmp_path, monkeypatch):
     result = task_create(
         title="TEST TASK DELETE ME",
         description="Automated test task — safe to delete. Created by test suite.",
-        assigned_to="anna",
+        assigned_to="builder",
         assigned_by="test_suite",
         priority="low",
     )
@@ -326,7 +326,7 @@ def test_task_create_invalid_priority():
     import pytest
     from memocean_mcp.tools.task_create import task_create
     with pytest.raises(ValueError, match="priority"):
-        task_create("test", "desc", assigned_to="anna", priority="critical")  # type: ignore
+        task_create("test", "desc", assigned_to="builder", priority="critical")  # type: ignore
 
 
 # ── radar_search tests (v0.1.3) ─────────────────────────────────────────────

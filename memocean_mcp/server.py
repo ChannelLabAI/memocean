@@ -136,7 +136,7 @@ TOOLS = {
                 },
                 "bot": {
                     "type": "string",
-                    "description": "Filter by bot name (e.g. 'anna', 'bella'). Optional.",
+                    "description": "Filter by bot name (e.g. 'builder', 'reviewer'). Optional.",
                 },
             },
             "required": ["query"],
@@ -253,7 +253,7 @@ TOOLS = {
     "memocean_task_create": {
         "description": (
             "Create a new task in the ChannelLab FATQ (pending/). "
-            "Assigns to anna, bella, or anya. Returns task_id and file path. "
+            "Assigns to builder, reviewer, or assistant. Returns task_id and file path. "
             "The task will be picked up by the assigned bot on their next startup scan."
         ),
         "input_schema": {
@@ -269,7 +269,7 @@ TOOLS = {
                 },
                 "assigned_to": {
                     "type": "string",
-                    "description": "Bot to assign to: 'anna', 'bella', or 'anya'",
+                    "description": "Bot to assign to: 'builder', 'reviewer', or 'assistant'",
                 },
                 "assigned_by": {
                     "type": "string",

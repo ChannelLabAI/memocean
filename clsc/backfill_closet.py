@@ -270,7 +270,7 @@ if __name__ == "__main__":
         rows = run_backfill(limit=args.sample)
         # Token comparison
         queries = ["股權結構", "學習筆記", "Bonk GEO", "CLSC", "Knowledge Infra",
-                   "ChannelLab", "任務", "CEO", "anna", "bot"]
+                   "ChannelLab", "任務", "CEO", "builder", "bot"]
         print("\n" + "="*60)
         print("TOKEN COMPARISON: Verbatim vs Closet (top-5 per query)")
         print("="*60)

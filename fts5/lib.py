@@ -138,7 +138,7 @@ def ingest_relay_messages_log(conn: sqlite3.Connection, log_path: Path, bot_name
 
 
 def _bot_name_from_project_dir(project_dir_name: str) -> str:
-    """e.g. -home-<USER>--claude-bots-bots-anna → anna"""
+    """e.g. -home-<USER>--claude-bots-bots-builder → builder"""
     name = project_dir_name
     marker = 'bots-'
     idx = name.rfind(marker)

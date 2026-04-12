@@ -41,7 +41,7 @@ def _load_valid_assignees() -> frozenset:
     except Exception:
         pass
     # Fallback
-    return frozenset({"anna", "bella", "anya"})
+    return frozenset({"builder", "reviewer", "assistant"})
 
 
 def task_create(

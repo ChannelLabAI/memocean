@@ -12,7 +12,7 @@ from pathlib import Path
 OBSIDIAN_WIKI = Path.home() / "Documents" / "Obsidian Vault" / "Wiki"
 # Fallback drawer
 FALLBACK_DRAWERS = [
-    Path.home() / ".claude-bots" / "bots" / "anna" / "research",
+    Path.home() / ".claude-bots" / "bots" / "builder" / "research",
 ]
 
 def find_drawer(slug: str) -> Path:
