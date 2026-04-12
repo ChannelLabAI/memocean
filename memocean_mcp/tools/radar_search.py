@@ -441,10 +441,11 @@ def radar_search(query: str, limit: int = 10) -> list[dict]:
 
     cjk_query = _has_cjk(query)
 
-    # --- Multi-Query Expansion (if API available and not disabled) ---
+    # --- Multi-Query Expansion (disabled by default; benchmarks show it hurts) ---
+    # Enable with ENABLE_QUERY_EXPANSION=1. Requires ANTHROPIC_API_KEY.
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
-    expansion_disabled = bool(os.environ.get("DISABLE_QUERY_EXPANSION"))
-    if api_key and _has_cjk(query) and not expansion_disabled:
+    expansion_enabled = bool(os.environ.get("ENABLE_QUERY_EXPANSION"))
+    if api_key and _has_cjk(query) and expansion_enabled:
         # Only expand CJK queries — English FTS5 already handles variations well
         expanded_queries = _expand_query(query)
     else:
