@@ -2,9 +2,9 @@
 messages_hybrid_search.py — Hybrid BM25 + BGE-m3 KNN + RRF search over TG messages.
 
 Pipeline:
-  query → BM25 FTS5 top-20  ─┐
+  query → BM25 FTS5 top-50  ─┐
                               ├── RRF(k=60) → top-N
-  query → BGE-m3 KNN top-20 ─┘
+  query → BGE-m3 KNN top-50 ─┘
 
 Fallback: KNN_ENABLED=false (or model unavailable) → pure BM25.
 Reuses embed_texts and _rrf_merge from radar_search to avoid duplication.
@@ -149,7 +149,7 @@ def messages_hybrid_search(
             knn_enabled = False
 
     # BM25 always runs
-    bm25 = _bm25_search(query, 20, bot)
+    bm25 = _bm25_search(query, 50, bot)
 
     if not knn_enabled:
         # Pure BM25 fallback — strip RRF slug before returning
@@ -158,7 +158,7 @@ def messages_hybrid_search(
 
     # KNN path
     try:
-        knn = _knn_search(query, 20, bot)
+        knn = _knn_search(query, 50, bot)
     except Exception as e:
         logger.warning("messages_hybrid_search: KNN failed, falling back to BM25: %s", e)
         _strip_slug(bm25)
