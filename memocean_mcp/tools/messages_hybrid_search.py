@@ -148,8 +148,17 @@ def messages_hybrid_search(
         except Exception:
             knn_enabled = False
 
+    # Keyword expansion: convert natural-language query → keyword OR query for BM25.
+    # KNN keeps original query (natural language better for embedding).
+    try:
+        from .query_expand import query_expand, keywords_to_fts_or
+        keywords = query_expand(query)
+        bm25_query = keywords_to_fts_or(keywords) if len(keywords) > 1 else query
+    except Exception:
+        bm25_query = query
+
     # BM25 always runs
-    bm25 = _bm25_search(query, 50, bot)
+    bm25 = _bm25_search(bm25_query, 50, bot)
 
     if not knn_enabled:
         # Pure BM25 fallback — strip RRF slug before returning
