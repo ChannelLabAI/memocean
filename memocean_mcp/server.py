@@ -24,10 +24,10 @@ logger = logging.getLogger("memocean_mcp")
 
 
 def tool_fts_search(query: str, limit: int = 10, bot: str = None):
-    """FTS5 search over cross-bot message history."""
+    """Hybrid BM25 + BGE-m3 KNN search over cross-bot message history."""
     try:
-        from .tools.fts_search import fts_search
-        results = fts_search(query, limit=limit, bot=bot or None)
+        from .tools.messages_hybrid_search import messages_hybrid_search
+        results = messages_hybrid_search(query, limit=limit, bot=bot or None)
         return {"query": query, "count": len(results), "results": results}
     except FileNotFoundError as e:
         return {"error": str(e), "results": []}
@@ -119,9 +119,11 @@ def tool_task_create(
 TOOLS = {
     "memocean_messages_search": {
         "description": (
-            "Full-text search over ChannelLab cross-bot Telegram message history (FTS5/BM25). "
-            "Supports boolean operators (AND/OR/NOT), phrase search (\"quoted\"), "
-            "and NEAR proximity. Falls back to substring match for short CJK tokens."
+            "Hybrid semantic + full-text search over ChannelLab cross-bot Telegram message history. "
+            "Uses BM25 (FTS5) + BGE-m3 KNN vector search merged via Reciprocal Rank Fusion (RRF). "
+            "Supports natural-language queries ('上次那個 OTC 討論'), boolean operators (AND/OR/NOT), "
+            "phrase search (\"quoted\"), and NEAR proximity. "
+            "Falls back to pure BM25 when KNN_ENABLED=false or model unavailable."
         ),
         "input_schema": {
             "type": "object",

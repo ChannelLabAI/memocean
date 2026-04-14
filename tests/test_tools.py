@@ -498,3 +498,90 @@ def test_merge_candidates_rrf_order():
     slugs = [r["slug"] for r in result]
     assert slugs.index("top") < slugs.index("mid")
     assert slugs.index("top") < slugs.index("other")
+
+
+# ==================== MESSAGES HYBRID SEARCH ====================
+
+
+def test_messages_hybrid_import():
+    """messages_hybrid_search module imports cleanly."""
+    from memocean_mcp.tools.messages_hybrid_search import messages_hybrid_search
+    assert callable(messages_hybrid_search)
+
+
+def test_messages_hybrid_empty_query():
+    """Empty query returns empty list."""
+    from memocean_mcp.tools.messages_hybrid_search import messages_hybrid_search
+    assert messages_hybrid_search("") == []
+    assert messages_hybrid_search("   ") == []
+
+
+def test_messages_hybrid_returns_list():
+    """messages_hybrid_search always returns a list."""
+    import os
+    from memocean_mcp.tools.messages_hybrid_search import messages_hybrid_search
+    # Force BM25-only to keep test fast/deterministic
+    orig = os.environ.get("KNN_ENABLED")
+    os.environ["KNN_ENABLED"] = "false"
+    try:
+        results = messages_hybrid_search("XYZZY_NONEXISTENT_TOKEN_99999", limit=5)
+        assert isinstance(results, list)
+    finally:
+        if orig is None:
+            os.environ.pop("KNN_ENABLED", None)
+        else:
+            os.environ["KNN_ENABLED"] = orig
+
+
+@pytest.mark.skipif(not FTS_DB.exists(), reason=f"memory.db not found at {FTS_DB}")
+def test_messages_hybrid_bm25_fallback():
+    """KNN_ENABLED=false returns BM25-only results with expected schema."""
+    import os
+    from memocean_mcp.tools.messages_hybrid_search import messages_hybrid_search
+
+    orig = os.environ.get("KNN_ENABLED")
+    os.environ["KNN_ENABLED"] = "false"
+    try:
+        results = messages_hybrid_search("部署", limit=5)
+        assert isinstance(results, list)
+        # Result schema must include standard BM25 fields
+        if results:
+            r = results[0]
+            assert "bot_name" in r
+            assert "snippet" in r
+            assert "chat_id" in r
+            assert "message_id" in r
+            # slug must be stripped from output
+            assert "slug" not in r
+    finally:
+        if orig is None:
+            os.environ.pop("KNN_ENABLED", None)
+        else:
+            os.environ["KNN_ENABLED"] = orig
+
+
+@pytest.mark.skipif(not FTS_DB.exists(), reason=f"memory.db not found at {FTS_DB}")
+def test_messages_hybrid_no_slug_in_output():
+    """Internal slug field must be stripped before returning results."""
+    import os
+    from memocean_mcp.tools.messages_hybrid_search import messages_hybrid_search
+
+    orig = os.environ.get("KNN_ENABLED")
+    os.environ["KNN_ENABLED"] = "false"
+    try:
+        results = messages_hybrid_search("OTC", limit=5)
+        for r in results:
+            assert "slug" not in r, "slug must not appear in output"
+    finally:
+        if orig is None:
+            os.environ.pop("KNN_ENABLED", None)
+        else:
+            os.environ["KNN_ENABLED"] = orig
+
+
+def test_messages_hybrid_server_handler():
+    """server TOOLS still has memocean_messages_search with hybrid handler."""
+    from memocean_mcp.server import TOOLS
+    assert "memocean_messages_search" in TOOLS
+    spec = TOOLS["memocean_messages_search"]
+    assert "hybrid" in spec["description"].lower() or "semantic" in spec["description"].lower()

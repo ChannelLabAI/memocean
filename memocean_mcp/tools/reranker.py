@@ -11,6 +11,7 @@ Graceful degradation: if BGE-m3 or sqlite-vec unavailable, falls back to
 pure BM25 ordering.
 """
 import logging
+import os
 import struct
 import time
 from typing import Optional
@@ -28,6 +29,42 @@ _VEC_TABLE = "radar_vec"
 # Track availability
 _bge_available: Optional[bool] = None
 _sqlite_vec_available: Optional[bool] = None
+
+# ONNX Runtime inference (faster than FlagEmbedding on CPU)
+_onnx_session = None
+_onnx_tokenizer = None
+_onnx_available: Optional[bool] = None
+_ONNX_MODEL_DIR = os.path.expanduser("~/.cache/huggingface/bge-m3-onnx-int8")
+
+
+def _get_onnx_session():
+    """Lazy-load ONNX Runtime session for BGE-m3 INT8. Returns (session, tokenizer) or (None, None)."""
+    global _onnx_session, _onnx_tokenizer, _onnx_available
+    if _onnx_available is False:
+        return None, None
+    if _onnx_session is not None:
+        return _onnx_session, _onnx_tokenizer
+    try:
+        import onnxruntime as ort
+        from transformers import AutoTokenizer
+        import glob
+        # Find the quantized model file
+        candidates = glob.glob(os.path.join(_ONNX_MODEL_DIR, "*.onnx"))
+        if not candidates:
+            raise FileNotFoundError(f"No .onnx file in {_ONNX_MODEL_DIR}")
+        model_file = candidates[0]
+        opts = ort.SessionOptions()
+        opts.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
+        opts.intra_op_num_threads = 2
+        _onnx_session = ort.InferenceSession(model_file, sess_options=opts, providers=["CPUExecutionProvider"])
+        _onnx_tokenizer = AutoTokenizer.from_pretrained(_ONNX_MODEL_DIR)
+        _onnx_available = True
+        logger.info("reranker: ONNX INT8 session loaded from %s", model_file)
+        return _onnx_session, _onnx_tokenizer
+    except Exception as e:
+        _onnx_available = False
+        logger.warning("reranker: ONNX unavailable, falling back to FlagEmbedding: %s", e)
+        return None, None
 
 
 def _get_embed_model():
@@ -83,13 +120,38 @@ def _float_vec_to_blob(vec) -> bytes:
 
 
 def _embed_texts(texts: list[str]) -> Optional[list[np.ndarray]]:
-    """Embed a list of texts using BGE-m3. Returns None if model unavailable."""
+    """Embed texts. Tries ONNX INT8 first (faster), falls back to FlagEmbedding."""
+    # Try ONNX Runtime path (faster on CPU)
+    session, tokenizer = _get_onnx_session()
+    if session is not None and tokenizer is not None:
+        try:
+            inputs = tokenizer(texts, padding=True, truncation=True, max_length=512, return_tensors="np")
+            ort_inputs = {k: v for k, v in inputs.items() if k in [inp.name for inp in session.get_inputs()]}
+            outputs = session.run(None, ort_inputs)
+            # outputs[1] is sentence_embedding (pooled), shape: (n, 1024)
+            # outputs[0] is token_embeddings, shape: (n, seq_len, 1024)
+            output_names = [o.name for o in session.get_outputs()]
+            if "sentence_embedding" in output_names:
+                idx = output_names.index("sentence_embedding")
+                vecs = outputs[idx]  # (n, 1024)
+            else:
+                # Fallback: CLS token from token_embeddings
+                vecs = outputs[0][:, 0, :]  # (n, 1024)
+            # L2-normalize (BGE-m3 convention)
+            norms = np.linalg.norm(vecs, axis=1, keepdims=True)
+            norms = np.where(norms == 0, 1, norms)
+            vecs = vecs / norms
+            return [vecs[i] for i in range(len(vecs))]
+        except Exception as e:
+            logger.warning("reranker: ONNX embed failed, falling back to FlagEmbedding: %s", e)
+
+    # Fallback: FlagEmbedding
     model = _get_embed_model()
     if model is None:
         return None
     try:
         result = model.encode(texts, batch_size=8, max_length=512, return_dense=True)
-        vecs = result['dense_vecs']  # numpy array (n, 1024)
+        vecs = result['dense_vecs']
         return [vecs[i] for i in range(len(vecs))]
     except Exception as e:
         logger.warning("reranker: embedding failed: %s", e)
@@ -97,7 +159,7 @@ def _embed_texts(texts: list[str]) -> Optional[list[np.ndarray]]:
 
 
 def embed_and_store(conn, slug: str, text: str) -> bool:
-    """Embed a single radar entry and store in radar_vec. Returns success."""
+    """Embed a single radar entry and store in radar_vec + radar_simhash8. Returns success."""
     if not _load_sqlite_vec(conn):
         return False
     _ensure_vec_table(conn)
@@ -106,12 +168,23 @@ def embed_and_store(conn, slug: str, text: str) -> bool:
     if embeddings is None:
         return False
 
-    blob = _float_vec_to_blob(embeddings[0])
+    vec = embeddings[0]
+    blob = _float_vec_to_blob(vec)
+    conn.execute(f"DELETE FROM {_VEC_TABLE} WHERE slug = ?", (slug,))
     conn.execute(
-        f"INSERT OR REPLACE INTO {_VEC_TABLE}(slug, embedding) VALUES (?, ?)",
+        f"INSERT INTO {_VEC_TABLE}(slug, embedding) VALUES (?, ?)",
         (slug, blob),
     )
     conn.commit()
+
+    # Also store multi-probe SimHash fingerprints (Phase 2)
+    try:
+        from .simhash import compute_fingerprints_single, store_fingerprints_single
+        fps = compute_fingerprints_single(vec)
+        store_fingerprints_single(conn, slug, fps)
+    except Exception as e:
+        logger.warning("reranker: simhash storage failed for %s: %s", slug, e)
+
     return True
 
 
@@ -133,11 +206,23 @@ def embed_and_store_batch(conn, items: list[tuple[str, str]], batch_size: int = 
 
         for slug, emb in zip(slugs, embeddings):
             blob = _float_vec_to_blob(emb)
+            conn.execute(f"DELETE FROM {_VEC_TABLE} WHERE slug = ?", (slug,))
             conn.execute(
-                f"INSERT OR REPLACE INTO {_VEC_TABLE}(slug, embedding) VALUES (?, ?)",
+                f"INSERT INTO {_VEC_TABLE}(slug, embedding) VALUES (?, ?)",
                 (slug, blob),
             )
         conn.commit()
+
+        # Also store multi-probe SimHash fingerprints for this batch (Phase 2)
+        try:
+            from .simhash import compute_fingerprints, store_fingerprints_batch
+            import numpy as np
+            vecs_np = np.stack(embeddings, axis=0)
+            fps = compute_fingerprints(vecs_np)
+            store_fingerprints_batch(conn, slugs, fps)
+        except Exception as e:
+            logger.warning("reranker: simhash batch storage failed: %s", e)
+
         stored += len(batch)
         logger.info("reranker: backfill progress %d/%d", stored, len(items))
 
@@ -282,8 +367,13 @@ def _rerank_in_memory(query: str, candidates: list[dict], top_k: int) -> Optiona
 
 
 def is_available() -> bool:
-    """Check if BGE-m3 KNN recall can function (model loadable)."""
-    global _bge_available
+    """Check if embedding KNN recall can function (ONNX or FlagEmbedding)."""
+    if _onnx_available is not None:
+        return _onnx_available
     if _bge_available is not None:
         return _bge_available
+    # Probe ONNX first (no heavy torch load)
+    sess, _ = _get_onnx_session()
+    if sess is not None:
+        return True
     return _get_embed_model() is not None
