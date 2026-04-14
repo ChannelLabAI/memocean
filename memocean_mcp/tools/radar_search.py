@@ -20,6 +20,7 @@ import os
 import re
 import sqlite3
 from pathlib import Path
+from typing import Optional
 
 from ..config import FTS_DB
 
@@ -117,7 +118,10 @@ def _search_fts5(conn: sqlite3.Connection, terms: list[str], limit: int) -> list
         "LIMIT ?"
     )
     rows = conn.execute(sql, (fts_query, limit)).fetchall()
-    return [dict(r) for r in rows]
+    results = [dict(r) for r in rows]
+    for r in results:
+        r.setdefault("source_type", "radar")
+    return results
 
 
 def _search_instr_fallback(conn: sqlite3.Connection, terms: list[str], limit: int) -> list[dict]:
@@ -133,14 +137,51 @@ def _search_instr_fallback(conn: sqlite3.Connection, terms: list[str], limit: in
     )
     params = terms + [limit]
     rows = conn.execute(sql, params).fetchall()
-    return [dict(r) for r in rows]
+    results = [dict(r) for r in rows]
+    for r in results:
+        r.setdefault("source_type", "radar")
+    return results
+
+
+def _cosine_rescore(
+    query_vec: "np.ndarray",
+    candidates: list[dict],
+    slug_to_vec: dict[str, "np.ndarray"],
+    top_k: int,
+) -> list[dict]:
+    """
+    Re-score a list of candidate dicts by cosine similarity to query_vec.
+    Uses pre-loaded slug→vec mapping. Returns top_k sorted by descending similarity.
+    """
+    import numpy as np
+
+    q_norm = np.linalg.norm(query_vec)
+    if q_norm == 0:
+        return candidates[:top_k]
+
+    scored = []
+    for cand in candidates:
+        slug = cand.get("slug", "")
+        c_vec = slug_to_vec.get(slug)
+        if c_vec is None:
+            sim = -1.0
+        else:
+            c_norm = np.linalg.norm(c_vec)
+            sim = float(np.dot(query_vec, c_vec) / (q_norm * c_norm + 1e-10))
+        scored.append((sim, cand))
+
+    scored.sort(key=lambda x: x[0], reverse=True)
+    return [c for _, c in scored[:top_k]]
 
 
 def _search_semantic(query: str, limit: int) -> list[dict]:
     """
-    Pure semantic search via radar_vec (sqlite-vec KNN).
-    Used when FTS5 and instr both return 0 results — the key path for
-    Chinese queries where keywords don't overlap but meaning does.
+    Semantic search — two-layer pipeline (Phase 2):
+      1. SimHash multi-probe (8×512) → top-50 coarse candidates (fast hamming)
+      2. Float32 cosine re-score → top-{limit} precise results
+
+    Falls back to direct sqlite-vec KNN if SimHash table not populated.
+    Used when FTS5/instr return 0 results — key path for Chinese queries.
     """
     try:
         from .reranker import (
@@ -153,17 +194,79 @@ def _search_semantic(query: str, limit: int) -> list[dict]:
     if q_emb is None:
         return []
 
+    q_vec = q_emb[0]  # (EMBED_DIM,) float32
+
     try:
+        import numpy as np
         conn = sqlite3.connect(str(FTS_DB))
         conn.row_factory = sqlite3.Row
 
+        # --- Try SimHash multi-probe coarse filter (Phase 2) ---
+        try:
+            from .simhash import (
+                compute_fingerprints_single,
+                is_simhash8_populated,
+                load_all_fingerprints,
+                simhash_coarse_search,
+                COARSE_LIMIT,
+                load_vectors_from_db,
+            )
+
+            if is_simhash8_populated(conn):
+                # Compute query fingerprints
+                q_fps = compute_fingerprints_single(q_vec)  # (N_TABLES, K_BYTES)
+
+                # Load all SimHash fingerprints and get coarse candidates
+                all_slugs, all_fps = load_all_fingerprints(conn)
+                coarse_slugs = simhash_coarse_search(q_fps, all_slugs, all_fps, COARSE_LIMIT)
+
+                if coarse_slugs:
+                    # Load float32 vectors for coarse candidates only
+                    coarse_slugs_set = set(coarse_slugs)
+                    raw_slugs, raw_vecs = load_vectors_from_db(conn)
+                    slug_to_vec = {
+                        s: raw_vecs[i]
+                        for i, s in enumerate(raw_slugs)
+                        if s in coarse_slugs_set
+                    }
+
+                    # Fetch radar metadata for coarse candidates
+                    placeholders = ",".join("?" for _ in coarse_slugs)
+                    radar_rows = conn.execute(
+                        f"SELECT slug, clsc, tokens, drawer_path FROM radar "
+                        f"WHERE slug IN ({placeholders})",
+                        coarse_slugs,
+                    ).fetchall()
+                    conn.close()
+
+                    if radar_rows:
+                        candidates = [dict(r) for r in radar_rows]
+                        for c in candidates:
+                            c.setdefault("source_type", "radar")
+                        # Float32 cosine re-score: top-50 → top-limit
+                        results = _cosine_rescore(q_vec, candidates, slug_to_vec, limit)
+                        logger.debug(
+                            "_search_semantic: simhash coarse %d → cosine rescore → %d",
+                            len(candidates), len(results),
+                        )
+                        return results
+
+        except Exception as sh_err:
+            logger.debug("_search_semantic: simhash path failed (%s), falling back to KNN", sh_err)
+            try:
+                conn.close()
+            except Exception:
+                pass
+            conn = sqlite3.connect(str(FTS_DB))
+            conn.row_factory = sqlite3.Row
+
+        # --- Fallback: direct sqlite-vec KNN ---
         if not _load_sqlite_vec(conn):
             conn.close()
             return []
 
-        q_blob = _float_vec_to_blob(q_emb[0])
+        q_blob = _float_vec_to_blob(q_vec)
 
-        # KNN search over pre-computed embeddings
         rows = conn.execute(
             f"SELECT slug, distance FROM {_VEC_TABLE} "
             f"WHERE embedding MATCH ? AND k = ?",
@@ -174,7 +277,6 @@ def _search_semantic(query: str, limit: int) -> list[dict]:
             conn.close()
             return []
 
-        # Fetch full radar data for matched slugs
         slugs = [r["slug"] if hasattr(r, "keys") else r[0] for r in rows]
         slug_dist = {
             (r["slug"] if hasattr(r, "keys") else r[0]): (
@@ -190,9 +292,10 @@ def _search_semantic(query: str, limit: int) -> list[dict]:
         ).fetchall()
         conn.close()
 
-        # Sort by embedding distance (ascending = most similar first)
         results = [dict(r) for r in radar_rows]
         results.sort(key=lambda r: slug_dist.get(r["slug"], 999))
+        for r in results:
+            r.setdefault("source_type", "radar")
         return results
 
     except Exception:
@@ -202,6 +305,110 @@ def _search_semantic(query: str, limit: int) -> list[dict]:
 _HAIKU_MODEL = "claude-haiku-4-5-20251001"
 _HAIKU_RECALL_LIMIT = 20  # candidates per source (FTS5 + embedding)
 _anthropic_client = None  # lazy singleton
+
+# Cache for messages_vec population check (None = unchecked)
+_messages_vec_populated: Optional[bool] = None
+
+
+def _check_messages_vec_populated() -> bool:
+    """Check (once per process) if messages_vec table exists and has data."""
+    global _messages_vec_populated
+    if _messages_vec_populated is not None:
+        return _messages_vec_populated
+    try:
+        from .reranker import _load_sqlite_vec
+        conn = sqlite3.connect(str(FTS_DB))
+        if not _load_sqlite_vec(conn):
+            conn.close()
+            _messages_vec_populated = False
+            return False
+        count = conn.execute("SELECT count(*) FROM messages_vec").fetchone()[0]
+        conn.close()
+        _messages_vec_populated = count > 0
+        return _messages_vec_populated
+    except Exception:
+        _messages_vec_populated = False
+        return False
+
+
+def _search_messages_semantic(query: str, limit: int) -> list[dict]:
+    """
+    KNN search over messages_vec for TG messages semantically similar to query.
+
+    Returns list of dicts with unified schema:
+      slug, clsc, tokens, drawer_path, source_type="message"
+    Falls back to empty list if sqlite-vec unavailable or messages_vec not populated.
+    """
+    try:
+        from .reranker import _embed_texts, _float_vec_to_blob, _load_sqlite_vec
+    except ImportError:
+        return []
+
+    q_emb = _embed_texts([query])
+    if q_emb is None:
+        return []
+
+    q_blob = _float_vec_to_blob(q_emb[0])
+
+    try:
+        conn = sqlite3.connect(str(FTS_DB))
+        conn.row_factory = sqlite3.Row
+
+        if not _load_sqlite_vec(conn):
+            conn.close()
+            return []
+
+        rows = conn.execute(
+            "SELECT msg_key, distance FROM messages_vec "
+            "WHERE embedding MATCH ? AND k = ?",
+            (q_blob, limit),
+        ).fetchall()
+
+        if not rows:
+            conn.close()
+            return []
+
+        # Build msg_key list preserving KNN order
+        msg_keys = [row["msg_key"] if hasattr(row, "keys") else row[0] for row in rows]
+
+        # Batch fetch — one query instead of N (S1 fix)
+        placeholders = ",".join("?" for _ in msg_keys)
+        msg_rows = conn.execute(
+            f"SELECT chat_id, message_id, text FROM messages "
+            f"WHERE (chat_id || ':' || message_id) IN ({placeholders})",
+            msg_keys,
+        ).fetchall()
+        conn.close()
+
+        # Build lookup keyed by msg_key
+        msg_map: dict[str, dict] = {}
+        for mr in msg_rows:
+            chat_id = mr["chat_id"] if hasattr(mr, "keys") else mr[0]
+            message_id = mr["message_id"] if hasattr(mr, "keys") else mr[1]
+            text = mr["text"] if hasattr(mr, "keys") else mr[2]
+            if text:
+                mk = f"{chat_id}:{message_id}"
+                msg_map[mk] = {"chat_id": chat_id, "message_id": message_id, "text": text}
+
+        # Assemble results in KNN order
+        results = []
+        for mk in msg_keys:
+            m = msg_map.get(mk)
+            if not m:
+                continue
+            results.append({
+                "slug": mk,
+                "clsc": m["text"][:200],
+                "tokens": len(m["text"]) // 4,
+                "drawer_path": f"tg:{m['chat_id']}:{m['message_id']}",
+                "source_type": "message",
+            })
+
+        return results
+
+    except Exception as e:
+        logger.debug("_search_messages_semantic failed: %s", e)
+        return []
 
 
 def _expand_query(query: str) -> list[str]:
@@ -382,14 +589,24 @@ def _haiku_rerank(query: str, candidates: list[dict], top_k: int) -> list[dict] 
         return None
 
 
-def _merge_candidates(fts_results: list[dict], sem_results: list[dict]) -> list[dict]:
+def _merge_candidates(
+    fts_results: list[dict],
+    sem_results: list[dict],
+    msg_results: list[dict] = None,
+) -> list[dict]:
     """
-    Merge FTS5 and semantic candidates using RRF (Reciprocal Rank Fusion).
+    Merge FTS5, semantic (radar KNN), and optional message KNN candidates using RRF.
     score(d) = sum(1 / (k + rank_i(d))), k=60 (standard constant).
     Adds 'sources' field: list of retrieval paths that returned each doc
-    (e.g. ["fts"], ["sem"], or ["fts", "sem"] for cross-path hits).
+    (e.g. ["fts"], ["sem"], ["msg"], or any combination for cross-path hits).
+
+    Note: radar slugs (e.g. tg-2026-04-05-...) and message msg_keys (chat_id:msg_id)
+    are structurally distinct — no false deduplication will occur.
     """
-    if not fts_results and not sem_results:
+    if msg_results is None:
+        msg_results = []
+
+    if not fts_results and not sem_results and not msg_results:
         return []
 
     # Track which retrieval paths each slug appeared in (before RRF modifies dicts)
@@ -402,9 +619,13 @@ def _merge_candidates(fts_results: list[dict], sem_results: list[dict]) -> list[
         slug = row.get("slug", "")
         if slug:
             sources_map.setdefault(slug, []).append("sem")
+    for row in msg_results:
+        slug = row.get("slug", "")
+        if slug:
+            sources_map.setdefault(slug, []).append("msg")
 
-    # RRF merge across both ranked lists
-    lists = [lst for lst in [fts_results, sem_results] if lst]
+    # RRF merge across all ranked lists
+    lists = [lst for lst in [fts_results, sem_results, msg_results] if lst]
     merged = _rrf_merge(lists)
 
     # Attach sources metadata to each result
@@ -499,9 +720,17 @@ def radar_search(query: str, limit: int = 10) -> list[dict]:
         except Exception:
             sem_results = []
 
+    # --- Messages semantic (messages_vec KNN) recall ---
+    msg_results: list[dict] = []
+    if use_knn and _check_messages_vec_populated():
+        try:
+            msg_results = _search_messages_semantic(query, _HAIKU_RECALL_LIMIT)
+        except Exception:
+            msg_results = []
+
     # --- Merge hybrid candidates ---
-    if keyword_results or sem_results:
-        merged = _merge_candidates(keyword_results, sem_results)
+    if keyword_results or sem_results or msg_results:
+        merged = _merge_candidates(keyword_results, sem_results, msg_results)
     else:
         # Both recall paths returned nothing — return empty
         _log_search(query, [])
