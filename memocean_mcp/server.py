@@ -5,6 +5,7 @@ Registered tools:
   memocean_messages_search — FTS5 cross-bot message search
   memocean_seabed_get      — Seabed content retrieval (verbatim/sonar)
   memocean_seabed_search   — Multi-term AND search over CLSC sonar seabed
+  memocean_ocean_search    — Full-text search over Ocean vault .md files
   memocean_kg_query      — Temporal knowledge graph query
   memocean_skill_list    — List/get approved learned skills
   memocean_task_create   — Create task in pending queue
@@ -53,6 +54,16 @@ def tool_radar_search(query: str, limit: int = 5):
         return {"query": query, "count": len(results), "results": results}
     except Exception as e:
         return {"error": str(e)}
+
+
+def tool_ocean_search(query: str, limit: int = 10):
+    """Full-text search over Ocean vault .md files via ripgrep."""
+    try:
+        from .tools.ocean_search import ocean_search
+        results = ocean_search(query, limit=limit)
+        return {"query": query, "count": len(results), "results": results}
+    except Exception as e:
+        return {"error": f"Ocean search failed: {e}", "results": []}
 
 
 def tool_kg_query(entity: str, as_of: str = None, direction: str = "outgoing"):
@@ -189,6 +200,30 @@ TOOLS = {
             "required": ["query"],
         },
         "handler": tool_radar_search,
+    },
+    "memocean_ocean_search": {
+        "description": (
+            "Full-text search over ChannelLab Ocean vault .md files using ripgrep. "
+            "Searches wiki pages, Pearl cards, Research notes, specs, and all Obsidian docs "
+            "under Ocean/ (excludes personal vaults). "
+            "Returns title, [[wikilink]], excerpt (~200 chars), and relative path. "
+            "Falls back to [] when Ocean vault not found or rg unavailable."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "Natural language or keyword query. E.g. 'ChannelLab GEO 服務', 'MemOcean 架構'",
+                },
+                "limit": {
+                    "type": "integer",
+                    "description": "Max results (default: 10)",
+                },
+            },
+            "required": ["query"],
+        },
+        "handler": tool_ocean_search,
     },
     "memocean_kg_query": {
         "description": (

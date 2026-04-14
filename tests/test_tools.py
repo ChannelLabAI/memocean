@@ -657,3 +657,82 @@ def test_keywords_to_fts_or_special_chars():
     from memocean_mcp.tools.query_expand import keywords_to_fts_or
     result = keywords_to_fts_or(['say "hello"'])
     assert '""' in result  # escaped double-quote
+
+
+# ── ocean_search tests ─────────────────────────────────────────────────────
+
+
+def test_ocean_search_missing_vault(tmp_path, monkeypatch):
+    """ocean_search returns [] when Ocean vault path doesn't exist."""
+    import memocean_mcp.tools.ocean_search as mod
+    monkeypatch.setattr(mod, "OCEAN_PATH", str(tmp_path / "nonexistent/"))
+    from memocean_mcp.tools.ocean_search import ocean_search
+    assert ocean_search("ChannelLab") == []
+
+
+def test_ocean_search_empty_query(tmp_path, monkeypatch):
+    """ocean_search returns [] for empty query."""
+    import memocean_mcp.tools.ocean_search as mod
+    monkeypatch.setattr(mod, "OCEAN_PATH", str(tmp_path))
+    from memocean_mcp.tools.ocean_search import ocean_search
+    assert ocean_search("") == []
+    assert ocean_search("   ") == []
+
+
+def test_ocean_search_returns_list(tmp_path, monkeypatch):
+    """ocean_search with real vault dir returns list (may be empty if no matches)."""
+    import os
+    import memocean_mcp.tools.ocean_search as mod
+    ocean_dir = tmp_path / "Ocean"
+    ocean_dir.mkdir()
+    # Create a test .md file
+    (ocean_dir / "Test Page.md").write_text("# Test Page\nChannelLab GEO 服務測試", encoding="utf-8")
+    monkeypatch.setattr(mod, "OCEAN_PATH", str(ocean_dir) + "/")
+    from memocean_mcp.tools.ocean_search import ocean_search
+    results = ocean_search("ChannelLab GEO", limit=5)
+    assert isinstance(results, list)
+
+
+def test_ocean_search_result_schema(tmp_path, monkeypatch):
+    """ocean_search result dicts have required fields."""
+    import memocean_mcp.tools.ocean_search as mod
+    ocean_dir = tmp_path / "Ocean"
+    ocean_dir.mkdir()
+    (ocean_dir / "MyPage.md").write_text("# MyPage\nHello World content", encoding="utf-8")
+    monkeypatch.setattr(mod, "OCEAN_PATH", str(ocean_dir) + "/")
+    from memocean_mcp.tools.ocean_search import ocean_search
+    results = ocean_search("Hello World", limit=5)
+    if results:
+        r = results[0]
+        assert "title" in r
+        assert "wikilink" in r
+        assert r["wikilink"].startswith("[[")
+        assert r["wikilink"].endswith("]]")
+        assert "excerpt" in r
+        assert "path" in r
+        assert r["source"] == "ocean"
+
+
+def test_ocean_search_no_personal_vault_leak(tmp_path, monkeypatch):
+    """ocean_search scope is limited to Ocean path, not parent directories."""
+    import memocean_mcp.tools.ocean_search as mod
+    ocean_dir = tmp_path / "Ocean"
+    ocean_dir.mkdir()
+    personal_dir = tmp_path / "OldRabbit"
+    personal_dir.mkdir()
+    (personal_dir / "Private.md").write_text("private secret content", encoding="utf-8")
+    (ocean_dir / "Public.md").write_text("public content", encoding="utf-8")
+    monkeypatch.setattr(mod, "OCEAN_PATH", str(ocean_dir) + "/")
+    from memocean_mcp.tools.ocean_search import ocean_search
+    results = ocean_search("private secret", limit=5)
+    paths = [r["path"] for r in results]
+    assert not any("OldRabbit" in p or "Private" in p for p in paths)
+
+
+def test_ocean_search_via_server_tool():
+    """memocean_ocean_search MCP tool exists and returns proper schema."""
+    from memocean_mcp.server import TOOLS
+    assert "memocean_ocean_search" in TOOLS
+    tool = TOOLS["memocean_ocean_search"]
+    assert "query" in tool["input_schema"]["properties"]
+    assert callable(tool["handler"])
