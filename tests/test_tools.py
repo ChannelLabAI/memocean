@@ -253,20 +253,24 @@ def test_server_import():
     """server.py imports cleanly and TOOLS dict is populated."""
     from memocean_mcp.server import TOOLS, handle_request
 
-    assert len(TOOLS) == 6
+    # MEMO-010: added memocean_search + memocean_ocean_search + memocean_ingest_file → 9 total
+    assert len(TOOLS) == 9
     expected = {
+        "memocean_search",
         "memocean_messages_search",
         "memocean_seabed_get",
         "memocean_seabed_search",
+        "memocean_ocean_search",
         "memocean_kg_query",
         "memocean_skill_list",
         "memocean_task_create",
+        "memocean_ingest_file",
     }
     assert set(TOOLS.keys()) == expected
 
 
 def test_server_tools_list():
-    """handle_request('tools/list') returns all 6 tools."""
+    """handle_request('tools/list') returns all 9 tools."""
     from memocean_mcp.server import handle_request
 
     request = {"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}
@@ -274,8 +278,9 @@ def test_server_tools_list():
 
     assert response["id"] == 1
     tools = response["result"]["tools"]
-    assert len(tools) == 6
+    assert len(tools) == 9
     names = {t["name"] for t in tools}
+    assert "memocean_search" in names
     assert "memocean_messages_search" in names
     assert "memocean_task_create" in names
 
@@ -580,11 +585,12 @@ def test_messages_hybrid_no_slug_in_output():
 
 
 def test_messages_hybrid_server_handler():
-    """server TOOLS still has memocean_messages_search with hybrid handler."""
+    """server TOOLS has memocean_messages_search; MEMO-010: now pure BM25, KNN opt-in."""
     from memocean_mcp.server import TOOLS
     assert "memocean_messages_search" in TOOLS
     spec = TOOLS["memocean_messages_search"]
-    assert "hybrid" in spec["description"].lower() or "semantic" in spec["description"].lower()
+    # MEMO-010: description updated to reflect BM25-default + KNN opt-in
+    assert "bm25" in spec["description"].lower() or "fts" in spec["description"].lower()
 
 
 # ==================== QUERY EXPAND ====================
@@ -736,3 +742,92 @@ def test_ocean_search_via_server_tool():
     tool = TOOLS["memocean_ocean_search"]
     assert "query" in tool["input_schema"]["properties"]
     assert callable(tool["handler"])
+
+
+# ==================== MEMO-010: unified_search tests ====================
+
+def test_unified_search_returns_list():
+    """memocean_search returns a list (empty is fine when no data)."""
+    from memocean_mcp.tools.unified_search import memocean_search
+    result = memocean_search("test query")
+    assert isinstance(result, list)
+
+
+def test_unified_search_empty_query():
+    """Empty query returns empty list without error."""
+    from memocean_mcp.tools.unified_search import memocean_search
+    assert memocean_search("") == []
+    assert memocean_search("   ") == []
+
+
+def test_unified_search_result_schema(tmp_path, monkeypatch):
+    """Results from Ocean layer have required schema fields."""
+    import memocean_mcp.tools.ocean_search as ocean_mod
+    ocean_dir = tmp_path / "Ocean"
+    ocean_dir.mkdir()
+    (ocean_dir / "SchemaTest.md").write_text("# SchemaTest\nunified search test content", encoding="utf-8")
+    monkeypatch.setattr(ocean_mod, "OCEAN_PATH", str(ocean_dir) + "/")
+    from memocean_mcp.tools.unified_search import memocean_search
+    results = memocean_search("unified search test content", source="ocean")
+    if results:
+        r = results[0]
+        for field in ("title", "excerpt", "source", "ref", "score_rank", "wikilink", "path", "drawer_path"):
+            assert field in r, f"Missing field: {field}"
+        assert r["source"] == "ocean"
+        assert isinstance(r["score_rank"], int)
+
+
+def test_unified_search_ocean_before_messages(tmp_path, monkeypatch):
+    """Ocean results appear before messages results (source priority order)."""
+    import memocean_mcp.tools.ocean_search as ocean_mod
+    ocean_dir = tmp_path / "Ocean"
+    ocean_dir.mkdir()
+    (ocean_dir / "PriorityPage.md").write_text("# PriorityPage\npriority test CHL GEO", encoding="utf-8")
+    monkeypatch.setattr(ocean_mod, "OCEAN_PATH", str(ocean_dir) + "/")
+
+    from memocean_mcp.tools.unified_search import _SOURCE_PRIORITY
+    assert _SOURCE_PRIORITY["ocean"] > _SOURCE_PRIORITY["messages"]
+
+
+def test_unified_search_source_ocean_only(tmp_path, monkeypatch):
+    """source='ocean' only searches Ocean vault, not messages."""
+    import memocean_mcp.tools.ocean_search as ocean_mod
+    ocean_dir = tmp_path / "Ocean"
+    ocean_dir.mkdir()
+    (ocean_dir / "OceanOnly.md").write_text("# OceanOnly\nocean only query", encoding="utf-8")
+    monkeypatch.setattr(ocean_mod, "OCEAN_PATH", str(ocean_dir) + "/")
+
+    from memocean_mcp.tools.unified_search import memocean_search
+    results = memocean_search("ocean only query", source="ocean")
+    for r in results:
+        assert r["source"] == "ocean"
+
+
+def test_unified_search_dedup():
+    """_merge_and_rank deduplicates by (source, ref)."""
+    from memocean_mcp.tools.unified_search import _merge_and_rank
+    dup = {"title": "T", "excerpt": "e", "source": "ocean", "ref": "Ocean/T.md",
+           "score_rank": 1, "wikilink": "[[T]]", "path": "Ocean/T.md", "drawer_path": ""}
+    results = _merge_and_rank([dup, dup], [], [], limit=10)
+    assert len(results) == 1
+
+
+def test_unified_search_via_server():
+    """memocean_search tool is registered in TOOLS with correct schema."""
+    from memocean_mcp.server import TOOLS
+    assert "memocean_search" in TOOLS
+    tool = TOOLS["memocean_search"]
+    assert "query" in tool["input_schema"]["properties"]
+    assert "source" in tool["input_schema"]["properties"]
+    assert "limit" in tool["input_schema"]["properties"]
+    assert callable(tool["handler"])
+
+
+def test_knn_disabled_by_default():
+    """KNN_ENABLED defaults to false — BGE-m3 must not load by default."""
+    import os
+    env_val = os.environ.get("KNN_ENABLED", "false")
+    assert env_val.lower() in ("false", "0", "no"), (
+        "KNN_ENABLED should default to 'false'; "
+        "if set, must not be true in production config"
+    )

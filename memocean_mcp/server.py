@@ -2,7 +2,8 @@
 server.py — MemOcean MCP Server (library mode, local only).
 
 Registered tools:
-  memocean_messages_search — FTS5 cross-bot message search
+  memocean_search          — Ocean-First unified search (ocean → radar → messages)  [MEMO-010]
+  memocean_messages_search — BM25 FTS5 cross-bot message search
   memocean_seabed_get      — Seabed content retrieval (verbatim/sonar)
   memocean_seabed_search   — Multi-term AND search over CLSC sonar seabed
   memocean_ocean_search    — Full-text search over Ocean vault .md files
@@ -22,6 +23,16 @@ logging.basicConfig(level=logging.INFO, format="%(message)s", stream=sys.stderr)
 logger = logging.getLogger("memocean_mcp")
 
 # ==================== TOOL HANDLERS ====================
+
+
+def tool_unified_search(query: str, source: str = "all", limit: int = 10):
+    """Ocean-First unified search: ocean → radar → messages (opt-in)."""
+    try:
+        from .tools.unified_search import memocean_search
+        results = memocean_search(query, source=source, limit=limit)
+        return {"query": query, "source": source, "count": len(results), "results": results}
+    except Exception as e:
+        return {"error": f"Search failed: {e}", "results": []}
 
 
 def tool_fts_search(query: str, limit: int = 10, bot: str = None):
@@ -128,13 +139,44 @@ def tool_task_create(
 # ==================== MCP PROTOCOL ====================
 
 TOOLS = {
+    "memocean_search": {
+        "description": (
+            "Ocean-First unified search across ChannelLab knowledge layers. "
+            "Searches Ocean vault .md files first (wiki pages, Pearl cards, Research notes, specs), "
+            "then Radar sonar index (CLSC compressed summaries), then Message history (opt-in). "
+            "Results ranked by source priority: ocean > radar > messages. "
+            "Use the `source` param to restrict to a specific layer: "
+            "'ocean' (vault only), 'radar' (sonar only), 'messages' (history only), 'all' (default). "
+            "AC1: memocean_search('CHL 現在在推什麼') returns Ocean page results before SQLite messages. "
+            "No BGE-m3/KNN — pure FTS + Haiku query expansion."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "Natural-language or keyword query. E.g. 'CHL 現在在推什麼', 'MemOcean 架構'",
+                },
+                "source": {
+                    "type": "string",
+                    "description": "Which layer to search: 'all' (default), 'ocean', 'radar', or 'messages'",
+                },
+                "limit": {
+                    "type": "integer",
+                    "description": "Max results to return (default: 10)",
+                },
+            },
+            "required": ["query"],
+        },
+        "handler": tool_unified_search,
+    },
     "memocean_messages_search": {
         "description": (
-            "Hybrid semantic + full-text search over ChannelLab cross-bot Telegram message history. "
-            "Uses BM25 (FTS5) + BGE-m3 KNN vector search merged via Reciprocal Rank Fusion (RRF). "
+            "BM25 full-text search over ChannelLab cross-bot Telegram message history. "
+            "Uses FTS5 BM25 with Haiku query expansion. "
             "Supports natural-language queries ('上次那個 OTC 討論'), boolean operators (AND/OR/NOT), "
             "phrase search (\"quoted\"), and NEAR proximity. "
-            "Falls back to pure BM25 when KNN_ENABLED=false or model unavailable."
+            "KNN vector search disabled by default (set KNN_ENABLED=true to re-enable BGE-m3)."
         ),
         "input_schema": {
             "type": "object",

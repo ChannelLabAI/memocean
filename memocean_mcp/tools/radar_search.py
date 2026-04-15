@@ -718,9 +718,10 @@ def radar_search(query: str, limit: int = 10) -> list[dict]:
 
     # --- Semantic (BGE-m3 KNN) recall ---
     sem_results: list[dict] = []
+    _knn_flag = os.environ.get("KNN_ENABLED", "false").lower()
     try:
         from .reranker import is_available as knn_available
-        use_knn = knn_available()
+        use_knn = _knn_flag not in ("false", "0", "no") and knn_available()
     except Exception:
         use_knn = False
 

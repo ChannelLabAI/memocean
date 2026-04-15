@@ -138,7 +138,7 @@ def messages_hybrid_search(
     if not query or not query.strip():
         return []
 
-    knn_flag = os.environ.get("KNN_ENABLED", "true").lower()
+    knn_flag = os.environ.get("KNN_ENABLED", "false").lower()
     knn_enabled = knn_flag not in ("false", "0", "no")
 
     if knn_enabled:
