@@ -87,7 +87,16 @@ def _search_via_rg(pattern: str, ocean_path: str, limit: int) -> list[dict]:
             rel_path = abs_path
 
         lines_text = obj.get("data", {}).get("lines", {}).get("text", "")
-        excerpt = lines_text.strip()[:200]
+        submatches = obj.get("data", {}).get("submatches", [])
+        if submatches and lines_text:
+            # Use byte offset to center excerpt around the match
+            match_byte_start = submatches[0].get("start", 0)
+            line_bytes = lines_text.encode("utf-8")
+            ctx_start = max(0, match_byte_start - 100)
+            ctx_end = min(len(line_bytes), match_byte_start + 300)
+            excerpt = line_bytes[ctx_start:ctx_end].decode("utf-8", errors="replace").strip()[:200]
+        else:
+            excerpt = lines_text.strip()[:200]
 
         results.append({
             "title": title,
