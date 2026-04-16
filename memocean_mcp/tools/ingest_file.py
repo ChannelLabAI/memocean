@@ -65,6 +65,13 @@ def store_from_string(content: str, slug: str, group: str = _GROUP) -> int:
     # store_sonar handles file + DB upsert
     store_sonar(group, slug, content)
 
+    # MEMO-011: best-effort summary generation
+    try:
+        from .insert_row import generate_and_store_summary
+        generate_and_store_summary(slug, content, "")  # clsc not yet available at insert time
+    except Exception:
+        pass
+
     # Return rowid
     conn = sqlite3.connect(str(FTS_DB))
     try:
@@ -113,6 +120,12 @@ def _upsert_by_path(slug: str, content: str, drawer_path: str, tokens: int, grou
                 sys.path.insert(0, clsc_path)
             from radar import store_sonar
             store_sonar(group, slug, content)
+            # MEMO-011: best-effort summary generation
+            try:
+                from .insert_row import generate_and_store_summary
+                generate_and_store_summary(slug, content, "")  # clsc not yet available at insert time
+            except Exception:
+                pass
             return rowid
         return None  # no existing row — let store_from_string handle INSERT
     finally:

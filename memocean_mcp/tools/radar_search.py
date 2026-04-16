@@ -110,7 +110,7 @@ def _search_fts5(conn: sqlite3.Connection, terms: list[str], limit: int) -> list
     """Primary search via radar_fts with BM25 ranking."""
     fts_query = _escape_fts5_query(terms)
     sql = (
-        "SELECT f.slug, c.clsc, c.tokens, c.drawer_path "
+        "SELECT f.slug, c.clsc, c.tokens, c.drawer_path, c.summary "
         "FROM radar_fts f "
         "JOIN radar c ON c.slug = f.slug "
         "WHERE radar_fts MATCH ? "
@@ -118,9 +118,13 @@ def _search_fts5(conn: sqlite3.Connection, terms: list[str], limit: int) -> list
         "LIMIT ?"
     )
     rows = conn.execute(sql, (fts_query, limit)).fetchall()
-    results = [dict(r) for r in rows]
-    for r in results:
-        r.setdefault("source_type", "radar")
+    results = []
+    for r in rows:
+        d = dict(r)
+        if not d.get("summary"):
+            d.pop("summary", None)
+        d.setdefault("source_type", "radar")
+        results.append(d)
     return results
 
 
@@ -130,16 +134,21 @@ def _search_instr_fallback(conn: sqlite3.Connection, terms: list[str], limit: in
         "CASE WHEN instr(clsc, ?) > 0 THEN 1 ELSE 0 END" for _ in terms
     )
     sql = (
-        f"SELECT slug, clsc, tokens, drawer_path, "
+        f"SELECT slug, clsc, tokens, drawer_path, summary, "
         f"({case_exprs}) AS match_count "
         f"FROM radar WHERE match_count >= 1 "
         f"ORDER BY match_count DESC LIMIT ?"
     )
     params = terms + [limit]
     rows = conn.execute(sql, params).fetchall()
-    results = [dict(r) for r in rows]
-    for r in results:
-        r.setdefault("source_type", "radar")
+    results = []
+    for r in rows:
+        d = dict(r)
+        d.pop("match_count", None)
+        if not d.get("summary"):
+            d.pop("summary", None)
+        d.setdefault("source_type", "radar")
+        results.append(d)
     return results
 
 

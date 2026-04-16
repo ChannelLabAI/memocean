@@ -64,8 +64,10 @@ MemOcean is a Chinese fork of MemPalace, with three core changes:
 The knowledge base is built on [Obsidian](https://obsidian.md) vaults — everything is Markdown + `[[wikilink]]`, readable and writable by both humans and agents with the same tools, no proprietary database or format required.
 
 **Core capabilities:**
-- FTS5 + BM25 + Haiku reranker hybrid search — 86.2% Hit@5 on Chinese
-- CLSC semantic sonar extraction — 87% token reduction, semantic links preserved
+- BM25/INSTR hybrid search — **92.9% Hit@5** on Chinese (no AI components required)
+  - CJK queries: pure SQLite INSTR string search on `radar.clsc` column
+  - English queries: FTS5 BM25, fallback to INSTR
+- CLSC semantic sonar extraction — **92.5% token reduction** (13x compression), semantic links preserved
 - Temporal knowledge graph with non-destructive invalidation
 - Cross-bot memory sharing via a single shared `memory.db`
 
@@ -86,8 +88,10 @@ MemOcean 是 MemPalace 的中文 fork，核心改動有三：
 命名從宮殿轉到海洋，不只是品牌差異。宮殿是靜態的、封閉的；海洋是流動的、開放的。當多隻 Agent 同時往知識庫寫入，知識的狀態更像洋流而不是房間。
 
 **核心能力：**
-- FTS5 + BM25 + Haiku reranker 三層混合搜尋，中文 86.2% Hit@5
-- CLSC 語意 Sonar 萃取，87% token 精簡，保留語意連結
+- BM25/INSTR 搜尋，中文 **92.9% Hit@5**（無需 AI 組件）
+  - CJK 查詢：純 SQLite INSTR 字串搜尋 `radar.clsc` 欄位
+  - 英文查詢：FTS5 BM25，miss 時 fallback INSTR
+- CLSC 語意 Sonar 萃取，**92.5% token 精簡**（13x 壓縮），保留語意連結
 - 時序知識圖譜（KG），支援事實 invalidate 不刪除
 - 跨 bot 記憶共享，同一個 memory.db 服務整個 bot 團隊
 
@@ -190,19 +194,21 @@ MemOcean 嚴格區分兩種記憶：
 | Dimension | [MemPalace](https://github.com/milla-jovovich/mempalace) | [GBrain](https://github.com/garrytan/gbrain) | MemOcean |
 |-----------|---------|---------|---------|
 | **Language assumption** / 設計語言假設 | English (whitespace tokenization) | English | **CJK-first** (HanNER + jieba) |
-| **Search architecture** / 搜尋架構 | BM25 + LIKE | Vector search | **FTS5 + BM25 + Haiku reranker** |
-| **Chinese Hit@5** / 中文搜尋命中率 | ~60% (est.) | ~75% (est.) | **86.2%** (measured) |
+| **Search architecture** / 搜尋架構 | BM25 + LIKE | Vector search | **CJK: pure INSTR / EN: FTS5 BM25** |
+| **Chinese Hit@5** / 中文搜尋命中率 | ~60% (est.) | ~75% (est.) | **92.9%** (measured, no AI required) |
+| **External benchmark** / 外部 benchmark | — | — | DRCD(繁中) **91.9%** / CMRC(簡中) **93.3%** |
 | **Memory format** / 記憶格式 | AAAK skeleton (Closet) | Compiled Truth + Timeline | CLSC Radar (.clsc.md) |
 | **Knowledge graph** / 知識圖譜 | -- | Entity-relation graph | **Temporal KG** (with invalidation) |
 | **Nightly consolidation** / 夜間整合 | -- | Dream Cycle | Dream Cycle (Phase 1 live) |
 | **Multi-bot sharing** / 多 bot 共享 | -- | -- | **Shared memory.db** |
 | **Deployment** / 部署方式 | Local Python | Local Python | **MCP server** (Claude Code native) |
-| **Token reduction** / Token 精簡率 | ~91% (AAAK) | N/A | **87% (CLSC Sonar)** |
+| **Token reduction** / Token 精簡率 | ~91% (AAAK) | N/A | **92.5% (CLSC Sonar, 13x compression)** |
+| **AI dependency** / AI 依賴 | Varies | Varies | **Zero** (all AI components disabled by default) |
 | **License** / 授權 | MIT | MIT | MIT |
 
-> **Note / 說明：** MemPalace and GBrain hit rates are estimated from their benchmark methodology, not direct comparison. MemOcean numbers come from an internal Chinese test set (800 queries, 1/3 each Traditional/Simplified/mixed).
+> **Note / 說明：** MemPalace and GBrain hit rates are estimated from their benchmark methodology, not direct comparison. MemOcean numbers come from benchmarks run 2026-04-16: internal query set + DRCD (Traditional Chinese) + CMRC (Simplified Chinese) external validation.
 >
-> MemPalace/GBrain 的命中率為根據其 benchmark 方法估算，非直接比較。MemOcean 數字來自內部中文測試集（800 題，繁中/簡中/混合各 1/3）。
+> MemPalace/GBrain 的命中率為根據其 benchmark 方法估算，非直接比較。MemOcean 數字來自 2026-04-16 實測：內部查詢集 + DRCD（繁中）+ CMRC（簡中）外部驗證。
 
 ---
 
@@ -270,19 +276,19 @@ Various sources ──→ Pearl (distilled insights)
 
 Both exist independently, `[[linked]]` to each other — they are not an upstream/downstream compression pipeline.
 
-### Search pipeline: Hybrid Recall / 搜尋管線
+### Search pipeline / 搜尋管線
 
-Three-stage hybrid recall, all via API calls, no local GPU required:
+Two-path search, zero AI dependency by default:
 
 ```
-keyword (FTS5 BM25)
-  +                     ──→ merge top-K candidates ──→ Haiku LLM reranker ──→ ranked results
-embedding KNN (API)
+CJK query  ──→  _search_instr_fallback()  ──→  SQLite INSTR on radar.clsc, sorted by match_count
+EN query   ──→  _search_fts5() (FTS5 BM25)
+                    └── on miss ──→  _search_instr_fallback()
 ```
 
-- **keyword**: FTS5 trigram + BM25, exact entity matching, <10ms
-- **embedding KNN**: semantic nearest-neighbor search via embedding API, catches inference-word misses, no local GPU
-- **Haiku reranker**: lightweight LLM reranking, stable ordering in work contexts, better Chinese context fit than pure vector cosine
+- **CJK path**: Pure SQLite `INSTR()` string search on the `radar.clsc` column, ranked by match count. FTS5 trigram performs poorly on Chinese — INSTR is more accurate.
+- **English path**: FTS5 BM25 first (better ranking for English), fallback to INSTR on miss.
+- **AI components** (all disabled by default): Query Expansion (`ENABLE_QUERY_EXPANSION=1`), KNN vector search (`KNN_ENABLED=true`), Haiku reranker (`ENABLE_HAIKU_RERANKER=1`), MiniLM reranker (`ENABLE_MINIML_RERANKER=1`). Benchmarks confirm all AI components hurt performance — enable only if you have a specific use case.
 
 ---
 
@@ -338,19 +344,17 @@ v3 hit rates match v2 (FTS5 auto-fallbacks to OR-match on miss), but ranking qua
 
 ### Benchmark
 
-MemPalace is designed for English; MemOcean is designed for Chinese work scenarios. Each validated on its strongest language:
+MemPalace is designed for English; MemOcean is designed for Chinese work scenarios. Benchmarks run 2026-04-16 with pure BM25/INSTR (zero AI components):
 
-| | MemPalace AAAK skeleton | MemOcean Hybrid+Haiku |
-|---|---|---|
-| Benchmark | LongMemEval (English) | MADial-Bench (Chinese) |
-| Hit@5 / R@5 | 84.2% | **87.5%** |
-| Hit@1 | N/A | **68.1%** |
+| Benchmark | Language | Hit@5 | Notes |
+|---|---|---|---|
+| Internal | Chinese (mixed) | **92.9%** | Primary working corpus |
+| DRCD | Traditional Chinese | **91.9%** | External dataset, gap −1.0% confirms no self-referential bias |
+| CMRC | Simplified Chinese | **93.3%** | External dataset, gap +0.4% |
+| BEIR SciFact | English | **70.7%** | gap −22.2%, language limitation — MemOcean is not optimized for English |
+| CLSC A/B | — | tag vs no-tag **+1.9pp** at Hit@5 | Confirms tag format contributes to recall |
 
-MemOcean exceeds MemPalace English skeleton mode by **+2.0pp** (Hit@5) on Chinese scenarios.
-
-Cross-validation (English LongMemEval): MemOcean Seabed+BM25 **90.5%** R@5 vs MemPalace AAAK **84.2%** (+6.3pp).
-
-Large-scale stress test (CRUD-RAG): 20K Chinese news documents, **99%** hit rate, **14ms** latency.
+CLSC token compression: 1,716,211 raw tokens → 129,529 skeleton tokens = **13x compression (92.5% reduction)**. Median per-entry ratio: 18.9%.
 
 ### Known limitations / 已知限制
 
@@ -558,17 +562,22 @@ Tide 是 MemOcean 的第三層輸出格式。資料流向：Seabed 存原始素�
 
 ## Recent updates / 最近更新
 
+### 2026-04-16
+- **Search pipeline finalized**: CJK queries use pure SQLite `INSTR()` on `radar.clsc` (not FTS5 — FTS5 trigram performs poorly on Chinese). English queries use FTS5 BM25, fallback to INSTR.
+- **All AI components disabled by default**: Query Expansion (`ENABLE_QUERY_EXPANSION=1`), KNN vector search (`KNN_ENABLED=true`), Haiku reranker (`ENABLE_HAIKU_RERANKER=1`), MiniLM reranker (`ENABLE_MINIML_RERANKER=1`) all require explicit env var. Benchmarks confirm all hurt performance.
+- **Benchmark update**: internal Hit@5=92.9%; DRCD Traditional Chinese=91.9%; CMRC Simplified Chinese=93.3%; BEIR SciFact English=70.7%.
+- **CLSC compression confirmed**: 1,716,211 raw tokens → 129,529 skeleton tokens = 13x (92.5% reduction), median per-entry 18.9%.
+
 ### 2026-04-14
-- **MEMO-003: messages_vec Phase 2** — Hybrid search now covers TG messages in addition to radar entries. New `messages_vec` virtual table (vec0, 7,234 rows) stores BGE-m3 embeddings of all ingested messages. `_search_messages_semantic()` runs KNN over `messages_vec` and merges results into the 3-way RRF pipeline (FTS5 + radar KNN + messages KNN). All results carry `source_type` field (`"radar"` or `"message"`) for caller disambiguation (AC3). `tg_daily_ingest.ingest_message()` auto-embeds new messages on ingest (non-blocking, try/except). Backfill script: `shared/scripts/backfill_messages_vec.py` (idempotent, batch=32).
-- **MEMO-002: BGE-m3 ONNX acceleration** — ONNX Runtime INT8 path replaces FlagEmbedding for hot queries (93–104ms vs 500ms). `bge-m3-onnx-int8` symlinks FP32 model; production warm latency target met. Batch backfill uses FlagEmbedding directly (ONNX graph compile ~45min cold).
-- **MEMO-001: radar_vec backfill** — 337/337 radar entries embedded into `radar_vec` (vec0 virtual table). SimHash multi-probe Phase 2 coarse filter also populated (`radar_simhash8`).
+- **MEMO-003: messages_vec Phase 2** — Hybrid search over TG messages. `messages_vec` virtual table (vec0, 7,234 rows). Note: KNN components are now disabled by default.
+- **MEMO-002: BGE-m3 ONNX acceleration** — ONNX Runtime INT8 path (93–104ms warm). Note: BGE-m3 KNN is disabled by default.
+- **MEMO-001: radar_vec backfill** — 337/337 radar entries embedded. Note: KNN path disabled by default.
 
 ### 2026-04-12
 - **`memocean_ingest_file` (Phase 1)**: New MCP tool to ingest local files into MemOcean Radar. Converts PDF/PPT/Word/Excel/HTML/CSV/JSON to markdown via MarkItDown, stores in `group='files'`. Deduplicates by file path. Slug format: `file:{stem}-{hash6}`. Truncates at 50k chars. Requires `markitdown[all]`.
 - **Closet → Radar rename sweep**: All internal references updated across `shared/clsc/`, `shared/fts5/`, `shared/scripts/`, and `memocean_mcp/`.
 - **Dream Cycle FTS gap monitoring**: `_check_fts_gap()` runs at end of each Dream Cycle to detect radar→FTS sync gaps. Additional daily cron at 18:00.
 - **Dream Cycle Phase 2 — stale knowledge detection**: Compares contradictory triples in the KG, marks `valid_to` on superseded facts. Non-destructive invalidation.
-- **Benchmark 86.2% Hit@5**: Hybrid+Haiku reranker stable baseline (LongMemEval 90.5% / MADial 87.5% / CRUD-RAG 99%).
 
 ### 2026-04-11
 - **Removed `memocean_ask_opus`**: Replaced by native `Agent` tool with `model: "opus"` in Claude Code — more direct, fewer tokens.

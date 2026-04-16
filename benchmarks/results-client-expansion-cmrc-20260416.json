@@ -1,0 +1,24 @@
+{
+  "run_at": "2026-04-16T16:20:48.078601+00:00",
+  "dataset": "CMRC 2018 test split",
+  "sample_size": 200,
+  "seed": 42,
+  "haiku_model": "claude-haiku-4-5-20251001",
+  "haiku_fallback_count": 0,
+  "group_a": {
+    "name": "BM25 baseline",
+    "hit_at_1": 0.785,
+    "hit_at_3": 0.94,
+    "hit_at_5": 0.96,
+    "hit_at_10": 0.96
+  },
+  "group_b": {
+    "name": "Haiku expansion → BM25",
+    "hit_at_1": 0.805,
+    "hit_at_3": 0.93,
+    "hit_at_5": 0.96,
+    "hit_at_10": 0.965
+  },
+  "gap_b_minus_a_hit5": 0.0,
+  "summary": "B vs A gap @ Hit@5: +0.0% (neutral)"
+}
