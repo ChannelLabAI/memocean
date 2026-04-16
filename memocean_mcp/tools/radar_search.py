@@ -658,17 +658,8 @@ def radar_search(query: str, limit: int = 10) -> list[dict]:
 
     cjk_query = _has_cjk(query)
 
-    # --- Keyword expansion (Haiku, default ON when ANTHROPIC_API_KEY set) ---
-    # Converts natural-language query → 3-6 keyword terms for FTS.
-    # Example: "CHL 現在在推什麼" → ["CHL","ChannelLab","GEO","服務"]
-    try:
-        from .query_expand import query_expand
-        terms = query_expand(query)
-    except Exception:
-        terms = [t.strip() for t in query.split() if t.strip()]
-
-    if not terms:
-        terms = [t.strip() for t in query.split() if t.strip()]
+    # Split query into keywords directly (caller passes pre-extracted keywords)
+    terms = [t.strip() for t in query.split() if t.strip()]
     if not terms:
         return []
 

@@ -259,7 +259,7 @@ def test_server_import():
         "memocean_search",
         "memocean_messages_search",
         "memocean_seabed_get",
-        "memocean_seabed_search",
+        "memocean_radar_search",
         "memocean_ocean_search",
         "memocean_kg_query",
         "memocean_skill_list",
@@ -375,8 +375,8 @@ def test_radar_search_no_match():
 def test_radar_search_via_server():
     """radar_search tool is registered in server TOOLS dict."""
     from memocean_mcp.server import TOOLS
-    assert "memocean_seabed_search" in TOOLS
-    spec = TOOLS["memocean_seabed_search"]
+    assert "memocean_radar_search" in TOOLS
+    spec = TOOLS["memocean_radar_search"]
     assert "handler" in spec
     assert "query" in spec["input_schema"]["properties"]
 
@@ -591,78 +591,6 @@ def test_messages_hybrid_server_handler():
     spec = TOOLS["memocean_messages_search"]
     # MEMO-010: description updated to reflect BM25-default + KNN opt-in
     assert "bm25" in spec["description"].lower() or "fts" in spec["description"].lower()
-
-
-# ==================== QUERY EXPAND ====================
-
-
-def test_query_expand_import():
-    """query_expand module imports cleanly."""
-    from memocean_mcp.tools.query_expand import query_expand, keywords_to_fts_or
-    assert callable(query_expand)
-    assert callable(keywords_to_fts_or)
-
-
-def test_query_expand_empty():
-    """Empty query returns empty list."""
-    from memocean_mcp.tools.query_expand import query_expand
-    assert query_expand("") == []
-    assert query_expand("   ") == []
-
-
-def test_query_expand_fallback_no_key(monkeypatch):
-    """Without API key, returns whitespace-split terms."""
-    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    from memocean_mcp.tools import query_expand as qe_mod
-    import importlib
-    importlib.reload(qe_mod)
-    qe_mod._KEYWORD_CACHE.clear()
-    result = qe_mod.query_expand("CHL 現在推什麼")
-    assert isinstance(result, list)
-    assert len(result) > 0
-    # Should be whitespace-split fallback
-    assert "CHL" in result
-
-
-def test_query_expand_disabled_flag(monkeypatch):
-    """ENABLE_KEYWORD_EXPANSION=false returns whitespace-split fallback."""
-    monkeypatch.setenv("ENABLE_KEYWORD_EXPANSION", "false")
-    from memocean_mcp.tools import query_expand as qe_mod
-    import importlib
-    importlib.reload(qe_mod)
-    qe_mod._KEYWORD_CACHE.clear()
-    result = qe_mod.query_expand("test query terms")
-    assert "test" in result or result == ["test", "query", "terms"]
-
-
-def test_keywords_to_fts_or_basic():
-    """keywords_to_fts_or builds quoted OR string."""
-    from memocean_mcp.tools.query_expand import keywords_to_fts_or
-    result = keywords_to_fts_or(["ChannelLab", "GEO", "服務"])
-    assert "OR" in result
-    assert '"ChannelLab"' in result
-    assert '"GEO"' in result
-
-
-def test_keywords_to_fts_or_empty():
-    """keywords_to_fts_or returns empty string for empty list."""
-    from memocean_mcp.tools.query_expand import keywords_to_fts_or
-    assert keywords_to_fts_or([]) == ""
-
-
-def test_keywords_to_fts_or_single():
-    """Single keyword returns quoted term without OR."""
-    from memocean_mcp.tools.query_expand import keywords_to_fts_or
-    result = keywords_to_fts_or(["ChannelLab"])
-    assert result == '"ChannelLab"'
-    assert "OR" not in result
-
-
-def test_keywords_to_fts_or_special_chars():
-    """keywords_to_fts_or escapes internal quotes."""
-    from memocean_mcp.tools.query_expand import keywords_to_fts_or
-    result = keywords_to_fts_or(['say "hello"'])
-    assert '""' in result  # escaped double-quote
 
 
 # ── ocean_search tests ─────────────────────────────────────────────────────

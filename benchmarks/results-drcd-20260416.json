@@ -1,0 +1,82 @@
+{
+  "run_at": "2026-04-16T13:10:18.178765+00:00",
+  "dataset": "DRCD v2 test split",
+  "total": 3493,
+  "evaluated": 3493,
+  "skipped": 0,
+  "hit_at_1": 0.8027,
+  "hit_at_3": 0.8961,
+  "hit_at_5": 0.9187,
+  "hit_at_10": 0.9402,
+  "internal_baseline_hit_at_5": 0.929,
+  "gap_hit_at_5": -0.0103,
+  "sample_failures": [
+    {
+      "question": "如果在網球比賽的過程中某選手故意擊球兩次會導致什麼結果？",
+      "query_terms": "會導致 OR 如果在 OR 果在網 OR 在網球 OR 網球比 OR 球比賽 OR 比賽的 OR 賽的過 OR 的過程 OR 過程中 OR 程中某 OR 中某選",
+      "expected_slugs": [
+        "drcd_1151-8_0"
+      ],
+      "got_slugs": [
+        "drcd_1151-11_0",
+        "drcd_1151-13_0",
+        "drcd_2525-12_0",
+        "drcd_3208-7_2",
+        "drcd_4982-14_1"
+      ]
+    },
+    {
+      "question": "在台灣中轄區內人口最多的法院以前的名字為？",
+      "query_terms": "中轄區 OR 在台灣 OR 台灣中 OR 灣中轄 OR 轄區內 OR 區內人 OR 內人口 OR 人口最 OR 口最多 OR 最多的 OR 多的法 OR 的法院",
+      "expected_slugs": [
+        "drcd_1152-13_0"
+      ],
+      "got_slugs": [
+        "drcd_6032-1_0",
+        "drcd_2525-3_1",
+        "drcd_3424-1_1",
+        "drcd_6207-1_0",
+        "drcd_3224-1_1"
+      ]
+    },
+    {
+      "question": "雙和和新店在選舉時哪一政治陣營會有優勢？",
+      "query_terms": "陣營會 OR 雙和和 OR 和和新 OR 和新店 OR 新店在 OR 店在選 OR 在選舉 OR 選舉時 OR 一政治 OR 政治陣 OR 治陣營 OR 營會有",
+      "expected_slugs": [
+        "drcd_1152-13_1"
+      ],
+      "got_slugs": [
+        "drcd_2493-13_0",
+        "drcd_2485-4_0",
+        "drcd_6433-1_0",
+        "drcd_4997-5_0"
+      ]
+    },
+    {
+      "question": "為何當初台北縣在升格時不能用「臺北」這名稱？",
+      "query_terms": "為何當 OR 何當初 OR 當初台 OR 初台北 OR 台北縣 OR 北縣在 OR 縣在升 OR 在升格 OR 升格時 OR 格時不 OR 時不能 OR 不能用",
+      "expected_slugs": [
+        "drcd_1152-2_0"
+      ],
+      "got_slugs": [
+        "drcd_1181-8_0",
+        "drcd_6225-2_0",
+        "drcd_5381-2_0"
+      ]
+    },
+    {
+      "question": "如果沒有誰台北在清朝統治時可能不會被設置台北府？",
+      "query_terms": "統治時 OR 如果沒 OR 果沒有 OR 台北在 OR 北在清 OR 在清朝 OR 清朝統 OR 朝統治 OR 治時可 OR 時可能 OR 可能不 OR 能不會",
+      "expected_slugs": [
+        "drcd_1152-5_0"
+      ],
+      "got_slugs": [
+        "drcd_2525-21_0",
+        "drcd_3265-1_0",
+        "drcd_5758-16_0",
+        "drcd_3341-2_0",
+        "drcd_3454-3_0"
+      ]
+    }
+  ]
+}

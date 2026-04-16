@@ -1,8 +1,8 @@
 """
-unified_search.py — Ocean-First unified search facade (MEMO-010).
+unified_search.py — Radar-First unified search facade (MEMO-012).
 
-Search order: Ocean vault → Radar (CLSC sonar) → Messages (opt-in).
-Implements the Ocean Origin Rule: Ocean results surface first.
+Default search order: Radar (CLSC sonar) → Messages.
+Ocean vault full-text is opt-in only (source='ocean').
 
 Source priority for result ranking: ocean=3 > radar=2 > messages=1.
 
@@ -110,16 +110,17 @@ def memocean_search(
     limit: int = 10,
 ) -> list[dict]:
     """
-    Unified Ocean-First search facade.
+    Radar-First unified search facade.
 
-    Searches in order: Ocean vault → Radar sonar index → Messages (opt-in).
+    Default (source='all'): Radar sonar index + Messages. Ocean vault is opt-in.
     Results merged and ranked by source priority (ocean > radar > messages).
 
     Args:
-        query:  Natural-language or keyword query (CJK-safe).
+        query:  3-5 keywords separated by spaces (not a question sentence).
+                Example: 'ChannelLab GEO 服務' not 'CHL 現在在推什麼業務？'
         source: Which layer(s) to search:
-                "all"      — Ocean + Radar + Messages (default)
-                "ocean"    — Ocean vault .md files only
+                "all"      — Radar + Messages (default, no Ocean full-text scan)
+                "ocean"    — Ocean vault .md files only (full-text ripgrep/walk)
                 "radar"    — Radar sonar index only
                 "messages" — Message history only
         limit:  Max results to return (default: 10).
@@ -131,14 +132,8 @@ def memocean_search(
     if not query or not query.strip():
         return []
 
-    # Expand query once — share keywords across all search layers.
-    try:
-        from .query_expand import query_expand
-        keywords = query_expand(query)
-    except Exception:
-        keywords = [t for t in query.split() if t.strip()]
-    if not keywords:
-        keywords = [query.strip()]
+    # Split keywords directly — caller (bot) is expected to pass keywords, not sentences.
+    keywords = [t for t in query.split() if t.strip()] or [query.strip()]
 
     # Shared keyword string for ocean (regex OR pattern built inside ocean_search)
     keyword_query = " ".join(keywords)
@@ -147,17 +142,15 @@ def memocean_search(
     radar_results: list[dict] = []
     messages_results: list[dict] = []
 
-    if source in ("ocean", "all"):
+    if source == "ocean":
         try:
             from .ocean_search import ocean_search
-            # ocean_search does its own query_expand internally, but passing the
-            # pre-expanded keyword query avoids a second Haiku call.
             raw = ocean_search(keyword_query, limit=limit)
             ocean_results = _normalize_ocean(raw)
         except Exception as e:
             logger.debug("unified_search: ocean_search failed: %s", e)
 
-    if source in ("radar", "all"):
+    if source in ("radar", "all"):  # "all" = Radar-First (no Ocean full-text)
         try:
             from .radar_search import radar_search
             raw = radar_search(query, limit=limit)

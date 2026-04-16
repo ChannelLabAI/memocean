@@ -2,10 +2,10 @@
 server.py — MemOcean MCP Server (library mode, local only).
 
 Registered tools:
-  memocean_search          — Ocean-First unified search (ocean → radar → messages)  [MEMO-010]
+  memocean_search          — Radar-First unified search (radar → messages; ocean opt-in)  [MEMO-012]
   memocean_messages_search — BM25 FTS5 cross-bot message search
   memocean_seabed_get      — Seabed content retrieval (verbatim/sonar)
-  memocean_seabed_search   — Multi-term AND search over CLSC sonar seabed
+  memocean_radar_search   — Multi-term AND search over CLSC sonar seabed
   memocean_ocean_search    — Full-text search over Ocean vault .md files
   memocean_kg_query      — Temporal knowledge graph query
   memocean_skill_list    — List/get approved learned skills
@@ -141,21 +141,20 @@ def tool_task_create(
 TOOLS = {
     "memocean_search": {
         "description": (
-            "Ocean-First unified search across ChannelLab knowledge layers. "
-            "Searches Ocean vault .md files first (wiki pages, Pearl cards, Research notes, specs), "
-            "then Radar sonar index (CLSC compressed summaries), then Message history (opt-in). "
+            "Radar-First unified search across ChannelLab knowledge layers. "
+            "Default (source='all'): searches Radar sonar index (CLSC summaries) + Message history. "
+            "Ocean vault full-text scan is opt-in only (source='ocean'). "
             "Results ranked by source priority: ocean > radar > messages. "
-            "Use the `source` param to restrict to a specific layer: "
-            "'ocean' (vault only), 'radar' (sonar only), 'messages' (history only), 'all' (default). "
-            "AC1: memocean_search('CHL 現在在推什麼') returns Ocean page results before SQLite messages. "
-            "No BGE-m3/KNN — pure FTS + Haiku query expansion."
+            "Use the `source` param to restrict: "
+            "'all' (Radar+Messages, default), 'ocean' (vault full-text), 'radar' (sonar only), 'messages' (history only). "
+            "No BGE-m3/KNN — pure BM25 FTS."
         ),
         "input_schema": {
             "type": "object",
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "Natural-language or keyword query. E.g. 'CHL 現在在推什麼', 'MemOcean 架構'",
+                    "description": "3-5 keywords separated by spaces (not a question sentence). E.g. 'ChannelLab GEO 服務', 'MemOcean 架構'",
                 },
                 "source": {
                     "type": "string",
@@ -173,8 +172,8 @@ TOOLS = {
     "memocean_messages_search": {
         "description": (
             "BM25 full-text search over ChannelLab cross-bot Telegram message history. "
-            "Uses FTS5 BM25 with Haiku query expansion. "
-            "Supports natural-language queries ('上次那個 OTC 討論'), boolean operators (AND/OR/NOT), "
+            "Pass 3-5 keywords separated by spaces (not a question sentence). "
+            "Supports keyword queries ('OTC 討論'), boolean operators (AND/OR/NOT), "
             "phrase search (\"quoted\"), and NEAR proximity. "
             "KNN vector search disabled by default (set KNN_ENABLED=true to re-enable BGE-m3)."
         ),
@@ -220,7 +219,7 @@ TOOLS = {
         },
         "handler": tool_radar_get,
     },
-    "memocean_seabed_search": {
+    "memocean_radar_search": {
         "description": (
             "Search MemOcean's Radar (CLSC sonar index) using multi-term AND matching. "
             "Splits query on whitespace; all terms must appear in the radar sonar index. "

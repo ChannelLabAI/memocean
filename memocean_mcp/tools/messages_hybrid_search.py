@@ -148,13 +148,12 @@ def messages_hybrid_search(
         except Exception:
             knn_enabled = False
 
-    # Keyword expansion: convert natural-language query → keyword OR query for BM25.
+    # Build BM25 query from split keywords (caller passes pre-extracted keywords).
     # KNN keeps original query (natural language better for embedding).
-    try:
-        from .query_expand import query_expand, keywords_to_fts_or
-        keywords = query_expand(query)
-        bm25_query = keywords_to_fts_or(keywords) if len(keywords) > 1 else query
-    except Exception:
+    keywords = [t.strip() for t in query.split() if t.strip()] or [query.strip()]
+    if len(keywords) > 1:
+        bm25_query = " OR ".join('"' + k.replace('"', '""') + '"' for k in keywords)
+    else:
         bm25_query = query
 
     # BM25 always runs

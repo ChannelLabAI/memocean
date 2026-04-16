@@ -1,0 +1,72 @@
+{
+  "run_at": "2026-04-16T13:24:58.320812+00:00",
+  "dataset": "CMRC 2018 test split",
+  "total": 3219,
+  "evaluated": 3219,
+  "skipped": 0,
+  "hit_at_1": 0.8055,
+  "hit_at_3": 0.9226,
+  "hit_at_5": 0.9329,
+  "hit_at_10": 0.9379,
+  "internal_baseline_hit_at_5": 0.929,
+  "gap_hit_at_5": 0.0039,
+  "sample_failures": [
+    {
+      "question": "战国史模式主打哪两个模式？",
+      "query_terms": "战国史 OR 国史模 OR 史模式 OR 模式主 OR 式主打 OR 两个模 OR 个模式",
+      "expected_slugs": [
+        "cmrc_DEV_0_1"
+      ],
+      "got_slugs": [
+        "cmrc_DEV_0_0",
+        "cmrc_DEV_493_1"
+      ]
+    },
+    {
+      "question": "赵鹏的职业是什么？",
+      "query_terms": "赵鹏的 OR 鹏的职 OR 的职业 OR 职业是",
+      "expected_slugs": [
+        "cmrc_DEV_5_0"
+      ],
+      "got_slugs": [
+        "cmrc_DEV_430_0",
+        "cmrc_DEV_143_0",
+        "cmrc_DEV_393_0"
+      ]
+    },
+    {
+      "question": "邹游的职业是什么？",
+      "query_terms": "邹游的 OR 游的职 OR 的职业 OR 职业是",
+      "expected_slugs": [
+        "cmrc_DEV_6_0"
+      ],
+      "got_slugs": [
+        "cmrc_DEV_430_0",
+        "cmrc_DEV_143_0",
+        "cmrc_DEV_393_0"
+      ]
+    },
+    {
+      "question": "他司职什么位置？",
+      "query_terms": "他司职 OR 么位置",
+      "expected_slugs": [
+        "cmrc_DEV_6_0"
+      ],
+      "got_slugs": [
+        "cmrc_DEV_143_0"
+      ]
+    },
+    {
+      "question": "于乐的职业是什么？",
+      "query_terms": "于乐的 OR 乐的职 OR 的职业 OR 职业是",
+      "expected_slugs": [
+        "cmrc_DEV_8_0"
+      ],
+      "got_slugs": [
+        "cmrc_DEV_430_0",
+        "cmrc_DEV_143_0",
+        "cmrc_DEV_393_0"
+      ]
+    }
+  ]
+}

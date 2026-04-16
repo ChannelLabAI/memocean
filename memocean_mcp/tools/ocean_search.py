@@ -6,8 +6,7 @@ Fast path: ripgrep if available on PATH (tried via shutil.which).
 
 Key design choices:
   - Only searches Ocean/ (never OldRabbit/ or other personal vaults)
-  - Uses query_expand() for keyword extraction, same as other search tools
-  - Falls back to raw query split when expansion unavailable
+  - Splits query on whitespace for keyword extraction (no Haiku call)
   - Returns [] (not raises) when Ocean path doesn't exist
 
 Result schema (each dict):
@@ -177,14 +176,8 @@ def ocean_search(query: str, limit: int = 10) -> list[dict]:
         logger.debug("ocean_search: Ocean vault not found at %s", OCEAN_PATH)
         return []
 
-    # Build search terms via query_expand
-    try:
-        from .query_expand import query_expand
-        terms = query_expand(query)
-    except Exception:
-        terms = [t for t in query.split() if t.strip()]
-    if not terms:
-        terms = [query.strip()]
+    # Split query into keywords directly
+    terms = [t for t in query.split() if t.strip()] or [query.strip()]
 
     # Build regex pattern: any term (OR)
     pattern = "|".join(re.escape(t) for t in terms)

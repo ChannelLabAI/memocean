@@ -91,7 +91,7 @@ Agent 團隊按職能分工——Assistant（需求分析、任務調度）、Bu
 
 | 路徑 | 搜什麼 | 速度 | 場景 |
 |------|--------|------|------|
-| `memocean_seabed_search` | Radar（CLSC sonar）| 快 | 快速定位：「有沒有關於 X 的素材？」 |
+| `memocean_radar_search` | Radar（CLSC sonar）| 快 | 快速定位：「有沒有關於 X 的素材？」 |
 | `memocean_seabed_get` | 原文 verbatim | 中 | 拿完整內容：「把那篇 X 的全文給我」 |
 | `fts_search` | 跨 Agent 訊息 | <10ms | 歷史搜尋：「誰什麼時候說過 X？」 |
 | `kg_query` | 時序知識圖譜 | 中 | 關係查詢：「X 跟 Y 什麼關係？」 |

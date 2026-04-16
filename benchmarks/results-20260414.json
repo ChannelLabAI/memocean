@@ -1,0 +1,4485 @@
+{
+  "benchmark": "work-scenario-200",
+  "run_date": "2026-04-14",
+  "db_path": "/home/oldrabbit/.claude-bots/memory.db",
+  "radar_entries": 247,
+  "summary": {
+    "total_questions": 155,
+    "hit@1": 0.5419,
+    "hit@3": 0.8,
+    "hit@5": 0.9161,
+    "hit@10": 0.9419
+  },
+  "scene_breakdown": {
+    "cross_language": {
+      "count": 16,
+      "hit@1": 56.2,
+      "hit@3": 68.8,
+      "hit@5": 100.0,
+      "hit@10": 100.0
+    },
+    "decision_record": {
+      "count": 17,
+      "hit@1": 82.4,
+      "hit@3": 100.0,
+      "hit@5": 100.0,
+      "hit@10": 100.0
+    },
+    "org_structure": {
+      "count": 8,
+      "hit@1": 50.0,
+      "hit@3": 87.5,
+      "hit@5": 87.5,
+      "hit@10": 87.5
+    },
+    "person_lookup": {
+      "count": 11,
+      "hit@1": 63.6,
+      "hit@3": 81.8,
+      "hit@5": 90.9,
+      "hit@10": 90.9
+    },
+    "process_sop": {
+      "count": 17,
+      "hit@1": 70.6,
+      "hit@3": 94.1,
+      "hit@5": 94.1,
+      "hit@10": 94.1
+    },
+    "product_feature": {
+      "count": 18,
+      "hit@1": 22.2,
+      "hit@3": 50.0,
+      "hit@5": 77.8,
+      "hit@10": 83.3
+    },
+    "project_info": {
+      "count": 19,
+      "hit@1": 42.1,
+      "hit@3": 68.4,
+      "hit@5": 84.2,
+      "hit@10": 100.0
+    },
+    "semantic_fuzzy": {
+      "count": 17,
+      "hit@1": 29.4,
+      "hit@3": 70.6,
+      "hit@5": 88.2,
+      "hit@10": 88.2
+    },
+    "tech_architecture": {
+      "count": 20,
+      "hit@1": 60.0,
+      "hit@3": 95.0,
+      "hit@5": 95.0,
+      "hit@10": 95.0
+    },
+    "temporal_reasoning": {
+      "count": 12,
+      "hit@1": 75.0,
+      "hit@3": 91.7,
+      "hit@5": 100.0,
+      "hit@10": 100.0
+    }
+  },
+  "errors": [],
+  "detail": [
+    {
+      "id": 1,
+      "question": "Nicky 在團隊裡負責什麼？",
+      "scene": "person_lookup",
+      "query_terms": "Nicky 角色 職責",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Research-knowledge-infra-proposal-anya",
+        "Currents-ChannelLab-BD-People-Nicky",
+        "Currents-ChannelLab-Org-Seabed-profit-sharing-202604",
+        "Currents-ChannelLab-Org-People-Nicky"
+      ],
+      "returned_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-blocks-block-daily-log",
+        "1050312492:5567",
+        "Currents-ChannelLab-BD-People-Nicky",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-dispatch",
+        "1050312492:11077",
+        "Currents-ChannelLab-Org-People-Nicky",
+        "Currents-NOXCAT-Product-V6-33d89caea48e81359b74f9113454f523",
+        "1050312492:16",
+        "Currents-ChannelLab-Org-Seabed-profit-sharing-202604"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 2,
+      "question": "Ron 是什麼個性的人？",
+      "scene": "person_lookup",
+      "query_terms": "Ron 個性",
+      "expected_slugs": [
+        "claude-skills-obsidian-markdown-references-PROPERTIES",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Bot-System-bots-anya-blocks-block-daily-cron",
+        "Chart-Bot-System-bots-Bella-CLAUDE",
+        "Chart-Bot-System-bots-caijie-zhuchu-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-Bot-System-bots-ron-assistant-blocks-block-daily-log",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "1050312492:5565",
+        "Chart-Bot-System-shared-team-l0",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "1050312492:7878",
+        "Chart-MemOcean-CLSC-CLSC-dogfood-week1",
+        "Currents-NOXCAT-Product-33a89caea48e80ee9a14cd24c7cadde1",
+        "1050312492:5534",
+        "Currents-ChannelLab-Org-People-Ron"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 3,
+      "question": "老兔的決策風格是什麼？",
+      "scene": "person_lookup",
+      "query_terms": "老兔 決策風格",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Bot-System-bots-anna-CLAUDE",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-Bot-System-bots-Bella-CLAUDE",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Chart-Bot-System-bots-anya-blocks-block-daily-log",
+        "1050312492:9090",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-daily-log",
+        "-5267778636:relay-msg|sancai|2154",
+        "Chart-Architecture-channellab-bot-framework",
+        "Currents-NOXCAT-Product-CK-Demo-33d89caea48e8141b592ffbfcf59562f",
+        "1050312492:9091",
+        "Chart-Bot-System-bots-anya-blocks-block-section9-external-comms"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 4,
+      "question": "菜姐的角色是什麼？她管什麼？",
+      "scene": "person_lookup",
+      "query_terms": "菜姐 角色",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Bot-System-bots-chltao-CLAUDE",
+        "Chart-Bot-System-bots-_template",
+        "Currents-ChannelLab-Org-People",
+        "Chart-Bot-System-bots-caijie-zhuchu-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-daily-log",
+        "-1003612111775:72",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "tg-20260413-1003634255226-relay-msg|anya|12783",
+        "1050312492:10004",
+        "Chart-Bot-System-bots-_template",
+        "tg-20260413-5034023909-relay-msg|anya|12803",
+        "1050312492:7138",
+        "Chart-Bot-System-global-CLAUDE"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 6,
+      "question": "誰是 QA Lead？",
+      "scene": "person_lookup",
+      "query_terms": "QA Lead 審查",
+      "expected_slugs": [
+        "Chart-Bot-System-bots-yitang-CLAUDE",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-Bot-System-bots-ron-reviewer-CLAUDE",
+        "Chart-Bot-System-bots-Bella-CLAUDE",
+        "Currents-GitHub-claude-telegram-bots-shared-templates-reviewer-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Currents-GitHub-claude-telegram-bots-shared-templates-reviewer-CLAUDE",
+        "Currents-NOXCAT-meetings-2026-04-07-OTC-Wes-PRD",
+        "-5267778636:relay-msg|anya|1324",
+        "Chart-Bot-System-bots-Bella-CLAUDE",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "-5267778636:relay-msg|Bella|1181",
+        "Chart-Bot-System-bots-ron-reviewer-CLAUDE",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "-5267778636:relay-msg|Bella|1218",
+        "Chart-Bot-System-bots-yitang-CLAUDE"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 7,
+      "question": "Anna 負責什麼？她是 builder 還是 reviewer？",
+      "scene": "person_lookup",
+      "query_terms": "Anna builder 角色",
+      "expected_slugs": [
+        "Chart-Bot-System-bots-anna-CLAUDE",
+        "Chart-Bot-System-bots-ron-builder-CLAUDE",
+        "Chart-Bot-System-bots-anya-blocks-block-vps-ops",
+        "Chart-Bot-System-bots-ron-reviewer-CLAUDE",
+        "Chart-Bot-System-bots-Bella-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-Bot-Usage-Cost",
+        "Chart-Bot-System-bots-anya-blocks-block-daily-log",
+        "1050312492:682",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-custom-reminders",
+        "1050312492:10683",
+        "Chart-Architecture-browser-automation-landscape",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-daily-cron",
+        "1050312492:5752",
+        "Chart-Bot-System-bots-CLAUDE"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "hit@10": 0
+    },
+    {
+      "id": 8,
+      "question": "CZ 趙長鵬的創業故事有什麼重點？",
+      "scene": "person_lookup",
+      "query_terms": "趙長鵬 CZ 創業",
+      "expected_slugs": [
+        "Currents-GitHub-memocean-clsc-README",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Currents-ChannelLab-Org-Companies-NanLiang",
+        "Research-CZ-Memoir-Industry-Timeline",
+        "Research-research_tmp-clsc"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Currents-NOXCAT-meetings-2026-04-09-NOXCAT",
+        "1050312492:7130",
+        "Currents-ChannelLab-Org-Companies-NanLiang",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:6049",
+        "Currents-GitHub-memocean-clsc-README",
+        "Currents-NOXCAT-Product-32d89caea48e80a7b313eff44819ca78",
+        "1050312492:6543",
+        "Research-research_tmp-clsc"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 11,
+      "question": "團隊裡有哪些 Builder？",
+      "scene": "person_lookup",
+      "query_terms": "Builder 團隊成員",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Bot-System-bots-anna-CLAUDE",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-Bot-System-bots-Bella-CLAUDE",
+        "Chart-Architecture-Bot-Team-Architecture"
+      ],
+      "returned_slugs": [
+        "Chart-Architecture-Bot-Team-Architecture",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-blocks-block-daily-log",
+        "1050312492:10759",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "-1003612111775:relay-msg|ron-builder|10",
+        "Chart-Architecture-channellab-bot-framework",
+        "Currents-ChannelLab-Org-Team-Email-Contacts",
+        "1050312492:6113",
+        "Chart-Bot-System-bots-anya-blocks-block-vps-ops"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 15,
+      "question": "誰寫了知識基礎設施的提案？",
+      "scene": "person_lookup",
+      "query_terms": "知識基礎設施 提案 作者",
+      "expected_slugs": [
+        "Research-knowledge-infra-proposal-chef",
+        "Research-knowledge-infra-proposal-anya",
+        "Research-knowledge-infra-proposal-elon-musk",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Research-knowledge-infra-proposal-panda"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "tg-20260413-5034023909-10429",
+        "1050312492:9720",
+        "Research-knowledge-infra-proposal-anya",
+        "Currents-NOXCAT-Product-Phase-1-EVM-Arbitrum-33d89caea48e816cb5eee7f0b4f349f6",
+        "1050312492:7331",
+        "Research-knowledge-infra-proposal-chef",
+        "Currents-NOXCAT-Product-33a89caea48e80ee9a14cd24c7cadde1",
+        "1050312492:9726",
+        "Research-knowledge-infra-proposal-elon-musk"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 16,
+      "question": "Nick Spisak 的方法論是什麼？",
+      "scene": "person_lookup",
+      "query_terms": "Nick Spisak method",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Research-nick-spisak-method",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-CLAUDE",
+        "Pearl-nick-spisak-method",
+        "Chart-Bot-System-bots-nicky-builder-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-blocks-block-daily-log",
+        "Pearl-nick-spisak-method",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "1050312492:7236",
+        "Research-nick-spisak-method",
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy",
+        "1050312492:7931",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "1050312492:5880"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 17,
+      "question": "Steph Ango 做了什麼跟 Agent 有關的事？",
+      "scene": "person_lookup",
+      "query_terms": "Steph Ango kepano agent skills",
+      "expected_slugs": [
+        "Chart-crypto-ai-skills-shortlist",
+        "Chart-Bot-System-bots-yitang-CLAUDE",
+        "Research-kepano-obsidian-skills",
+        "Chart-Bot-System-bots-ron-reviewer-CLAUDE",
+        "Pearl-kepano-obsidian-skills"
+      ],
+      "returned_slugs": [
+        "Pearl-kepano-obsidian-skills",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-sub-agent-routing",
+        "1050312492:5614",
+        "Research-kepano-obsidian-skills",
+        "Research-ApifySkills-WebScraping-2026-04-14",
+        "1050312492:10214",
+        "Chart-crypto-ai-skills-shortlist",
+        "Currents-NOXCAT-Product-32d89caea48e8056836ed39d140a76ef",
+        "1050312492:7790",
+        "Pearl-hermes-agent"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 21,
+      "question": "Bonk GEO 提案目前進度？",
+      "scene": "project_info",
+      "query_terms": "Bonk GEO 提案 進度",
+      "expected_slugs": [
+        "Chart-SOP-Team-Onboarding-SOP",
+        "Chart-Bot-System-bots-lilai-fengfeng-CLAUDE",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-CLAUDE",
+        "Currents-ChannelLab-GEO-Bonk-GEO",
+        "Currents-ChannelLab-GEO-PRD"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-Bonk-GEO",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Currents-ChannelLab-GEO-Bonk-GEO",
+        ":/home/oldrabbit/.claude/projects/-home-oldrabbit--claude-bots/memory/project_bonk_geo.md",
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy",
+        "1050312492:6541",
+        "Chart-SOP-Team-Onboarding-SOP",
+        "Currents-NOXCAT-Product-CK-Demo-33d89caea48e8141b592ffbfcf59562f",
+        "-5267778636:relay-msg|anna|1766",
+        "Currents-ChannelLab-GEO-PRD"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 22,
+      "question": "南良集團合作案細節",
+      "scene": "project_info",
+      "query_terms": "南良集團 合作",
+      "expected_slugs": [
+        "Currents-ChannelLab-BD-Media-Pricing",
+        "Currents-ChannelLab-Org-People-Lilai",
+        "Currents-ChannelLab-BD-People-_template",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-CLAUDE",
+        "Currents-ChannelLab-Org-Companies-NanLiang"
+      ],
+      "returned_slugs": [
+        "Currents-NOXCAT-Product-NOX-Paymaster-V2-Arbitrum-NOX-Gas-33d89caea48e81c0a421c1afb7702f82",
+        "Currents-NOXCAT-Product-Noxcat-PRD-33d89caea48e81e6b5ceef4080b0ce4a",
+        "Currents-NOXCAT-Product-noxcat_cross_chain_prd_markdown",
+        "Currents-NOXCAT-Product-33d89caea48e81339745ebfea63f3e1e",
+        "Currents-NOXCAT-Product-CK-Demo-33d89caea48e8141b592ffbfcf59562f",
+        "Currents-NOXCAT-Product-33d89caea48e81b491a3fa71191717ae",
+        "Currents-ChannelLab-Org-Companies-NanLiang",
+        "1050312492:8758",
+        "Currents-ChannelLab-BD-Media-Pricing",
+        "1050312492:11003"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "hit@10": 1
+    },
+    {
+      "id": 23,
+      "question": "QuBitDEX 的 GEO 策略做了什麼？",
+      "scene": "project_info",
+      "query_terms": "QuBitDEX GEO",
+      "expected_slugs": [
+        "Currents-ChannelLab-GEO-QuBitDEX-GEO",
+        "Chart-MemOcean",
+        "Currents-ChannelLab-GEO-Bonk-GEO",
+        "Currents-ChannelLab-GEO-PRD",
+        "Chart-MemOcean-MemOcean"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-QuBitDEX-GEO",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Currents-ChannelLab-GEO-PRD",
+        "1050312492:6267",
+        "Currents-ChannelLab-GEO-QuBitDEX-GEO",
+        "1050312492:6541",
+        "Currents-ChannelLab-Product-GEO-Bonk-GEO",
+        "-5267778636:relay-msg|anna|1420",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "-5267778636:relay-msg|Bella|1467"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 24,
+      "question": "GWIN RWA 白皮書重點",
+      "scene": "project_info",
+      "query_terms": "GWIN RWA 白皮書",
+      "expected_slugs": [
+        "Currents-ChannelLab-Events-TBOS-2025-TBOS-Index",
+        "Currents-ChannelLab-Org-Companies-Meta-Assets-MSP",
+        "Currents-ChannelLab-Events-TBOS-TBOS-Index",
+        "Currents-ChannelLab-GEO-GWIN-RWA",
+        "Depth-llm-wiki-wiki-sources-2026-04-05-eip-8141-hegota"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-GWIN-RWA",
+        "Currents-NOXCAT-Product-33d89caea48e81648b4cf7e23213daae",
+        "Currents-NOXCAT-meetings-2026-04-09-NOXCAT",
+        "Currents-ChannelLab-GEO-GWIN-RWA",
+        "1050312492:9693",
+        "1050312492:9863",
+        "Currents-ChannelLab-Events-TBOS-2025-TBOS-Index",
+        "Currents-ChannelLab-Product-GEO-QuBitDEX-GEO",
+        "1050312492:5373",
+        "Currents-ChannelLab-Events-TBOS-TBOS-Index"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 25,
+      "question": "Canalis Angel 融資案的營收預估是多少？",
+      "scene": "project_info",
+      "query_terms": "Canalis Angel 融資 營收",
+      "expected_slugs": [
+        "Currents-ChannelLab-Org-Deals-Canalis_Angel",
+        "Chart-O2-WorkFlow",
+        "Currents-GitHub-geo-analyzer-CHANGELOG",
+        "Currents-GitHub-geo-analyzer-demo-CHANGELOG",
+        "Research-hermes-agent-research"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Org-Deals-Canalis_Angel",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "1050312492:7691",
+        "Research-hermes-agent-research",
+        "Research-RyanLi-SurfSkill-ClaudeCode-Crypto-2026-04-14",
+        "1050312492:8099",
+        "Currents-NOXCAT-Product-U-33d89caea48e81a5b85cdd1a39a507b7",
+        ":/home/oldrabbit/.claude/projects/-home-oldrabbit--claude-bots-bots-anya/memory/project_client_status.md",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        ":/home/oldrabbit/.claude/projects/-home-oldrabbit--claude-bots/memory/project_channellab_pricing.md"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 28,
+      "question": "Gene Capital 的量化策略 APY 多少？",
+      "scene": "project_info",
+      "query_terms": "Gene Capital APY 量化",
+      "expected_slugs": [
+        "Currents-NOXCAT-People-Gene-Capital",
+        "Currents-ChannelLab-ChannelLab-clsc",
+        "Chart-Bot-System-shared-team-l0",
+        "Chart-MemOcean-RnD-Vector-Quantization",
+        "Currents-ChannelLab-Org-People-Wes"
+      ],
+      "returned_slugs": [
+        "Currents-NOXCAT-People-Gene-Capital",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "1050312492:10229",
+        "Currents-ChannelLab-Org-People-Wes",
+        "Research-ApifySkills-WebScraping-2026-04-14",
+        "1050312492:7893",
+        "Chart-MemOcean-RnD-Vector-Quantization",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "1050312492:5799",
+        "Currents-ChannelLab-Events-TBOS-2026-TBOS-Plan-Draft"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 30,
+      "question": "Anya Voice Assistant 的技術架構用了什麼？",
+      "scene": "project_info",
+      "query_terms": "Anya Voice Assistant 技術",
+      "expected_slugs": [
+        "Research-graphify-research",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-CLAUDE",
+        "Research-Clicky",
+        "Chart-Bot-System-bots-anya-CLAUDE",
+        "Chart-Bot-System-bots-interns-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Seabed-chats-clsc",
+        "Chart-MemOcean-CLSC-CLSC-dogfood-week1",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:684",
+        "Currents-GitHub-geo-analyzer-docs-review-brand-geo-score-phase1",
+        "tg-20260413-1003634255226-relay-msg|anya|12783",
+        "-5208584620:8603",
+        "Research-graphify-research",
+        "tg-20260413-5034023909-relay-msg|anya|12812",
+        "1050312492:5202"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "hit@10": 1
+    },
+    {
+      "id": 31,
+      "question": "Bonk 的 Google AIO 策略是什麼？",
+      "scene": "project_info",
+      "query_terms": "Bonk Google AIO",
+      "expected_slugs": [
+        "Currents-ChannelLab-GEO-Bonk-AIO-Strategy",
+        "Chart-Bot-System-bots-ron-assistant-CLAUDE",
+        "Chart-Bot-System-bots-chltao-CLAUDE",
+        "Chart-Bot-System-bots-anya-blocks-block-daily-cron",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy",
+        "Currents-ChannelLab-Product-GEO-Bonk-GEO",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Currents-ChannelLab-GEO-Bonk-AIO-Strategy",
+        ":/home/oldrabbit/.claude/projects/-home-oldrabbit--claude-bots/memory/project_bonk_geo.md",
+        "1050312492:5603",
+        "Chart-MemOcean-RnD-Vector-Quantization",
+        "1050312492:10631",
+        "Chart-SOP-Google-Calendar-MCP-Setup-SOP",
+        "Seabed-chats-clsc"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 33,
+      "question": "日本 Web3 BD 職缺的條件是什麼？",
+      "scene": "project_info",
+      "query_terms": "日本 Web3 BD 職缺",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Currents-ChannelLab-Org-Companies-Meta-Assets-MSP",
+        "Currents-ChannelLab-BD-Media-Resource-List",
+        "Currents-NOXCAT-People-JD_BD_Japan_Web3_2026-04",
+        "Currents-ChannelLab-Org-Media-Resource-List"
+      ],
+      "returned_slugs": [
+        "Research-RyanLi-SurfSkill-ClaudeCode-Crypto-2026-04-14",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Currents-NOXCAT-Product-NOX_Wallet_PRD_v1-1",
+        "Currents-NOXCAT-People-JD_BD_Japan_Web3_2026-04",
+        "2114307569:1454",
+        "Currents-ChannelLab-BD-Media-Resource-List",
+        "Currents-NOXCAT-Product-Web2-V5-33d89caea48e8188863bffea77d4d6af",
+        "1050312492:10281",
+        "Currents-ChannelLab-Org-Companies-Meta-Assets-MSP"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 34,
+      "question": "ChannelLab 目前有哪些進行中的專案？",
+      "scene": "project_info",
+      "query_terms": "ChannelLab 進行中 專案",
+      "expected_slugs": [
+        "Currents-ChannelLab-Org-Companies-Meta-Assets-MSP",
+        "Depth-CLSC-Spec",
+        "Currents-ChannelLab-Org-Companies-Hubble-AI",
+        "Currents-ChannelLab-Org-Seabed-ChannelLab-Projects",
+        "Chart-Bot-System-bots-interns-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "Currents-ChannelLab-Org-Companies-Hubble-AI",
+        "Chart-Bot-System-automation-registry",
+        "1050312492:5933",
+        "Currents-ChannelLab-Org-Companies-Meta-Assets-MSP",
+        "Currents-NOXCAT-meetings-2026-03-19",
+        "1050312492:8931",
+        "Currents-ChannelLab-Org-Seabed-ChannelLab-Projects",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "-5267778636:relay-msg|nicky-builder|782"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 35,
+      "question": "CZ 回憶錄有什麼策略教訓？",
+      "scene": "project_info",
+      "query_terms": "CZ 回憶錄 策略 教訓",
+      "expected_slugs": [
+        "Chart-Bot-System-bots-anna-CLAUDE",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Chart-Bot-System-bots-Bella-CLAUDE",
+        "Research-CZ-Memoir-Strategy-Lessons",
+        "Chart-Bot-System-bots-anya-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Meetings-2026-04-13-AI",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:7413",
+        "Research-CZ-Memoir-Strategy-Lessons",
+        "tg-20260413-1003634255226-relay-msg|anya|12760",
+        "-1003634255226:relay-msg|anya|8451",
+        "Chart-Bot-System-shared-mistakes",
+        "Currents-ChannelLab-Org-Team-Email-Contacts",
+        "1050312492:7830"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 36,
+      "question": "加密產業的時間軸整理在哪？",
+      "scene": "project_info",
+      "query_terms": "加密 產業 時間軸 歷史",
+      "expected_slugs": [
+        "Research-CZ-Memoir-Industry-Timeline",
+        "Chart-FATQ"
+      ],
+      "returned_slugs": [
+        "Currents-NOXCAT-Product-32d89caea48e80a7b313eff44819ca78",
+        "Research-RyanLi-SurfSkill-ClaudeCode-Crypto-2026-04-14",
+        "Currents-NOXCAT-Product-NOX-Wallet-PRD-v1-1-33d89caea48e81a2a4c5dc50562f4f84",
+        "Currents-NOXCAT-Product-NOX_Wallet_PRD_v1-1",
+        "Currents-NOXCAT-Product-32d89caea48e8056836ed39d140a76ef",
+        "Research-CZ-Memoir-Industry-Timeline",
+        "1050312492:7335",
+        "Chart-FATQ",
+        "Currents-NOXCAT-meetings-2026-04-09-NOXCAT",
+        "-1003612111775:185"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "hit@10": 1
+    },
+    {
+      "id": 37,
+      "question": "南良的 ESG 碳稅問題有多嚴重？",
+      "scene": "project_info",
+      "query_terms": "南良 ESG 碳稅",
+      "expected_slugs": [
+        "Currents-ChannelLab-ChannelLab-clsc",
+        "Currents-ChannelLab-Org-Deals-Canalis_Angel",
+        "Currents-ChannelLab-Org-Companies-NanLiang"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Org-Companies-NanLiang",
+        "Currents-NOXCAT-Product-NOX-Paymaster-V2-Arbitrum-NOX-Gas-33d89caea48e81c0a421c1afb7702f82",
+        "1050312492:8758",
+        "Currents-ChannelLab-Org-Deals-Canalis_Angel",
+        "Currents-NOXCAT-Product-Phase-2-TRON-Solana-EVM-Arbitrum-33d89caea48e81978190cd5ef85c2937",
+        "1050312492:11003",
+        "Seabed-chats-clsc",
+        "-5002663624:65",
+        "Currents-NOXCAT-Product-Phase-3-Bridge-Aggregator-33d89caea48e81349d0aceebd343e622",
+        "-5267778636:relay-msg|anya|538"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 40,
+      "question": "xbar 的 bot 狀態監控插件是什麼？",
+      "scene": "project_info",
+      "query_terms": "xbar bot 狀態 監控",
+      "expected_slugs": [
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-Bot-System-bots-chltao-CLAUDE",
+        "Chart-Bot-System-bots-CLAUDE",
+        "Chart-Bot-System-bots-ops-CLAUDE",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Chart-Bot-System-bots-CLAUDE",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "-5180494548:relay-msg|caijie-zhuchu|1917",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Chart-Bot-System-automation-registry",
+        "-5180494548:relay-msg|sancai|1437",
+        "Chart-Architecture-channellab-bot-framework",
+        "Currents-NOXCAT-Product-NOX-Wallet-PRD-v1-2-33f89caea48e81b9bd17f38d1932b888",
+        "-5180494548:relay-msg|caijie-zhuchu|851",
+        "Chart-FATQ"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 41,
+      "question": "媒體報價查詢表有哪些管道？",
+      "scene": "project_info",
+      "query_terms": "媒體 報價 資源",
+      "expected_slugs": [
+        "Currents-ChannelLab-BD-Media-Pricing",
+        "Currents-ChannelLab-BD-Media-Resource-List",
+        "Currents-ChannelLab-Events-TBOS-2026-TBOS-Plan-Draft",
+        "Currents-ChannelLab-Org-Companies-Hubble-AI",
+        "Currents-ChannelLab-Org-Media-Resource-List"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-BD-Media-Pricing",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        ":/home/oldrabbit/.claude/projects/-home-oldrabbit--claude-bots/memory/project_channellab_pricing.md",
+        "Currents-ChannelLab-ChannelLab-clsc",
+        "Research-ApifySkills-WebScraping-2026-04-14",
+        "1050312492:6773",
+        "Currents-ChannelLab-BD-Media-Resource-List",
+        "Currents-ChannelLab-Meetings-2026-04-13-AI",
+        "1050312492:6045",
+        "Currents-ChannelLab-Org-Companies-Hubble-AI"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 42,
+      "question": "hermes agent 研究結論是什麼？",
+      "scene": "project_info",
+      "query_terms": "hermes agent 研究",
+      "expected_slugs": [
+        "Pearl-hermes-agent",
+        "Research-0xKingsKuan-tweet-vs-adr",
+        "Research-graphify-research",
+        "Pearl-kepano-obsidian-skills",
+        "Research-hermes-agent-research"
+      ],
+      "returned_slugs": [
+        "Research-hermes-agent-research",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-sub-agent-routing",
+        "1050312492:7211",
+        "Pearl-hermes-agent",
+        "Currents-NOXCAT-Product-33d89caea48e81b491a3fa71191717ae",
+        "1050312492:7214",
+        "Pearl-kepano-obsidian-skills",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "1050312492:7258",
+        "Research-0xKingsKuan-tweet-vs-adr"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 43,
+      "question": "graphify 能做什麼？",
+      "scene": "project_info",
+      "query_terms": "graphify",
+      "expected_slugs": [
+        "Pearl-graphify",
+        "Research-graphify-research"
+      ],
+      "returned_slugs": [
+        "tg-20260413-0-cron-cards-lint-graphify-1776044221",
+        "Seabed-chats-clsc",
+        "Pearl-graphify",
+        "1050312492:7217",
+        "Research-graphify-research",
+        "Research-ApifySkills-WebScraping-2026-04-14",
+        "1050312492:6710",
+        "1050312492:9775",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:6722"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 44,
+      "question": "ChannelLab Term Sheet 的重點條款",
+      "scene": "project_info",
+      "query_terms": "ChannelLab Term Sheet",
+      "expected_slugs": [
+        "Currents-GitHub-geo-analyzer-demo-README",
+        "Chart-MemOcean-CLSC-CLSC-dogfood-week1",
+        "Currents-ChannelLab-Org-Seabed-ChannelLab-Equity",
+        "Chart-MemOcean-CLSC-CLSC",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Org-Seabed-ChannelLab-Equity",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "-1003612111775:68",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Chart-Bot-System-automation-registry",
+        "1050312492:8864",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Currents-NOXCAT-meetings-2026-03-19",
+        "1050312492:6513",
+        "Chart-Architecture-channellab-bot-framework"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 45,
+      "question": "Deals 的 schema 長什麼樣？",
+      "scene": "project_info",
+      "query_terms": "deals schema",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-MemOcean-FTS5-bot",
+        "Currents-ChannelLab-Org-Deals-_README",
+        "Chart-_index",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Currents-NOXCAT-meetings-2026-04-07-OTC-Wes-PRD",
+        "1050312492:10643",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:9598",
+        "Chart-MemOcean-FTS5-bot",
+        "Currents-NOXCAT-Product-CK-Demo-33d89caea48e8141b592ffbfcf59562f",
+        "1050312492:7780",
+        "Chart-_index"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 46,
+      "question": "CLSC 的壓縮率實際表現多少？",
+      "scene": "tech_architecture",
+      "query_terms": "CLSC 壓縮率 結果",
+      "expected_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec",
+        "Chart-Bot-System-shared-mistakes",
+        "Depth-CLSC-Spec",
+        "Reviews-Test-CLSC-Result-v0-1",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh"
+      ],
+      "returned_slugs": [
+        "Depth-CLSC-Spec",
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "-5267778636:relay-msg|anna|2521",
+        "Reviews-Test-CLSC-Result-v0-1",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "-5267778636:relay-msg|anya|3517",
+        "Chart-Bot-System-shared-mistakes",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "-5267778636:relay-msg|Bella|3035",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 48,
+      "question": "CLSC 是什麼東西？",
+      "scene": "tech_architecture",
+      "query_terms": "CLSC 是什麼",
+      "expected_slugs": [
+        "Chart-Bot-System-shared-mistakes",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec",
+        "Chart-Bot-System-bots-CLAUDE",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Currents-GitHub-memocean-README-zh-TW"
+      ],
+      "returned_slugs": [
+        "Currents-GitHub-memocean-README-zh-TW",
+        "Research-RyanLi-SurfSkill-ClaudeCode-Crypto-2026-04-14",
+        "1050312492:7748",
+        "Chart-Bot-System-bots-CLAUDE",
+        "Seabed-chats-clsc",
+        "1050312492:7321",
+        "Chart-Bot-System-shared-mistakes",
+        "Currents-NOXCAT-meetings-2026-04-07-OTC-Wes-PRD",
+        "1050312492:8355",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 49,
+      "question": "FTS5 跨 bot 搜尋能在多久內完成？",
+      "scene": "tech_architecture",
+      "query_terms": "FTS5 跨 bot 搜尋 速度",
+      "expected_slugs": [
+        "Pearl-GBrain-compiled-truth-plus-Dream-Cycle",
+        "Chart-MemOcean-FTS5-bot",
+        "Pearl-FTS5-bot",
+        "Currents-GitHub-memocean-fts5-README",
+        "Chart-FATQ"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Chart-FATQ",
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "-1003634255226:relay-msg|anya|4542",
+        "Chart-MemOcean-FTS5-bot",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "-1003634255226:relay-msg|anya|8969",
+        "Currents-GitHub-memocean-fts5-README",
+        "tg-20260413-1003634255226-relay-msg|anya|12753",
+        "-1003634255226:relay-msg|anna|2705"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 50,
+      "question": "MemOcean 的架構設計是什麼？",
+      "scene": "tech_architecture",
+      "query_terms": "MemOcean 架構",
+      "expected_slugs": [
+        "Chart-MemOcean-MemOcean-Vector-Search-Consensus-20260412",
+        "Chart-MemOcean-MemOcean-README",
+        "Chart-MemOcean-MemOcean-TideDoc",
+        "Chart-MemOcean-RnD-Reranker-Pipeline",
+        "Chart-MemOcean-MemOcean"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "Chart-MemOcean-MemOcean-README",
+        "1050312492:8927",
+        "Chart-MemOcean-MemOcean-TideDoc",
+        "Research-RAG-Benchmark-Standards-2026-04-14",
+        "1050312492:10218",
+        "Chart-MemOcean-MemOcean-Vector-Search-Consensus-20260412",
+        "Chart-MemOcean-memocean-semantic-search-spec",
+        "1050312492:8398"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 51,
+      "question": "CLSC 的 Technical Spec 中文版在哪？",
+      "scene": "tech_architecture",
+      "query_terms": "CLSC Technical Spec 中文",
+      "expected_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec",
+        "Depth-CLSC-Spec",
+        "Research-ZK-2026-survey",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Currents-NOXCAT-Product-OTC-33d89caea48e8165ac56d311d3e49f17",
+        "1050312492:7755",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec",
+        "Chart-MemOcean-memocean-semantic-search-spec",
+        "1050312492:7746",
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec",
+        "Seabed-chats-clsc",
+        "1050312492:7413",
+        "Depth-CLSC-Spec"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 52,
+      "question": "瀏覽器自動化工具比較的結論是什麼？",
+      "scene": "tech_architecture",
+      "query_terms": "瀏覽器自動化 比較",
+      "expected_slugs": [
+        "Research-0xKingsKuan-tweet-vs-adr",
+        "Currents-GitHub-memocean-README",
+        "Chart-MemOcean-RnD-Vector-Quantization",
+        "Chart-MemOcean-MemOcean-README",
+        "Chart-MemOcean-RnD-Reranker-Pipeline"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "Chart-MemOcean-MemOcean-README",
+        "Chart-Bot-System-automation-registry",
+        "-1003634255226:relay-msg|Bella|3326",
+        "Chart-MemOcean-RnD-Reranker-Pipeline",
+        "-1003634255226:relay-msg|anna|2741",
+        "Chart-MemOcean-RnD-Vector-Quantization",
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy",
+        "-1003634255226:relay-msg|anya|4508",
+        "Pearl-agent-browser"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 53,
+      "question": "Playwright MCP 跟 gstack browse 怎麼選？",
+      "scene": "tech_architecture",
+      "query_terms": "Playwright gstack 比較",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Pearl-Playwright-MCP-vs-gstack-browse",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-Bot-System-bots-CLAUDE",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "Pearl-Playwright-MCP-vs-gstack-browse",
+        "Currents-ChannelLab-Product-GEO-GWIN-RWA",
+        "1050312492:6196",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Currents-NOXCAT-Product-NOX-Paymaster-V2-Arbitrum-NOX-Gas-33d89caea48e81c0a421c1afb7702f82",
+        "1050312492:7663",
+        "Chart-Architecture-channellab-bot-framework",
+        "1050312492:5381",
+        "Chart-Bot-System-bots-CLAUDE"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 54,
+      "question": "三 Bot 架構框架是怎麼運作的？",
+      "scene": "tech_architecture",
+      "query_terms": "三 Bot 架構",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-Bot-System-bots-anya-blocks-block-vps-ops",
+        "Chart-Bot-System-bots-CLAUDE",
+        "Chart-Bot-System-bots-anya-blocks-block-section9-external-comms"
+      ],
+      "returned_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "1050312492:6789",
+        "Chart-Architecture-channellab-bot-framework",
+        "tg-20260413-1003634255226-relay-msg|anya|12767",
+        "-1003634255226:relay-msg|anya|11458",
+        "Chart-Bot-System-bots-CLAUDE",
+        "Chart-Bot-System-automation-registry",
+        "-5034023909:relay-msg|anya|3741",
+        "Chart-Bot-System-bots-anya-blocks-block-vps-ops"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 55,
+      "question": "CLSC v0.6 HanCloset 為什麼被 REJECT？",
+      "scene": "tech_architecture",
+      "query_terms": "CLSC v0.6 HanCloset REJECT",
+      "expected_slugs": [
+        "Reviews-Test-CLSC-Result-v0-2",
+        "Currents-GitHub-memocean-clsc-README",
+        "Reviews-CR-20260408-clsc-v0-6-hancloset-rerun",
+        "Reviews-CR-20260408-clsc-v0-6-hancloset",
+        "Chart-MemOcean-CLSC-CLSC"
+      ],
+      "returned_slugs": [
+        "Currents-GitHub-memocean-clsc-README",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "-1003634255226:relay-msg|anna|3288",
+        "Reviews-CR-20260408-clsc-v0-6-hancloset-rerun",
+        "tg-20260413-1003634255226-relay-msg|anya|12753",
+        "-1003634255226:relay-msg|anya|5965",
+        "Reviews-CR-20260408-clsc-v0-6-hancloset",
+        "Currents-NOXCAT-Product-33d89caea48e81b491a3fa71191717ae",
+        "-1003634255226:relay-msg|anna|3315",
+        "Chart-MemOcean-CLSC-CLSC"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 56,
+      "question": "CLSC v0.7 的審查結果如何？",
+      "scene": "tech_architecture",
+      "query_terms": "CLSC v0.7 審查",
+      "expected_slugs": [
+        "Reviews-Test-CLSC-Result-v0-2",
+        "Currents-GitHub-memocean-clsc-README",
+        "Research-mempalace-vs-channellab-architecture",
+        "Chart-MemOcean-CLSC-CLSC",
+        "Reviews-CR-20260408-clsc-v0-7"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-CLSC-CLSC",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:7240",
+        "Currents-GitHub-memocean-clsc-README",
+        "Currents-NOXCAT-meetings-2026-04-07-OTC-Wes-PRD",
+        "1050312492:7746",
+        "Research-mempalace-vs-channellab-architecture",
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "-1003634255226:relay-msg|anna|3429",
+        "Reviews-CR-20260408-clsc-v0-7"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 57,
+      "question": "agent-browser 是什麼？Rust 寫的嗎？",
+      "scene": "tech_architecture",
+      "query_terms": "agent-browser Rust",
+      "expected_slugs": [
+        "Reviews-CR-20260408-browser-automation-spike",
+        "Chart-Architecture-browser-automation-landscape",
+        "Chart-Bot-System-bots-Bella-CLAUDE",
+        "Research-agent-browser-research",
+        "Pearl-agent-browser"
+      ],
+      "returned_slugs": [
+        "Pearl-agent-browser",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-sub-agent-routing",
+        "1050312492:7251",
+        "Research-agent-browser-research",
+        "tg-20260413-1003634255226-relay-msg|anya|12777",
+        "1050312492:6003",
+        "Chart-Architecture-browser-automation-landscape",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:8981",
+        "Reviews-CR-20260408-browser-automation-spike"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 58,
+      "question": "中文 LLM token 壓縮市場有哪些工具？",
+      "scene": "tech_architecture",
+      "query_terms": "中文 LLM token 壓縮 市場",
+      "expected_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec",
+        "Depth-CLSC-Spec",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Research-chinese-llm-compression-landscape",
+        "Chart-MemOcean-CLSC-CLSC"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Research-RyanLi-SurfSkill-ClaudeCode-Crypto-2026-04-14",
+        "1050312492:7179",
+        "Depth-CLSC-Spec",
+        "Currents-NOXCAT-Product-32d89caea48e8056836ed39d140a76ef",
+        "1050312492:7349",
+        "Research-chinese-llm-compression-landscape",
+        "Currents-NOXCAT-meetings-2026-04-09-NOXCAT",
+        "1050312492:7329",
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 59,
+      "question": "ZK proof 2026 調研報告的結論？",
+      "scene": "tech_architecture",
+      "query_terms": "ZK proof 2026 調研",
+      "expected_slugs": [
+        "Depth-llm-wiki-wiki-topics",
+        "Research-ZK-2026-survey",
+        "Research-GBrain",
+        "Chart-MemOcean-RnD-Vector-Quantization",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Research-ZK-2026-survey",
+        "Currents-NOXCAT-meetings-2026-04-07-OTC-Wes-PRD",
+        "1050312492:7827",
+        "Chart-MemOcean-RnD-Vector-Quantization",
+        "Currents-NOXCAT-Product-33d89caea48e81b491a3fa71191717ae",
+        "1050312492:8097",
+        "Depth-llm-wiki-wiki-topics",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "1050312492:8950",
+        "Research-GBrain"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 60,
+      "question": "EIP-8141 是什麼提案？",
+      "scene": "tech_architecture",
+      "query_terms": "EIP-8141",
+      "expected_slugs": [
+        "Depth-llm-wiki-wiki-topics",
+        "Depth-llm-wiki-wiki-entities",
+        "Depth-llm-wiki-Seabed-articles-2026-04-05-blocktempo-eip-8141-hegota",
+        "Depth-llm-wiki-wiki-entities-EIP-8141",
+        "Depth-llm-wiki-wiki-sources-2026-04-05-eip-8141-hegota"
+      ],
+      "returned_slugs": [
+        "Currents-NOXCAT-Product-33a89caea48e80ee9a14cd24c7cadde1",
+        "Depth-llm-wiki-Seabed-articles-2026-04-05-blocktempo-eip-8141-hegota",
+        "1050312492:6730",
+        "Depth-llm-wiki-wiki-entities-EIP-8141",
+        "Currents-NOXCAT-meetings-2026-03-19",
+        "-5034023909:8586",
+        "Depth-llm-wiki-wiki-entities-Frame-Transactions",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-dispatch",
+        "1050312492:7057",
+        "Depth-llm-wiki-wiki-entities-Vitalik-Buterin"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 63,
+      "question": "CLSC dogfood 第一週的命中率多少？",
+      "scene": "tech_architecture",
+      "query_terms": "CLSC dogfood 命中率",
+      "expected_slugs": [
+        "Chart-Bot-System-shared-mistakes",
+        "Chart-MemOcean-CLSC-CLSC-dogfood-week1",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec",
+        "Chart-Bot-System-bots-CLAUDE",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-dogfood-week1",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "-1003634255226:relay-msg|anna|4084",
+        "Chart-Bot-System-bots-CLAUDE",
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "-1003634255226:relay-msg|anya|7547",
+        "Chart-Bot-System-shared-mistakes",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "-1003634255226:relay-msg|anna|4072",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 65,
+      "question": "inotify watch daemon 的效能表現？",
+      "scene": "tech_architecture",
+      "query_terms": "inotify daemon 效能",
+      "expected_slugs": [
+        "Currents-GitHub-claude-telegram-bots-shared-hooks-README-task-learnings",
+        "Research-ZK-2026-survey",
+        "Reviews-CR-20260408-inotify-watch-daemon",
+        "Pearl-agent-browser",
+        "Chart-FATQ"
+      ],
+      "returned_slugs": [
+        "Chart-FATQ",
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "-1003634255226:relay-msg|anna|3834",
+        "Reviews-CR-20260408-inotify-watch-daemon",
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy",
+        "-1003634255226:relay-msg|anya|7222",
+        "Research-ZK-2026-survey",
+        "Seabed-chats-clsc",
+        "-1003634255226:relay-msg|anya|7128",
+        "Currents-GitHub-claude-telegram-bots-shared-hooks-README-task-learnings"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 66,
+      "question": "temporal KG fork 的審查通過了嗎？",
+      "scene": "tech_architecture",
+      "query_terms": "temporal KG fork 審查",
+      "expected_slugs": [
+        "Chart-Bot-System-bots-yitang-CLAUDE",
+        "Chart-Bot-System-bots-ron-builder-CLAUDE",
+        "Chart-Bot-System-bots-ron-reviewer-CLAUDE",
+        "Chart-Bot-System-bots-Bella-CLAUDE",
+        "Reviews-CR-20260408-temporal-kg-fork"
+      ],
+      "returned_slugs": [
+        "Reviews-CR-20260408-temporal-kg-fork",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "-1003634255226:relay-msg|anna|3549",
+        "Chart-Architecture-channellab-bot-framework",
+        "Currents-NOXCAT-Product-CK-Demo-33d89caea48e8141b592ffbfcf59562f",
+        "-1003634255226:relay-msg|anya|6292",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Currents-NOXCAT-meetings-2026-04-07-OTC-Wes-PRD",
+        "-1003634255226:relay-msg|anna|3533",
+        "Chart-MemOcean-MemOcean-README"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 67,
+      "question": "mempalace 跟 ChannelLab 的架構差異？",
+      "scene": "tech_architecture",
+      "query_terms": "mempalace ChannelLab 架構 比較",
+      "expected_slugs": [
+        "Chart-MemOcean",
+        "Research-mempalace-deep-mining-2026-04-08",
+        "Chart-MemOcean-MemOcean-README",
+        "Chart-MemOcean-RnD-Reranker-Pipeline",
+        "Chart-MemOcean-MemOcean"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "1050312492:8724",
+        "Research-AI-Memory-Systems-Benchmark",
+        "1050312492:8864",
+        "Research-mempalace-vs-channellab-architecture",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "1050312492:9644",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "hit@10": 0
+    },
+    {
+      "id": 69,
+      "question": "channellab-kb-mcp 有什麼安全漏洞？",
+      "scene": "tech_architecture",
+      "query_terms": "channellab-kb-mcp 安全 漏洞",
+      "expected_slugs": [
+        "Chart-crypto-ai-skills-shortlist",
+        "Chart-Bot-System-bots-yitang-CLAUDE",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-MemOcean-CLSC-CLSC-dogfood-week1",
+        "Chart-Bot-System-bots-Bella-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Currents-NOXCAT-Product-NOX-Wallet-PRD-v1-2-33f89caea48e81b9bd17f38d1932b888",
+        "Currents-NOXCAT-Product-33a89caea48e80ee9a14cd24c7cadde1",
+        "Chart-Architecture-channellab-bot-framework",
+        "Currents-NOXCAT-meetings-2026-03-19",
+        "1050312492:8450",
+        "Chart-MemOcean-CLSC-CLSC-dogfood-week1",
+        "Currents-NOXCAT-meetings-2026-04-07-OTC-Wes-PRD",
+        "system:",
+        "Chart-crypto-ai-skills-shortlist",
+        "tg-20260413-1003634255226-relay-msg|anya|12753"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 70,
+      "question": "Ocean schema 的設計原則是什麼？",
+      "scene": "tech_architecture",
+      "query_terms": "Ocean schema 設計",
+      "expected_slugs": [
+        "Chart-MemOcean",
+        "Research-GBrain"
+      ],
+      "returned_slugs": [
+        "Research-RAG-Benchmark-Standards-2026-04-14",
+        "Research-GBrain",
+        "Research-RyanLi-SurfSkill-ClaudeCode-Crypto-2026-04-14",
+        "1050312492:10643",
+        "Chart-Bot-System-claude-bots-CLAUDE",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "1050312492:11114",
+        "Chart-MemOcean-MemOcean",
+        "Chart-MemOcean-memocean-semantic-search-spec",
+        "1050312492:9825"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 71,
+      "question": "為什麼殺掉 CLSC？",
+      "scene": "decision_record",
+      "query_terms": "CLSC 為什麼殺掉",
+      "expected_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec",
+        "Chart-Bot-System-shared-mistakes",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec",
+        "Chart-Bot-System-bots-CLAUDE",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh"
+      ],
+      "returned_slugs": [
+        "Chart-Bot-System-bots-CLAUDE",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "1050312492:7748",
+        "Chart-Bot-System-shared-mistakes",
+        "Seabed-chats-clsc",
+        "1050312492:7321",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "tg-20260413-1003634255226-relay-msg|anya|12753",
+        "1050312492:7746",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 72,
+      "question": "知識基礎設施的 ADR 結論是什麼？",
+      "scene": "decision_record",
+      "query_terms": "知識基礎設施 ADR",
+      "expected_slugs": [
+        "Chart-MemOcean",
+        "Research-0xKingsKuan-tweet-vs-adr",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Currents-NOXCAT-Product-NOXCAT_OTC_PRD_v2-2",
+        "1050312492:9720",
+        "Chart-MemOcean",
+        "Research-RAG-Benchmark-Standards-2026-04-14",
+        "-5175060310:relay-msg|anya|5744",
+        "Research-0xKingsKuan-tweet-vs-adr",
+        "Currents-NOXCAT-Product-OTC-PRD-v2-2-32d89caea48e8097a94adbf36b2ec634",
+        "1050312492:9718",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 73,
+      "question": "Notion 跟 Obsidian 要怎麼分工？",
+      "scene": "decision_record",
+      "query_terms": "Notion Obsidian 分工",
+      "expected_slugs": [
+        "Research-knowledge-infra-proposal-chef",
+        "Chart-Bot-System-bots-chltao-CLAUDE",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-CLAUDE",
+        "Chart-Bot-System-bots-anya-CLAUDE",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Seabed-chats-clsc",
+        "Research-knowledge-infra-proposal-chef",
+        "tg-20260413-5034023909-relay-msg|anya|12825",
+        "1050312492:5917",
+        "Chart-MemOcean",
+        "Chart-Bot-System-bots-ron-assistant-blocks-block-daily-log",
+        "-5034023909:relay-msg|caijie-zhuchu|605",
+        "Pearl-MCP-background-agent",
+        "Chart-Bot-System-bots-wes-buddy-blocks-block-daily-log",
+        "1050312492:6273"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 74,
+      "question": "為什麼不用 Redis 做任務佇列？",
+      "scene": "decision_record",
+      "query_terms": "Redis 任務佇列 為什麼不用",
+      "expected_slugs": [
+        "Pearl-FATQ-File-Atomic-Task-Queue"
+      ],
+      "returned_slugs": [
+        "Pearl-FATQ-File-Atomic-Task-Queue",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-sub-agent-routing",
+        "1050312492:7263",
+        "tg-20260413-5034023909-relay-msg|anya|12812",
+        "1050312492:7684",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-dispatch",
+        "1050312492:7310",
+        "Seabed-chats-clsc",
+        "1050312492:6746",
+        "Currents-NOXCAT-Product-V6-33d89caea48e81359b74f9113454f523"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 75,
+      "question": "CLSC v0.3 為什麼字典方案失敗？",
+      "scene": "decision_record",
+      "query_terms": "CLSC v0.3 字典 失敗",
+      "expected_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec",
+        "Reviews-CR-20260408-clsc-v0-3-benchmark",
+        "Chart-Bot-System-shared-mistakes",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Chart-MemOcean-CLSC-CLSC"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-CLSC-CLSC",
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "1050312492:550",
+        "Reviews-CR-20260408-clsc-v0-3-benchmark",
+        "Chart-MemOcean-memocean-semantic-search-spec",
+        "1050312492:8212",
+        "Chart-Bot-System-shared-mistakes",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:7746",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 77,
+      "question": "VPS 基礎設施審計發現了什麼問題？",
+      "scene": "decision_record",
+      "query_terms": "VPS 基礎設施 審計",
+      "expected_slugs": [
+        "Research-knowledge-infra-proposal-elon-musk",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-Bot-System-claude-bots-CLAUDE",
+        "Research-TurboQuant-Google-Compression",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Chart-Bot-System-claude-bots-CLAUDE",
+        "Currents-NOXCAT-Product-NOX-Paymaster-V2-Arbitrum-NOX-Gas-33d89caea48e81c0a421c1afb7702f82",
+        "1050312492:9463",
+        "Research-knowledge-infra-proposal-elon-musk",
+        "Currents-NOXCAT-meetings-2026-03-19",
+        "1050312492:9457",
+        "Research-TurboQuant-Google-Compression",
+        "Currents-NOXCAT-Product-33d89caea48e81b491a3fa71191717ae",
+        "1050312492:9310",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 78,
+      "question": "為什麼選 Obsidian 當唯一真相源？",
+      "scene": "decision_record",
+      "query_terms": "Obsidian 唯一真相源 SSOT",
+      "expected_slugs": [
+        "claude-skills-obsidian-cli-SKILL",
+        "claude-skills-obsidian-bases-SKILL",
+        "Research-knowledge-infra-proposal-anya",
+        "claude-skills-obsidian-markdown-SKILL",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Research-knowledge-infra-proposal-anya",
+        "tg-20260413-5034023909-relay-msg|anya|12825",
+        "1050312492:5926",
+        "claude-skills-obsidian-bases-SKILL",
+        "tg-20260413-5034023909-relay-msg|anya|12856",
+        "1050312492:8794",
+        "claude-skills-obsidian-cli-SKILL",
+        "Chart-Bot-System-bots-wes-buddy-blocks-block-daily-log",
+        "1050312492:6273",
+        "claude-skills-obsidian-markdown-SKILL"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 79,
+      "question": "auto schema evolution 的想法是什麼？",
+      "scene": "decision_record",
+      "query_terms": "auto schema evolution",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Architecture-browser-automation-landscape",
+        "Chart-Bot-System-shared-team-l0",
+        "Research-auto-schema-evolution",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Research-auto-schema-evolution",
+        "Chart-Bot-System-automation-registry",
+        "1050312492:10643",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Seabed-chats-clsc",
+        "1050312492:10639",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:9598",
+        "Chart-Architecture-browser-automation-landscape"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 80,
+      "question": "CLSC v0.4 是壓縮工具還是 shorthand 語言？",
+      "scene": "decision_record",
+      "query_terms": "CLSC v0.4 shorthand 壓縮",
+      "expected_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec",
+        "Depth-CLSC-Spec",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Reviews-CLSC-v0-5-UTF8-Codepoint-Hack-PoC",
+        "Research-chinese-llm-compression-landscape"
+      ],
+      "returned_slugs": [
+        "Reviews-CLSC-v0-5-UTF8-Codepoint-Hack-PoC",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:7746",
+        "Research-chinese-llm-compression-landscape",
+        "Seabed-chats-clsc",
+        "-1003634255226:relay-msg|anna|3220",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "-1003634255226:relay-msg|anya|5296",
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 81,
+      "question": "L1 英文系統提示詞的 token 節省多少？",
+      "scene": "decision_record",
+      "query_terms": "L1 英文 系統提示詞 token",
+      "expected_slugs": [
+        "Chart-MemOcean",
+        "Research-AI-Memory-Systems-Benchmark",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Chart-MemOcean-MemOcean"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Seabed-chats-clsc",
+        "1050312492:6645",
+        "Chart-MemOcean-MemOcean",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-custom-reminders",
+        "-5180494548:relay-msg|sancai|1340",
+        "Research-AI-Memory-Systems-Benchmark",
+        "tg-20260413-5034023909-relay-msg|anya|12893",
+        "-5180494548:relay-msg|yitang|1033",
+        "Research-chinese-llm-compression-landscape"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 83,
+      "question": "team-config centralization 為什麼有問題？",
+      "scene": "decision_record",
+      "query_terms": "team-config centralization 問題",
+      "expected_slugs": [
+        "Chart-Bot-System-bots-ron-builder-CLAUDE",
+        "Chart-Bot-System-bots-Bella-CLAUDE",
+        "Reviews-CR-20260408-team-config-centralization",
+        "Chart-Bot-System-bots-anya-CLAUDE",
+        "Chart-Bot-System-bots-interns-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Reviews-CR-20260408-team-config-centralization",
+        "Seabed-chats-clsc",
+        "-1003634255226:relay-msg|anna|3074",
+        "Chart-Knowledge-Graph-Optimization",
+        "tg-20260413-1003634255226-relay-msg|anya|12753",
+        "1050312492:9355",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "tg-20260413-1003634255226-relay-msg|anya|12777",
+        "-1003612111775:relay-msg|ron-assistant|80",
+        "Currents-ChannelLab-GEO-Bonk-AIO-Strategy"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 84,
+      "question": "CLSC closet backfill 的審查結果？",
+      "scene": "decision_record",
+      "query_terms": "CLSC closet backfill 審查",
+      "expected_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-empirical-results",
+        "Chart-MemOcean-CLSC-CLSC-dogfood-week1",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec",
+        "Reviews-CR-20260408-clsc-closet-backfill",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Seabed-chats-clsc",
+        "-1003634255226:relay-msg|anna|3719",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec",
+        "tg-20260413-5034023909-relay-msg|anya|12803",
+        "-1003634255226:relay-msg|anya|8485",
+        "Chart-MemOcean-CLSC-CLSC-dogfood-week1",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:7722",
+        "Chart-MemOcean-CLSC-CLSC"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 85,
+      "question": "Panda 的知識基礎設施提案有什麼獨到見解？",
+      "scene": "decision_record",
+      "query_terms": "Panda 知識基礎設施 提案",
+      "expected_slugs": [
+        "Research-knowledge-infra-proposal-anya",
+        "Research-knowledge-infra-proposal-elon-musk",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Research-knowledge-infra-proposal-panda",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-Bonk-GEO",
+        "Research-knowledge-infra-proposal-panda",
+        "Currents-NOXCAT-Product-33f89caea48e81ac849fd2c7e21ed29c",
+        "-5175060310:relay-msg|anya|4993",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "-1003612111775:relay-msg|ron-assistant|179",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Currents-NOXCAT-Product-33d89caea48e81648b4cf7e23213daae",
+        "1050312492:7331"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 86,
+      "question": "CLSC v0.1 測試為什麼失敗？",
+      "scene": "decision_record",
+      "query_terms": "CLSC v0.1 測試 失敗",
+      "expected_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec",
+        "Reviews-Test-CLSC-Result-v0-2",
+        "Chart-Bot-System-shared-mistakes",
+        "Reviews-Test-CLSC-Result-v0-1",
+        "Chart-MemOcean-CLSC-CLSC"
+      ],
+      "returned_slugs": [
+        "Reviews-Test-CLSC-Result-v0-1",
+        "Currents-NOXCAT-Product-CK-Demo-33d89caea48e8141b592ffbfcf59562f",
+        "1050312492:7240",
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec",
+        "Currents-NOXCAT-Product-U-33d89caea48e81a5b85cdd1a39a507b7",
+        "1050312492:7746",
+        "Chart-MemOcean-CLSC-CLSC",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "-1003634255226:relay-msg|anya|4716",
+        "Reviews-Test-CLSC-Result-v0-2"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 87,
+      "question": "browser automation spike review 推薦用什麼工具？",
+      "scene": "decision_record",
+      "query_terms": "browser automation spike 推薦",
+      "expected_slugs": [
+        "Reviews-CR-20260408-browser-automation-v0-2",
+        "Reviews-CR-20260408-browser-automation-spike",
+        "Chart-Architecture-browser-automation-landscape",
+        "Pearl-Playwright-MCP-vs-gstack-browse",
+        "Pearl-agent-browser"
+      ],
+      "returned_slugs": [
+        "Chart-Bot-System-automation-registry",
+        "Reviews-CR-20260408-browser-automation-v0-2",
+        "Research-ApifySkills-WebScraping-2026-04-14",
+        "-1003634255226:relay-msg|anna|2995",
+        "Chart-Architecture-browser-automation-landscape",
+        "-1003634255226:relay-msg|anya|4867",
+        "Pearl-Playwright-MCP-vs-gstack-browse",
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy",
+        "-1003634255226:relay-msg|anya|4508",
+        "Pearl-agent-browser"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 89,
+      "question": "MBIF (My Brain Is Full) 跟我們的系統有什麼不同？",
+      "scene": "decision_record",
+      "query_terms": "My Brain Is Full MBIF ChannelLab",
+      "expected_slugs": [
+        "Research-nick-spisak-method",
+        "Chart-Architecture-channellab-bot-framework",
+        "Pearl-nick-spisak-method",
+        "Research-gnekt-mybrain-vs-channellab",
+        "Chart-Bot-System-bots-interns-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Research-gnekt-mybrain-vs-channellab",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "1050312492:8936",
+        "Chart-MemOcean",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "1050312492:7669",
+        "Pearl-nick-spisak-method",
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "-1003612111775:68",
+        "Research-nick-spisak-method"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 90,
+      "question": "mempalace 的 hook 機制對我們有什麼啟發？",
+      "scene": "decision_record",
+      "query_terms": "mempalace hook 機制",
+      "expected_slugs": [
+        "Research-knowledge-infra-proposal-chef",
+        "Research-mempalace-deep-mining-2026-04-08",
+        "Research-mempalace-vs-channellab-architecture",
+        "Chart-Bot-System-bots-ops-CLAUDE",
+        "Chart-MemOcean-Bot-Usage-Cost"
+      ],
+      "returned_slugs": [
+        "Research-mempalace-deep-mining-2026-04-08",
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "1050312492:8500",
+        "Research-knowledge-infra-proposal-chef",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "1050312492:9644",
+        "Research-mempalace-vs-channellab-architecture",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-dispatch",
+        "1050312492:8715",
+        "Chart-MemOcean-Bot-Usage-Cost"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 91,
+      "question": "gstack 八步驟是哪八步？",
+      "scene": "process_sop",
+      "query_terms": "gstack 八步驟",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-Bot-System-bots-ron-reviewer-CLAUDE",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-CLAUDE",
+        "Chart-Bot-System-bots-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "1050312492:6196",
+        "Chart-Architecture-channellab-bot-framework",
+        "tg-20260413-5034023909-relay-msg|anya|12825",
+        "-5267778636:relay-msg|Bella|2221",
+        "Chart-Bot-System-bots-CLAUDE",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "-5267778636:relay-msg|nicky-builder|387",
+        "Chart-O2-WorkFlow"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 92,
+      "question": "新工具導入要走什麼流程？",
+      "scene": "process_sop",
+      "query_terms": "新工具 導入 SOP",
+      "expected_slugs": [
+        "Chart-SOP-New-Tool-Adoption-SOP",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Bot-System-bots-CLAUDE",
+        "Chart-SOP-Google-Calendar-MCP-Setup-SOP",
+        "Chart-Bot-System-bots-interns-CLAUDE"
+      ],
+      "returned_slugs": [
+        "tg-20260413-5034023909-relay-msg|anya|12825",
+        "Chart-SOP-New-Tool-Adoption-SOP",
+        "1050312492:6670",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Bot-System-automation-registry",
+        "1050312492:9449",
+        "Chart-Bot-System-bots-CLAUDE",
+        "Seabed-chats-clsc",
+        "1050312492:9559",
+        "Chart-SOP-Google-Calendar-MCP-Setup-SOP"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 93,
+      "question": "新人入職要走哪些步驟？",
+      "scene": "process_sop",
+      "query_terms": "新人 入職 onboarding",
+      "expected_slugs": [
+        "Research-mempalace-deep-mining-2026-04-08",
+        "Chart-SOP-Team-Onboarding-SOP",
+        "Chart-SOP-Local-Setup-AI-SOP",
+        "Currents-ChannelLab-Org-Seabed-profit-sharing-202604",
+        "Research-gnekt-mybrain-vs-channellab"
+      ],
+      "returned_slugs": [
+        "Chart-SOP-Team-Onboarding-SOP",
+        "Seabed-chats-clsc",
+        "-5034023909:8578",
+        "Chart-SOP-Local-Setup-AI-SOP",
+        "tg-20260413-1003634255226-relay-msg|anya|12760",
+        "1050312492:117",
+        "Currents-ChannelLab-Org-Seabed-profit-sharing-202604",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-custom-reminders",
+        "1050312492:8667",
+        "Research-gnekt-mybrain-vs-channellab"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 94,
+      "question": "Google Calendar MCP 怎麼設定多帳號？",
+      "scene": "process_sop",
+      "query_terms": "Google Calendar MCP 多帳號 設定",
+      "expected_slugs": [
+        "Chart-Bot-System-bots-ron-assistant-CLAUDE",
+        "Chart-Bot-System-bots-chltao-CLAUDE",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-CLAUDE",
+        "Chart-Bot-System-bots-anya-blocks-block-daily-cron",
+        "Chart-SOP-Google-Calendar-MCP-Setup-SOP"
+      ],
+      "returned_slugs": [
+        "Chart-SOP-Google-Calendar-MCP-Setup-SOP",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "-5175060310:relay-msg|anya|13450",
+        "Chart-MemOcean-MemOcean-README",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-custom-reminders",
+        "-5175060310:relay-msg|anya|13444",
+        "Currents-GitHub-geo-analyzer-README",
+        "Seabed-chats-clsc",
+        "-5002663624:relay-msg|anya|3581",
+        "Pearl-MCP-background-agent"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 95,
+      "question": "本地環境部署 SOP 的步驟",
+      "scene": "process_sop",
+      "query_terms": "本地環境 部署 SOP",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-SOP-Team-Onboarding-SOP",
+        "Chart-SOP-Local-Setup-AI-SOP",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-Bot-System-bots-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-SOP-Local-Setup-AI-SOP",
+        "tg-20260413-5034023909-relay-msg|anya|12825",
+        "1050312492:9449",
+        "Chart-SOP-Team-Onboarding-SOP",
+        "Seabed-chats-clsc",
+        "1050312492:6670",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Bot-System-automation-registry",
+        "-5002663624:relay-msg|anya|6610",
+        "Chart-Architecture-channellab-bot-framework"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 96,
+      "question": "FATQ 的狀態轉換怎麼做？",
+      "scene": "process_sop",
+      "query_terms": "FATQ 狀態轉換",
+      "expected_slugs": [
+        "Chart-Bot-System-bots-CLAUDE",
+        "Chart-Bot-System-bots-anya-blocks-block-task-queue",
+        "Chart-FATQ"
+      ],
+      "returned_slugs": [
+        "Chart-FATQ",
+        "Currents-NOXCAT-Product-OTC-33d89caea48e8165ac56d311d3e49f17",
+        "1050312492:8189",
+        "Chart-Bot-System-bots-CLAUDE",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:8194",
+        "Chart-Bot-System-claude-bots-CLAUDE",
+        "tg-20260413-5034023909-relay-msg|anya|12866",
+        "1050312492:10909",
+        "Pearl-FATQ-File-Atomic-Task-Queue"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 97,
+      "question": "代碼審查要審哪五個維度？",
+      "scene": "process_sop",
+      "query_terms": "代碼審查 五維度",
+      "expected_slugs": [
+        "Chart-Bot-System-bots-Bella-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-Bot-System-bots-Bella-CLAUDE",
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "-5267778636:relay-msg|anna|1190",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "-5267778636:relay-msg|Bella|1116",
+        "Currents-NOXCAT-Product-32d89caea48e8056836ed39d140a76ef",
+        "-5267778636:relay-msg|Bella|1670",
+        "Currents-NOXCAT-Product-NOX_Wallet_Visual_PRD_v1-0",
+        "-5267778636:relay-msg|anna|1650",
+        "Currents-NOXCAT-Product-U-33d89caea48e81a5b85cdd1a39a507b7"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 98,
+      "question": "Reviewer 為什麼要出現三次？",
+      "scene": "process_sop",
+      "query_terms": "Reviewer 三次 審查",
+      "expected_slugs": [
+        "Chart-Bot-System-bots-yitang-CLAUDE",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-Bot-System-bots-ron-builder-CLAUDE",
+        "Chart-Bot-System-bots-ron-reviewer-CLAUDE",
+        "Chart-Bot-System-bots-Bella-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-Architecture-channellab-bot-framework",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "-5267778636:relay-msg|Bella|1115",
+        "Chart-SOP-Team-Onboarding-SOP",
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "-5267778636:relay-msg|anna|1450",
+        "Currents-GitHub-claude-telegram-bots-shared-templates-builder-CLAUDE",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "-5267778636:relay-msg|Bella|1497",
+        "Currents-GitHub-claude-telegram-bots-shared-templates-reviewer-CLAUDE"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 100,
+      "question": "Claude Telegram bot 怎麼部署多個？",
+      "scene": "process_sop",
+      "query_terms": "Claude Telegram bot 多個 部署",
+      "expected_slugs": [
+        "Research-hermes-agent-research",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-SOP-Local-Setup-AI-SOP",
+        "Chart-Bot-System-bots-chltao-CLAUDE",
+        "Chart-Bot-System-bots-caijie-zhuchu-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "Chart-Architecture-channellab-bot-framework",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:8104",
+        "Chart-SOP-Local-Setup-AI-SOP",
+        "tg-20260413-1003634255226-relay-msg|anya|12777",
+        "7132373174:123",
+        "Chart-Bot-System-claude-bots-CLAUDE",
+        "tg-20260413-5034023909-relay-msg|anya|12881",
+        "-5034023909:relay-msg|anya|3858"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 101,
+      "question": "background agent 應該怎麼用？",
+      "scene": "process_sop",
+      "query_terms": "background agent 用法",
+      "expected_slugs": [
+        "Chart-Bot-System-bots-anna-CLAUDE",
+        "Chart-Bot-System-bots-anya-blocks-block-daily-cron",
+        "Chart-Bot-System-bots-Bella-CLAUDE",
+        "Chart-Bot-System-bots-anya-blocks-block-mcp-tools-policy",
+        "Chart-Bot-System-bots-anya-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-sub-agent-routing",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-daily-cron",
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec",
+        "1050312492:5995",
+        "Pearl-AI-agent-bot",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "1050312492:6003",
+        "Pearl-Claude-Code-prompt-injection",
+        "Currents-NOXCAT-Product-NOXCAT_",
+        "1050312492:8977"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "hit@10": 0
+    },
+    {
+      "id": 103,
+      "question": "Wiki 維護的原則是什麼？",
+      "scene": "process_sop",
+      "query_terms": "Wiki 維護 原則",
+      "expected_slugs": [
+        "Depth-llm-wiki-index",
+        "Depth-CLSC-Dictionary"
+      ],
+      "returned_slugs": [
+        "Depth-CLSC-Dictionary",
+        "Chart-Bot-System-bots-wes-buddy-blocks-block-daily-log",
+        "1050312492:8195",
+        "Depth-llm-wiki-index",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "1050312492:5907",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-blocks-block-daily-log",
+        "1050312492:6655",
+        "Chart-Architecture-ChannelLab-AI-Architecture"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 104,
+      "question": "卡片筆記怎麼寫？一張卡幾行？",
+      "scene": "process_sop",
+      "query_terms": "卡片 筆記 規則",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "_schema",
+        "Depth-CLSC-Spec",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-Bot-System-_index"
+      ],
+      "returned_slugs": [
+        "Depth-CLSC-Spec",
+        "Seabed-chats-clsc",
+        "1050312492:6232",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-custom-reminders",
+        "1050312492:5955",
+        "_schema",
+        "Currents-NOXCAT-Tickets-Ticket",
+        "1050312492:5959",
+        "Chart-Architecture-channellab-bot-framework"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 105,
+      "question": "LLM Wiki 的 schema 結構？",
+      "scene": "process_sop",
+      "query_terms": "LLM Wiki schema",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Research-knowledge-infra-proposal-anya",
+        "Chart-MemOcean-CLSC-CLSC",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Depth-CLSC-Dictionary"
+      ],
+      "returned_slugs": [
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "tg-20260413-0-cron-cards-lint-graphify-1776044221",
+        "1050312492:5734",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Currents-ChannelLab-Meetings-2026-04-13-CHL",
+        "1050312492:5754",
+        "Chart-MemOcean-CLSC-CLSC",
+        "Currents-NOXCAT-meetings-2026-04-07-OTC-Wes-PRD",
+        "1050312492:6716",
+        "Depth-CLSC-Spec"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 106,
+      "question": "crypto AI agent 可以裝哪些 skill？",
+      "scene": "process_sop",
+      "query_terms": "crypto AI agent skill",
+      "expected_slugs": [
+        "Chart-crypto-ai-skills-shortlist",
+        "Pearl-agent-skill-codification-garrytan",
+        "Chart-Bot-System-bots-yitang-CLAUDE",
+        "Pearl-Claude-Code-prompt-injection",
+        "Research-gnekt-mybrain-vs-channellab"
+      ],
+      "returned_slugs": [
+        "Research-RyanLi-SurfSkill-ClaudeCode-Crypto-2026-04-14",
+        "Chart-crypto-ai-skills-shortlist",
+        "1050312492:7444",
+        "Pearl-Claude-Code-prompt-injection",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "-5034023909:8555",
+        "Pearl-agent-skill-codification-garrytan",
+        "Research-ApifySkills-WebScraping-2026-04-14",
+        "1050312492:10283",
+        "Research-graphify-research"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 107,
+      "question": "Interactions schema 怎麼連結 Person 跟 Deal？",
+      "scene": "process_sop",
+      "query_terms": "interactions schema Person Deal",
+      "expected_slugs": [
+        "Currents-ChannelLab-Org-Seabed-_README",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Currents-NOXCAT-Product-33a89caea48e80ee9a14cd24c7cadde1",
+        "1050312492:5",
+        "Research-knowledge-infra-proposal-chef",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-sub-agent-routing",
+        "-1003634255226:relay-msg|anya|8131",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Currents-NOXCAT-Product-CK-Demo-33d89caea48e8141b592ffbfcf59562f",
+        "1050312492:9941",
+        "Chart-MemOcean-FTS5-bot"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 108,
+      "question": "Syncthing 部署步驟",
+      "scene": "process_sop",
+      "query_terms": "Syncthing 部署",
+      "expected_slugs": [
+        "Depth-llm-wiki-wiki-entities-ERC-4337",
+        "Chart-SOP-Team-Onboarding-SOP",
+        "Chart-SOP-Local-Setup-AI-SOP",
+        "Chart-Bot-System-bots-anya-blocks-block-vps-ops",
+        "Chart-Architecture-channellab-bot-framework"
+      ],
+      "returned_slugs": [
+        "tg-20260413-5034023909-relay-msg|anya|12866",
+        "tg-20260413-1003634255226-relay-msg|anya|12783",
+        "Chart-SOP-Local-Setup-AI-SOP",
+        "-1003634255226:relay-msg|anya|12792",
+        "Chart-SOP-Team-Onboarding-SOP",
+        "-5291099801:81",
+        "Chart-Architecture-channellab-bot-framework",
+        "tg-20260413-5034023909-relay-msg|anya|12812",
+        "1050312492:10637",
+        "Chart-Bot-System-bots-anya-blocks-block-vps-ops"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 109,
+      "question": "Dataview 查詢記憶類型的語法？",
+      "scene": "process_sop",
+      "query_terms": "Dataview 查詢 memory type",
+      "expected_slugs": [
+        "Research-mempalace-deep-mining-2026-04-08",
+        "Research-claude-code-best-practice-review",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-MemOcean-CLSC-dataview-examples",
+        "Chart-Bot-System-bots-anya-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-CLSC-dataview-examples",
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "1050312492:7030",
+        "Research-mempalace-deep-mining-2026-04-08",
+        "Currents-NOXCAT-Tickets-Ticket",
+        "1050312492:10017",
+        "Research-claude-code-best-practice-review",
+        "Chart-MemOcean-memocean-semantic-search-spec",
+        "1050312492:10538",
+        "Chart-Architecture-channellab-bot-framework"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 111,
+      "question": "GEO Analyzer 能分析哪些平台？",
+      "scene": "product_feature",
+      "query_terms": "GEO Analyzer 平台",
+      "expected_slugs": [
+        "Currents-GitHub-geo-analyzer-README",
+        "Currents-ChannelLab-GEO-GEO-Analyzer-PRD",
+        "Currents-ChannelLab-GEO-PRD",
+        "Currents-ChannelLab-GEO-ChannelLab-GEO-Pricing",
+        "Currents-GitHub-geo-analyzer-QA_REPORT"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "Currents-ChannelLab-GEO-PRD",
+        ":/home/oldrabbit/.claude/projects/-home-oldrabbit--claude-bots-bots-anya/memory/project_geo_tool.md",
+        "Currents-GitHub-geo-analyzer-QA_REPORT",
+        "-5267778636:relay-msg|anna|2315",
+        "Currents-GitHub-geo-analyzer-README",
+        "-5267778636:relay-msg|anya|3130"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 112,
+      "question": "GEO Analyzer 的前端 redesign spec？",
+      "scene": "product_feature",
+      "query_terms": "GEO 前端 redesign spec",
+      "expected_slugs": [
+        "Chart-MemOcean",
+        "Currents-GitHub-geo-analyzer-demo-frontend-README",
+        "Currents-GitHub-geo-analyzer-demo-README",
+        "Currents-GitHub-geo-analyzer-docs-review-brand-geo-score-phase1",
+        "Chart-MemOcean-MemOcean"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-MemOcean",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "-5267778636:relay-msg|anya|188",
+        "Currents-GitHub-geo-analyzer-docs-review-brand-geo-score-phase1",
+        "Currents-ChannelLab-Product-GEO-Bonk-GEO",
+        "-5267778636:relay-msg|anna|251",
+        "Currents-GitHub-geo-analyzer-demo-README",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "-5267778636:relay-msg|Bella|235",
+        "Currents-GitHub-geo-analyzer-demo-frontend-README"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 113,
+      "question": "GEO 服務定價方案有幾個級別？",
+      "scene": "product_feature",
+      "query_terms": "GEO 定價 方案",
+      "expected_slugs": [
+        "Chart-Architecture-browser-automation-landscape",
+        "Chart-MemOcean-CLSC-CLSC",
+        "Currents-ChannelLab-GEO-ChannelLab-GEO-Pricing",
+        "Chart-Bot-System-bots-nicky-builder-CLAUDE",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "Currents-ChannelLab-GEO-ChannelLab-GEO-Pricing",
+        "1050312492:6773",
+        "Currents-ChannelLab-Product-GEO-Bonk-GEO",
+        ":/home/oldrabbit/.claude/projects/-home-oldrabbit--claude-bots/memory/project_channellab_pricing.md",
+        "Currents-ChannelLab-Meetings-2026-04-13-AI",
+        "1050312492:6267",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 114,
+      "question": "AI 搜尋流量年增率是多少？",
+      "scene": "product_feature",
+      "query_terms": "AI 搜尋 流量 年增率",
+      "expected_slugs": [
+        "Chart-MemOcean-MemOcean-Vector-Search-Consensus-20260412",
+        "Chart-MemOcean-RnD-Vector-Quantization",
+        "Chart-MemOcean-MemOcean-README",
+        "Chart-MemOcean-RnD-Reranker-Pipeline",
+        "Currents-ChannelLab-GEO-ChannelLab-GEO-Pricing"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "Currents-ChannelLab-GEO-ChannelLab-GEO-Pricing",
+        "1050312492:10283",
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy",
+        "1050312492:9791",
+        "Chart-MemOcean-MemOcean-Vector-Search-Consensus-20260412",
+        "1050312492:10337",
+        "Chart-MemOcean-RnD-Vector-Quantization"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 115,
+      "question": "NOXCAT 錢包有什麼功能？",
+      "scene": "product_feature",
+      "query_terms": "NOXCAT 錢包 功能",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Depth-llm-wiki-Seabed-articles-2026-04-05-blocktempo-eip-8141-hegota",
+        "Currents-NOXCAT-meetings-2026-04-07",
+        "Currents-NOXCAT-NOXCAT",
+        "Depth-llm-wiki-wiki-sources-2026-04-05-eip-8141-hegota"
+      ],
+      "returned_slugs": [
+        "Currents-NOXCAT-Product-NOX-Wallet-PRD-v1-2-33f89caea48e81b9bd17f38d1932b888",
+        "Currents-NOXCAT-Product-NOXCAT_",
+        "Currents-NOXCAT-Product-NOX_Wallet_Visual_PRD_v1-0",
+        "Currents-NOXCAT-meetings-2026-04-09-NOXCAT",
+        "Currents-NOXCAT-Product-NOX-Wallet-PRD-v1-1-33d89caea48e81a2a4c5dc50562f4f84",
+        "Currents-NOXCAT-Product-NOX_Wallet_PRD_v1-1",
+        "Currents-NOXCAT-Product-USDT-Nox-33d89caea48e818bac34fad72134ca31",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "Currents-NOXCAT-Product-NOXCAT_OTC_PRD_v2-2",
+        "Currents-NOXCAT-Product-NOXCAT_infi-flow"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "hit@10": 0
+    },
+    {
+      "id": 116,
+      "question": "GEO Analyzer 支援哪些中文 AI 引擎？",
+      "scene": "product_feature",
+      "query_terms": "GEO Analyzer 中文 AI 引擎",
+      "expected_slugs": [
+        "Currents-GitHub-geo-analyzer-README",
+        "Currents-ChannelLab-GEO-GEO-Analyzer-PRD",
+        "Chart-MemOcean-MemOcean-README",
+        "Currents-ChannelLab-GEO-PRD",
+        "Currents-GitHub-geo-analyzer-QA_REPORT"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "Currents-ChannelLab-GEO-GEO-Analyzer-PRD",
+        ":/home/oldrabbit/.claude/projects/-home-oldrabbit--claude-bots-bots-anya/memory/project_geo_tool.md",
+        "Currents-ChannelLab-GEO-PRD",
+        "1050312492:6313",
+        "Currents-GitHub-geo-analyzer-README",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "1050312492:6316"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 117,
+      "question": "Brand GEO Score 是什麼概念？",
+      "scene": "product_feature",
+      "query_terms": "Brand GEO Score",
+      "expected_slugs": [
+        "Chart-MemOcean",
+        "Currents-GitHub-geo-analyzer-demo-README",
+        "Currents-GitHub-geo-analyzer-docs-review-brand-geo-score-phase1",
+        "Currents-ChannelLab-GEO-Bonk-GEO",
+        "Currents-ChannelLab-GEO-ChannelLab-GEO-Pricing"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Currents-GitHub-geo-analyzer-docs-review-brand-geo-score-phase1",
+        "-5267778636:relay-msg|anna|1064",
+        "Currents-GitHub-geo-analyzer-demo-README",
+        "Currents-ChannelLab-Product-GEO-Bonk-GEO",
+        "-5267778636:relay-msg|Bella|850",
+        "Currents-GitHub-geo-analyzer-demo-frontend-README",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "-5267778636:relay-msg|anya|1102",
+        "Currents-ChannelLab-GEO-PRD"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 118,
+      "question": "GEO 優化後可見度能提升多少？",
+      "scene": "product_feature",
+      "query_terms": "GEO 優化 可見度 提升",
+      "expected_slugs": [
+        "Pearl-GEO",
+        "Currents-ChannelLab-GEO-GEO-Analyzer-PRD",
+        "Currents-ChannelLab-GEO-PRD",
+        "Currents-ChannelLab-GEO-ChannelLab-GEO-Pricing",
+        "Currents-GitHub-geo-analyzer-QA_REPORT"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "Currents-ChannelLab-GEO-PRD",
+        "1050312492:6541",
+        "Pearl-GEO",
+        "1050312492:8095",
+        "-5267778636:relay-msg|anna|1039",
+        "Currents-ChannelLab-GEO-ChannelLab-GEO-Pricing",
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 120,
+      "question": "Bonk 的語意完整度分數跟引用機率的關係？",
+      "scene": "product_feature",
+      "query_terms": "語意完整度 引用機率",
+      "expected_slugs": [
+        "Currents-ChannelLab-GEO-Bonk-AIO-Strategy"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy",
+        "Currents-ChannelLab-GEO-Bonk-AIO-Strategy",
+        "Currents-ChannelLab-Product-GEO-QuBitDEX-GEO",
+        "1050312492:6573",
+        "-5267778636:relay-msg|anya|1269",
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "-5267778636:relay-msg|anna|1144",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "-1003634255226:relay-msg|Bella|3198",
+        "tg-20260413-5034023909-relay-msg|anya|12812"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 121,
+      "question": "GEO Analyzer README 有什麼功能描述？",
+      "scene": "product_feature",
+      "query_terms": "GEO Analyzer README",
+      "expected_slugs": [
+        "Currents-GitHub-geo-analyzer-README",
+        "Currents-GitHub-geo-analyzer-CHANGELOG",
+        "Currents-GitHub-geo-analyzer-demo-README",
+        "Currents-ChannelLab-GEO-GEO-Analyzer-PRD",
+        "Currents-ChannelLab-GEO-PRD"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "Currents-GitHub-geo-analyzer-README",
+        "-5267778636:relay-msg|anna|2315",
+        "Currents-GitHub-geo-analyzer-demo-README",
+        "-5267778636:relay-msg|anya|3130",
+        "Currents-ChannelLab-GEO-GEO-Analyzer-PRD",
+        "Currents-ChannelLab-Product-GEO-QuBitDEX-GEO",
+        "-5267778636:relay-msg|anna|1316"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 122,
+      "question": "GEO demo 頁面展示了什麼？",
+      "scene": "product_feature",
+      "query_terms": "GEO demo",
+      "expected_slugs": [
+        "Chart-MemOcean",
+        "Currents-ChannelLab-GEO-GEO-Analyzer-PRD",
+        "Currents-GitHub-geo-analyzer-demo-CHANGELOG",
+        "Currents-ChannelLab-GEO-Bonk-GEO",
+        "Currents-ChannelLab-GEO-ChannelLab-GEO-Pricing"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "Currents-ChannelLab-GEO-GEO-Analyzer-PRD",
+        "1050312492:6541",
+        "Currents-GitHub-geo-analyzer-demo-README",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "1050312492:6267",
+        "Currents-ChannelLab-Product-GEO-Bonk-GEO",
+        ":/home/oldrabbit/.claude/projects/-home-oldrabbit--claude-bots-bots-anya/memory/project_geo_tool.md",
+        "Chart-MemOcean-MemOcean",
+        "Currents-NOXCAT-Product-CK-Demo-33d89caea48e8141b592ffbfcf59562f"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 124,
+      "question": "CLSC 的 drawer-closet 架構是什麼意思？",
+      "scene": "product_feature",
+      "query_terms": "CLSC drawer closet 架構",
+      "expected_slugs": [
+        "Chart-MemOcean",
+        "Chart-MemOcean-CLSC-CLSC-dogfood-week1",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Chart-MemOcean-MemOcean"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Currents-NOXCAT-meetings-2026-04-07-OTC-Wes-PRD",
+        "1050312492:8247",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-daily-log",
+        "1050312492:7759",
+        "Chart-MemOcean-CLSC-CLSC-dogfood-week1",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-blocks-block-daily-log",
+        "1050312492:8843",
+        "Research-gnekt-mybrain-vs-channellab"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 125,
+      "question": "JSON Canvas 可以做什麼？",
+      "scene": "product_feature",
+      "query_terms": "JSON Canvas",
+      "expected_slugs": [
+        "claude-skills-json-canvas-SKILL"
+      ],
+      "returned_slugs": [
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-dispatch",
+        "claude-skills-json-canvas-SKILL",
+        "1050312492:8931",
+        "claude-skills-json-canvas-references-EXAMPLES",
+        "Seabed-chats-clsc",
+        "-5034023909:6990",
+        "Chart-Architecture-channellab-bot-framework",
+        "tg-20260413-1003634255226-relay-msg|anya|12753",
+        "-5267778636:relay-msg|anna|1459",
+        "Chart-FATQ"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 126,
+      "question": "Obsidian Bases 支援什麼功能？",
+      "scene": "product_feature",
+      "query_terms": "Obsidian Bases 功能",
+      "expected_slugs": [
+        "claude-skills-obsidian-bases-SKILL"
+      ],
+      "returned_slugs": [
+        "claude-skills-obsidian-bases-SKILL",
+        "Chart-Bot-System-bots-wes-buddy-blocks-block-daily-log",
+        "1050312492:6277",
+        "Research-knowledge-infra-proposal-zhanglinghe",
+        "Currents-NOXCAT-Product-OTC-33d89caea48e8165ac56d311d3e49f17",
+        "1050312492:7294",
+        "claude-skills-obsidian-cli-SKILL",
+        "tg-20260413-5034023909-relay-msg|anya|12825",
+        "1050312492:8171",
+        "claude-skills-obsidian-markdown-SKILL"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 127,
+      "question": "defuddle 是做什麼的？",
+      "scene": "product_feature",
+      "query_terms": "defuddle",
+      "expected_slugs": [
+        "claude-skills-defuddle-SKILL"
+      ],
+      "returned_slugs": [
+        "Pearl-kepano-obsidian-skills",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:5793",
+        "Currents-NOXCAT-Product-32d89caea48e8056836ed39d140a76ef",
+        "1050312492:5795",
+        "tg-20260413-1003634255226-relay-msg|anya|12777",
+        "1050312492:11204",
+        "Currents-NOXCAT-Product-NOXCAT_",
+        "1050312492:8926",
+        "tg-20260413-1003634255226-relay-msg|anya|12760"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "hit@10": 0
+    },
+    {
+      "id": 128,
+      "question": "Obsidian CLI 能做哪些操作？",
+      "scene": "product_feature",
+      "query_terms": "Obsidian CLI 操作",
+      "expected_slugs": [
+        "claude-skills-obsidian-cli-SKILL"
+      ],
+      "returned_slugs": [
+        "claude-skills-obsidian-cli-SKILL",
+        "tg-20260413-5034023909-relay-msg|anya|12825",
+        "1050312492:6277",
+        "Pearl-MCP-background-agent",
+        "tg-20260413-5034023909-relay-msg|anya|12856",
+        "1050312492:8794",
+        "Research-0xKingsKuan-tweet-vs-adr",
+        "Chart-Bot-System-bots-ron-assistant-blocks-block-daily-log",
+        "1050312492:9438",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-CLAUDE"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 129,
+      "question": "Obsidian 的 callout 語法怎麼用？",
+      "scene": "product_feature",
+      "query_terms": "Obsidian callout 語法",
+      "expected_slugs": [
+        "claude-skills-obsidian-markdown-references-CALLOUTS"
+      ],
+      "returned_slugs": [
+        "claude-skills-obsidian-bases-SKILL",
+        "tg-20260413-5034023909-relay-msg|anya|12825",
+        "1050312492:6277",
+        "claude-skills-obsidian-cli-SKILL",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "1050312492:6273",
+        "claude-skills-obsidian-markdown-SKILL",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-dispatch",
+        "1050312492:5926",
+        "claude-skills-obsidian-markdown-references-CALLOUTS"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "hit@10": 1
+    },
+    {
+      "id": 130,
+      "question": "Obsidian frontmatter properties 怎麼寫？",
+      "scene": "product_feature",
+      "query_terms": "Obsidian frontmatter properties",
+      "expected_slugs": [
+        "claude-skills-obsidian-markdown-references-PROPERTIES"
+      ],
+      "returned_slugs": [
+        "Research-gnekt-mybrain-vs-channellab",
+        "Currents-NOXCAT-Product-NOX_Wallet_Visual_PRD_v1-0",
+        "1050312492:8967",
+        "Research-kepano-obsidian-skills",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "1050312492:6277",
+        "Research-knowledge-infra-proposal-anya",
+        "tg-20260413-5034023909-relay-msg|anya|12825",
+        "1050312492:6273",
+        "Research-knowledge-infra-proposal-chef"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "hit@10": 0
+    },
+    {
+      "id": 131,
+      "question": "共用部門池有哪些角色？",
+      "scene": "org_structure",
+      "query_terms": "共用部門 角色",
+      "expected_slugs": [
+        "Chart-Architecture-Bot-Team-Architecture",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Bot-System-bots-_template"
+      ],
+      "returned_slugs": [
+        "Chart-Architecture-Bot-Team-Architecture",
+        "Currents-NOXCAT-meetings-2026-04-02",
+        "1050312492:9854",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-blocks-block-daily-log",
+        ":/home/oldrabbit/.claude/projects/-home-oldrabbit--claude-bots-bots-anna/memory/project_nicky_team_roles.md",
+        "Chart-Bot-System-bots-_template",
+        "Chart-Bot-System-bots-ron-assistant-blocks-block-daily-log",
+        "-5175060310:7123",
+        "Chart-Bot-System-global-CLAUDE"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 132,
+      "question": "ChannelLab 的三大引擎是什麼？",
+      "scene": "org_structure",
+      "query_terms": "ChannelLab 三大引擎",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Pearl-ChannelLab",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-Bot-System-bots-CLAUDE",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Pearl-ChannelLab",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "-1003612111775:68",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "1050312492:8936",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Currents-NOXCAT-meetings-2026-03-19",
+        "-5267778636:relay-msg|nicky-builder|782",
+        "Chart-Architecture-channellab-bot-framework"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 135,
+      "question": "ChannelLab 的股權結構",
+      "scene": "org_structure",
+      "query_terms": "ChannelLab 股權結構",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Architecture-channellab-bot-framework",
+        "Currents-ChannelLab-Org-Seabed-ChannelLab-Equity",
+        "Chart-Bot-System-bots-CLAUDE",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Org-Seabed-ChannelLab-Equity",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        ":/home/oldrabbit/.claude/projects/-home-oldrabbit--claude-bots/memory/project_chl_equity.md",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "-1003612111775:68",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Currents-NOXCAT-meetings-2026-04-07-OTC-Wes-PRD",
+        ":/home/oldrabbit/.claude/projects/-home-oldrabbit--claude-bots/memory/reference_channellab_org.md",
+        "Chart-Architecture-channellab-bot-framework"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 137,
+      "question": "Nicky 的股權激勵方案長什麼樣？",
+      "scene": "org_structure",
+      "query_terms": "Nicky 股權 激勵",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-MemOcean-CLSC-CLSC-empirical-results",
+        "Chart-Bot-System-shared-team-l0",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-CLAUDE",
+        "Chart-Bot-System-bots-nicky-builder-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-Bot-System-bots-nicky-zhanglinghe-blocks-block-daily-log",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Currents-NOXCAT-Product-NOXCAT_infi-flow",
+        "1050312492:11077",
+        "Chart-Bot-System-shared-team-l0",
+        "1050312492:5567",
+        "Chart-MemOcean-CLSC-CLSC-empirical-results",
+        "Currents-NOXCAT-Product-NOX-Paymaster-V2-Arbitrum-NOX-Gas-33d89caea48e81c0a421c1afb7702f82",
+        "1050312492:7931",
+        "Currents-ChannelLab-BD-People-Nicky"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 139,
+      "question": "Web3 媒體監控有哪些資源可以用？",
+      "scene": "org_structure",
+      "query_terms": "Web3 媒體 監控 資源",
+      "expected_slugs": [
+        "Currents-ChannelLab-BD-Media-Pricing",
+        "Currents-ChannelLab-BD-Media-Resource-List",
+        "Currents-ChannelLab-Events-TBOS-2026-TBOS-Plan-Draft",
+        "Chart-Architecture-channellab-bot-framework",
+        "Currents-ChannelLab-Org-Media-Resource-List"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Meetings-2026-04-13-CHL",
+        "Currents-ChannelLab-BD-Media-Resource-List",
+        "Research-ApifySkills-WebScraping-2026-04-14",
+        "-5267778636:relay-msg|anya|1146",
+        "Currents-ChannelLab-Org-Media-Resource-List",
+        "Research-RyanLi-SurfSkill-ClaudeCode-Crypto-2026-04-14",
+        "-5267778636:relay-msg|Bella|968",
+        "Currents-ChannelLab-BD-Media-Pricing",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "1050312492:6045"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 142,
+      "question": "資本儲備水位線是多少？",
+      "scene": "org_structure",
+      "query_terms": "資本儲備 水位線",
+      "expected_slugs": [
+        "Currents-ChannelLab-Org-Seabed-profit-sharing-202604",
+        "Currents-ChannelLab-Org-Seabed-ChannelLab-Projects"
+      ],
+      "returned_slugs": [
+        "tg-20260413-5034023909-relay-msg|anya|12825",
+        "1050312492:5143",
+        "Currents-ChannelLab-Product-GEO-GWIN-RWA",
+        "-1003634255226:relay-msg|anya|12149",
+        "Currents-NOXCAT-Product-Phase-3-Bridge-Aggregator-33d89caea48e81349d0aceebd343e622",
+        "1050312492:10247",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "1050312492:7331",
+        "Currents-NOXCAT-Product-33d89caea48e81b491a3fa71191717ae",
+        "1050312492:10370"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "hit@10": 0
+    },
+    {
+      "id": 143,
+      "question": "Wiki 的目錄結構是什麼？",
+      "scene": "org_structure",
+      "query_terms": "Wiki 目錄結構",
+      "expected_slugs": [
+        "Research-knowledge-infra-proposal-anya",
+        "Depth-llm-wiki-index",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Chart-Bot-System-bots-wes-buddy-blocks-block-daily-log",
+        "1050312492:6177",
+        "Research-knowledge-infra-proposal-anya",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-blocks-block-daily-log",
+        "1050312492:5880",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "tg-20260413-5034023909-10450",
+        "1050312492:8195",
+        "Chart-MemOcean-CLSC-CLSC"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 144,
+      "question": "期權池的分配機制？",
+      "scene": "org_structure",
+      "query_terms": "期權池 分配",
+      "expected_slugs": [
+        "Currents-ChannelLab-Org-Seabed-profit-sharing-202604",
+        "Chart-SOP-Team-Onboarding-SOP",
+        "Chart-Architecture-channellab-bot-framework"
+      ],
+      "returned_slugs": [
+        "Currents-NOXCAT-Product-infi-flow-32d89caea48e80e78312d1e10febd08b",
+        "Chart-Architecture-channellab-bot-framework",
+        "Currents-NOXCAT-Product-NOXCAT_infi-flow",
+        "1050312492:5134",
+        "Chart-SOP-Team-Onboarding-SOP",
+        "Currents-NOXCAT-Product-NOX-Paymaster-V2-Arbitrum-NOX-Gas-33d89caea48e81c0a421c1afb7702f82",
+        "1050312492:5127",
+        "Currents-ChannelLab-Org-Seabed-profit-sharing-202604",
+        "1050312492:5141",
+        "Currents-NOXCAT-Tickets-TICKET-001-infiflow-20-30"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 146,
+      "question": "4/6 的待辦有什麼？",
+      "scene": "temporal_reasoning",
+      "query_terms": "2026-04-06 待辦",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Bot-System-bots-lilai-fengfeng-CLAUDE",
+        "Chart-Bot-System-bots-chltao-CLAUDE",
+        "Chart-Bot-System-bots-anya-blocks-block-daily-cron",
+        "Chart-Bot-System-bots-caijie-zhuchu-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Currents-NOXCAT-Product-V6-33d89caea48e81359b74f9113454f523",
+        "1050312492:8755",
+        "Chart-MemOcean-MemOcean",
+        "Currents-NOXCAT-Product-CK-Demo-33d89caea48e8141b592ffbfcf59562f",
+        "1050312492:8529",
+        "Currents-GitHub-claude-telegram-bots-shared-templates-assistant-CLAUDE",
+        "Currents-NOXCAT-meetings-2026-03-19",
+        "1050312492:9939",
+        "Depth-llm-wiki-index"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 147,
+      "question": "4/8 那天做了哪些事？",
+      "scene": "temporal_reasoning",
+      "query_terms": "2026-04-08 待辦",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-Architecture-browser-automation-landscape",
+        "Chart-Bot-System-bots-anya-blocks-block-sub-agent-routing",
+        "Chart-Bot-System-bots-anya-blocks-block-daily-cron",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Currents-NOXCAT-Product-CK-Demo-33d89caea48e8141b592ffbfcf59562f",
+        "1050312492:8755",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Currents-NOXCAT-meetings-2026-03-19",
+        "1050312492:8529",
+        "Chart-Architecture-browser-automation-landscape",
+        "Currents-NOXCAT-meetings-2026-04-07-OTC-Wes-PRD",
+        "1050312492:9939",
+        "Chart-Bot-System-shared-mistakes"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 148,
+      "question": "4/9 的 Google Calendar MCP 出了什麼問題？",
+      "scene": "temporal_reasoning",
+      "query_terms": "2026-04-09 Google Calendar MCP 問題",
+      "expected_slugs": [
+        "Chart-Bot-System-bots-anya-blocks-block-daily-cron",
+        "Chart-SOP-Google-Calendar-MCP-Setup-SOP",
+        "Chart-Bot-System-bots-anya-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-SOP-Google-Calendar-MCP-Setup-SOP",
+        "tg-20260413-1003634255226-relay-msg|anya|12753",
+        "-5175060310:relay-msg|anya|13450",
+        "Currents-ChannelLab-GEO-Bonk-AIO-Strategy",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "-1003634255226:relay-msg|anya|7274",
+        "Pearl-MCP-background-agent",
+        "Seabed-chats-clsc",
+        "-1003634255226:relay-msg|anna|3858",
+        "Research-Harness-Engineering"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 149,
+      "question": "4/10 有什麼重要的事？",
+      "scene": "temporal_reasoning",
+      "query_terms": "2026-04-10",
+      "expected_slugs": [
+        "_schema"
+      ],
+      "returned_slugs": [
+        "_schema",
+        "Currents-NOXCAT-meetings-2026-04-07-OTC-Wes-PRD",
+        "1050312492:10320",
+        "Currents-NOXCAT-meetings-2026-03-19",
+        "1050312492:7304",
+        "Currents-NOXCAT-meetings-2026-04-02",
+        "1050312492:5343",
+        "Currents-NOXCAT-meetings-2026-03-24",
+        "1050312492:10291",
+        "Currents-NOXCAT-meetings-2026-04-13"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 150,
+      "question": "AOT-002 搶票是幾點開搶的？",
+      "scene": "temporal_reasoning",
+      "query_terms": "AOT-002 搶票 時間",
+      "expected_slugs": [
+        "Chart-Bot-System-bots-yitang-CLAUDE",
+        "Chart-Bot-System-shared-mistakes",
+        "Chart-Bot-System-_index",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Chart-Bot-System-bots-caijie-zhuchu-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Currents-NOXCAT-Product-NOX-Paymaster-V2-Arbitrum-NOX-Gas-33d89caea48e81c0a421c1afb7702f82",
+        "Currents-NOXCAT-Product-USDT-Nox-33d89caea48e818bac34fad72134ca31",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "-5180494548:relay-msg|caijie-zhuchu|3520",
+        "Chart-Bot-System-_index",
+        "tg-20260413-1003634255226-relay-msg|anya|12760",
+        "-5180494548:relay-msg|yitang|1278",
+        "Chart-Bot-System-shared-mistakes",
+        "Currents-NOXCAT-Tickets-Ticket"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 151,
+      "question": "CLSC 什麼時候被正式殺掉的？",
+      "scene": "temporal_reasoning",
+      "query_terms": "CLSC 殺掉 時間",
+      "expected_slugs": [
+        "Reviews-CR-20260408-clsc-v0-3-benchmark",
+        "_schema",
+        "Chart-Bot-System-bots-CLAUDE",
+        "Chart-Bot-System-_index",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Reviews-CR-20260408-clsc-v0-3-benchmark",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "1050312492:7746",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Seabed-chats-clsc",
+        "1050312492:7321",
+        "Chart-Bot-System-_index",
+        "Currents-NOXCAT-Product-32d89caea48e8056836ed39d140a76ef",
+        "1050312492:8263",
+        "Chart-Bot-System-bots-CLAUDE"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 152,
+      "question": "知識基礎設施 ADR 是哪天決定的？",
+      "scene": "temporal_reasoning",
+      "query_terms": "知識基礎設施 ADR 日期",
+      "expected_slugs": [
+        "Chart-MemOcean",
+        "Research-0xKingsKuan-tweet-vs-adr",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Currents-NOXCAT-Product-OTC-PRD-v2-2-32d89caea48e8097a94adbf36b2ec634",
+        "-5175060310:relay-msg|anya|5744",
+        "Chart-MemOcean",
+        "Chart-Bot-System-bots-ron-assistant-blocks-block-daily-log",
+        "1050312492:9720",
+        "Research-0xKingsKuan-tweet-vs-adr",
+        "Currents-NOXCAT-meetings-2026-04-07-OTC-Wes-PRD",
+        "1050312492:9718",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 154,
+      "question": "Anthropic managed agents 研究是哪天做的？",
+      "scene": "temporal_reasoning",
+      "query_terms": "Anthropic managed agents 日期",
+      "expected_slugs": [
+        "Research-Harness-Engineering",
+        "Research-Anthropic-Managed-Agents-2026-04-09",
+        "Chart-Bot-System-claude-bots-CLAUDE",
+        "Chart-MemOcean-CLSC-CLSC",
+        "Chart-MemOcean-MemOcean"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-CLSC-CLSC",
+        "Chart-Bot-System-automation-registry",
+        "-1003634255226:relay-msg|anya|8205",
+        "Research-Anthropic-Managed-Agents-2026-04-09",
+        "Currents-NOXCAT-Product-USDT-Nox-33d89caea48e818bac34fad72134ca31",
+        "-1003634255226:relay-msg|anya|8065",
+        "Chart-Bot-System-claude-bots-CLAUDE",
+        "Chart-Bot-System-bots-anya-blocks-block-daily-log",
+        "-1003634255226:relay-msg|anya|8131",
+        "Chart-MemOcean-MemOcean"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 155,
+      "question": "NOXCAT 技術會議是哪天開的？",
+      "scene": "temporal_reasoning",
+      "query_terms": "NOXCAT 技術會議 日期",
+      "expected_slugs": [
+        "Currents-NOXCAT-People-Gene-Capital",
+        "Currents-NOXCAT-NOXCAT",
+        "Currents-NOXCAT-meetings-2026-04-07"
+      ],
+      "returned_slugs": [
+        "Currents-NOXCAT-meetings-2026-04-09-NOXCAT",
+        "Currents-NOXCAT-Product-NOX-Wallet-PRD-v1-2-33f89caea48e81b9bd17f38d1932b888",
+        "Currents-NOXCAT-Product-NOXCAT_OTC_PRD_v2-2",
+        "Currents-NOXCAT-Product-NOX_Wallet_Visual_PRD_v1-0",
+        "Currents-NOXCAT-People-Gene-Capital",
+        "-5175060310:relay-msg|anya|13113",
+        "Currents-NOXCAT-meetings-2026-04-07",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "1050312492:6578",
+        "Currents-NOXCAT-Product-33a89caea48e80ee9a14cd24c7cadde1"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 157,
+      "question": "CBAM 2026 南良要面對的截止日是什麼？",
+      "scene": "temporal_reasoning",
+      "query_terms": "CBAM 2026 南良 截止",
+      "expected_slugs": [
+        "Currents-NOXCAT-People-Gene-Capital",
+        "Currents-ChannelLab-Org-Deals-Canalis_Angel",
+        "Currents-ChannelLab-ChannelLab-clsc",
+        "Currents-ChannelLab-Org-Companies-NanLiang",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Org-Companies-NanLiang",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "1050312492:8758",
+        "Currents-ChannelLab-Org-Deals-Canalis_Angel",
+        "Currents-NOXCAT-Product-NOX-Paymaster-V2-Arbitrum-NOX-Gas-33d89caea48e81c0a421c1afb7702f82",
+        "1050312492:11003",
+        "Currents-NOXCAT-People-Gene-Capital",
+        "Currents-NOXCAT-Product-Phase-1-EVM-Arbitrum-33d89caea48e816cb5eee7f0b4f349f6",
+        "-5267778636:relay-msg|anna|617",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 159,
+      "question": "CLSC Dictionary 什麼時候被 deprecated？",
+      "scene": "temporal_reasoning",
+      "query_terms": "CLSC Dictionary deprecated 時間",
+      "expected_slugs": [
+        "_schema",
+        "Depth-CLSC-Spec",
+        "Research-chinese-claude-token-optimization-anya",
+        "Depth-CLSC-Dictionary-Anya-Ext",
+        "Depth-CLSC-Dictionary"
+      ],
+      "returned_slugs": [
+        "Depth-CLSC-Dictionary-Anya-Ext",
+        "Currents-NOXCAT-Product-32d89caea48e8056836ed39d140a76ef",
+        "1050312492:7746",
+        "Depth-CLSC-Dictionary",
+        "tg-20260413-5034023909-relay-msg|anya|12803",
+        "1050312492:8212",
+        "Depth-CLSC-Spec",
+        "Currents-NOXCAT-Product-OTC-33d89caea48e8165ac56d311d3e49f17",
+        "-1003634255226:relay-msg|anya|8451",
+        "Research-chinese-claude-token-optimization-anya"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 160,
+      "question": "Canalis Angel 預估幾年營收 8812 萬？",
+      "scene": "temporal_reasoning",
+      "query_terms": "Canalis Angel 營收 年",
+      "expected_slugs": [
+        "Currents-ChannelLab-Org-Deals-Canalis_Angel",
+        "Currents-ChannelLab-Events-TBOS-2025-TBOS-Index",
+        "Chart-O2-WorkFlow",
+        "Chart-Bot-System-bots-ops-CLAUDE",
+        "Currents-ChannelLab-GEO-ChannelLab-GEO-Pricing"
+      ],
+      "returned_slugs": [
+        "Currents-NOXCAT-Product-NOX-Wallet-PRD-v1-2-33f89caea48e81b9bd17f38d1932b888",
+        "Currents-ChannelLab-Org-Deals-Canalis_Angel",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "1050312492:7691",
+        "Currents-ChannelLab-Events-TBOS-2025-TBOS-Index",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        ":/home/oldrabbit/.claude/projects/-home-oldrabbit--claude-bots/memory/project_channellab_pricing.md",
+        "Currents-ChannelLab-Events-TBOS-TBOS-Index",
+        "Research-RyanLi-SurfSkill-ClaudeCode-Crypto-2026-04-14",
+        "1050312492:46"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 161,
+      "question": "Playwright browser automation 評估結論",
+      "scene": "cross_language",
+      "query_terms": "Playwright browser automation 評估",
+      "expected_slugs": [
+        "Reviews-CR-20260408-browser-automation-spike",
+        "Chart-Architecture-browser-automation-landscape",
+        "Pearl-Playwright-MCP-vs-gstack-browse",
+        "Pearl-browser-automation-tool-selection",
+        "Research-agent-browser-research"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "Research-RAG-Benchmark-Standards-2026-04-14",
+        "Chart-Bot-System-automation-registry",
+        "Pearl-Playwright-MCP-vs-gstack-browse",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "-1003634255226:relay-msg|anna|3189",
+        "Pearl-browser-automation-tool-selection",
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy",
+        "-1003634255226:relay-msg|anna|2995",
+        "Research-agent-browser-research"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 162,
+      "question": "FATQ protocol 怎麼運作？",
+      "scene": "cross_language",
+      "query_terms": "FATQ protocol",
+      "expected_slugs": [
+        "Chart-Bot-System-bots-sancai-CLAUDE",
+        "Chart-Bot-System-bots-anya-blocks-block-task-queue",
+        "Chart-FATQ"
+      ],
+      "returned_slugs": [
+        "Chart-Bot-System-claude-bots-CLAUDE",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "1050312492:8189",
+        "Chart-FATQ",
+        "Currents-NOXCAT-Product-32d89caea48e8056836ed39d140a76ef",
+        "1050312492:8194",
+        "Depth-llm-wiki-wiki-topics",
+        "Currents-NOXCAT-Product-OTC-33d89caea48e8165ac56d311d3e49f17",
+        "1050312492:10918",
+        "Pearl-FATQ-File-Atomic-Task-Queue"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 163,
+      "question": "OAuth 多帳號設定 Google Calendar",
+      "scene": "cross_language",
+      "query_terms": "OAuth 多帳號 Google Calendar",
+      "expected_slugs": [
+        "Chart-Bot-System-bots-ron-assistant-CLAUDE",
+        "Chart-Bot-System-bots-chltao-CLAUDE",
+        "Chart-Bot-System-bots-anya-blocks-block-daily-cron",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-CLAUDE",
+        "Chart-SOP-Google-Calendar-MCP-Setup-SOP"
+      ],
+      "returned_slugs": [
+        "Currents-NOXCAT-Product-NOX-Wallet-PRD-v1-1-33d89caea48e81a2a4c5dc50562f4f84",
+        "Currents-NOXCAT-Product-NOX_Wallet_PRD_v1-1",
+        "Currents-NOXCAT-Product-Web2-V5-33d89caea48e8188863bffea77d4d6af",
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy",
+        "Chart-SOP-Google-Calendar-MCP-Setup-SOP",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "7132373174:113",
+        "Chart-Bot-System-bots-anya-blocks-block-daily-cron",
+        "-5002663624:relay-msg|anya|3564",
+        "Chart-MemOcean-RnD-Vector-Quantization"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 164,
+      "question": "MCP server 工具怎麼接線？",
+      "scene": "cross_language",
+      "query_terms": "MCP server 工具 接線",
+      "expected_slugs": [
+        "Chart-SOP-New-Tool-Adoption-SOP",
+        "Chart-MemOcean-CLSC-CLSC-dogfood-week1",
+        "Currents-GitHub-claude-telegram-plugin-README",
+        "Research-agent-browser-research",
+        "Currents-GitHub-memocean-README-zh-TW"
+      ],
+      "returned_slugs": [
+        "Chart-SOP-New-Tool-Adoption-SOP",
+        "tg-20260413-1003634255226-relay-msg|anya|12753",
+        "1050312492:7959",
+        "Research-agent-browser-research",
+        "tg-20260413-5034023909-relay-msg|anya|12812",
+        "1050312492:7694",
+        "Chart-MemOcean-CLSC-CLSC-dogfood-week1",
+        "Currents-NOXCAT-Product-Phase-3-Bridge-Aggregator-33d89caea48e81349d0aceebd343e622",
+        "1050312492:10563",
+        "Currents-GitHub-claude-telegram-plugin-README"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 165,
+      "question": "token compression 中文效率",
+      "scene": "cross_language",
+      "query_terms": "token compression 中文 效率",
+      "expected_slugs": [
+        "Depth-CLSC-Spec",
+        "Research-chinese-llm-compression-landscape",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec"
+      ],
+      "returned_slugs": [
+        "Depth-CLSC-Spec",
+        "tg-20260413-5034023909-relay-msg|anya|12893",
+        "1050312492:7383",
+        "Research-chinese-llm-compression-landscape",
+        "Currents-NOXCAT-Product-32d89caea48e8056836ed39d140a76ef",
+        "1050312492:7179",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy",
+        "1050312492:9019",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 166,
+      "question": "Schema markup 在 SEO 跟 GEO 的差異？",
+      "scene": "cross_language",
+      "query_terms": "Schema markup SEO GEO",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-MemOcean-FTS5-bot",
+        "Depth-llm-wiki-log",
+        "Chart-MemOcean-MemOcean",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-MemOcean",
+        "Currents-ChannelLab-Product-GEO-Bonk-GEO",
+        "1050312492:6267",
+        "Currents-ChannelLab-GEO-Bonk-AIO-Strategy",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "1050312492:6773",
+        "Currents-ChannelLab-GEO-Bonk-GEO",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "-5267778636:relay-msg|Bella|1263",
+        "Currents-ChannelLab-GEO-ChannelLab-GEO-Pricing"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 167,
+      "question": "E-E-A-T 權威性跟 AI 引用的關係？",
+      "scene": "cross_language",
+      "query_terms": "E-E-A-T 權威性 AI 引用",
+      "expected_slugs": [
+        "Research-knowledge-infra-proposal-anya",
+        "Currents-ChannelLab-GEO-Bonk-AIO-Strategy",
+        "Currents-ChannelLab-GEO-GEO-Analyzer-PRD",
+        "Chart-MemOcean-CLSC-CLSC",
+        "Currents-ChannelLab-GEO-PRD"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Currents-ChannelLab-GEO-Bonk-AIO-Strategy",
+        "1050312492:7893",
+        "Currents-ChannelLab-GEO-GEO-Analyzer-PRD",
+        "Chart-Bot-System-automation-registry",
+        "-1003634255226:relay-msg|anya|10235",
+        "Currents-ChannelLab-GEO-PRD",
+        "Currents-NOXCAT-Product-33a89caea48e80ee9a14cd24c7cadde1"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 168,
+      "question": "LLMLingua 壓縮工具的評估",
+      "scene": "cross_language",
+      "query_terms": "LLMLingua 壓縮 評估",
+      "expected_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Research-chinese-llm-compression-landscape",
+        "Research-TurboQuant-Google-Compression",
+        "Chart-MemOcean-MemOcean"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "Research-RAG-Benchmark-Standards-2026-04-14",
+        "Currents-NOXCAT-Tickets-TICKET-001-infiflow-20-30",
+        "Research-TurboQuant-Google-Compression",
+        "1050312492:7830",
+        "Research-chinese-llm-compression-landscape",
+        "Currents-NOXCAT-Product-32d89caea48e8056836ed39d140a76ef",
+        "-1003634255226:relay-msg|Bella|3198",
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "-1003634255226:relay-msg|anya|4257"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 169,
+      "question": "CDP accessibility ref 怎麼省 token？",
+      "scene": "cross_language",
+      "query_terms": "CDP accessibility ref token",
+      "expected_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Reviews-CLSC-v0-5-UTF8-Codepoint-Hack-PoC",
+        "Chart-MemOcean-CLSC-CLSC",
+        "Pearl-agent-browser",
+        "Depth-CLSC-Dictionary"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Currents-NOXCAT-Product-NOXCAT_OTC_PRD_v2-2",
+        ":/home/oldrabbit/.claude/projects/-home-oldrabbit--claude-bots/memory/project_google_ads_token.md",
+        "Chart-MemOcean-CLSC-CLSC",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "1050312492:6645",
+        "Depth-CLSC-Dictionary",
+        "Currents-NOXCAT-Product-NOX_Wallet_Visual_PRD_v1-0",
+        "-5267778636:relay-msg|anna|1039",
+        "Pearl-agent-browser"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 171,
+      "question": "Tokenizer 對中文的 overhead 有多大？",
+      "scene": "cross_language",
+      "query_terms": "tokenizer 中文 overhead",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-CLAUDE",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Chart-Bot-System-bots-interns-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "tg-20260413-5034023909-relay-msg|anya|12893",
+        "1050312492:7179",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "1050312492:7383",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec",
+        "Seabed-chats-clsc",
+        "1050312492:7324",
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 172,
+      "question": "BPE encoding 跟中文壓縮的關係",
+      "scene": "cross_language",
+      "query_terms": "BPE encoding 中文 壓縮",
+      "expected_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Depth-CLSC-Spec",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Chart-Bot-System-bots-interns-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Currents-NOXCAT-Product-32d89caea48e8056836ed39d140a76ef",
+        "1050312492:7179",
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec",
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "1050312492:7381",
+        "Depth-CLSC-Spec",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:7329",
+        "Chart-Architecture-ChannelLab-AI-Architecture"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 173,
+      "question": "Rust CLI daemon 比 MCP 好在哪？",
+      "scene": "cross_language",
+      "query_terms": "Rust CLI daemon MCP 比較",
+      "expected_slugs": [
+        "Chart-SOP-New-Tool-Adoption-SOP",
+        "Chart-MemOcean-MemOcean-README",
+        "Chart-SOP-Google-Calendar-MCP-Setup-SOP",
+        "Research-agent-browser-research",
+        "Pearl-agent-browser"
+      ],
+      "returned_slugs": [
+        "Research-agent-browser-research",
+        "tg-20260413-1003634255226-relay-msg|anya|12753",
+        "1050312492:10563",
+        "Pearl-agent-browser",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "1050312492:10792",
+        "Chart-MemOcean-MemOcean-README",
+        "Currents-NOXCAT-meetings-2026-04-09-NOXCAT",
+        "1050312492:8938",
+        "Chart-SOP-New-Tool-Adoption-SOP"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 174,
+      "question": "Zettelkasten 方法論我們怎麼用？",
+      "scene": "cross_language",
+      "query_terms": "Zettelkasten 方法",
+      "expected_slugs": [
+        "Chart-Knowledge-Graph-Optimization",
+        "Research-AI-Memory-Systems-Benchmark",
+        "Research-0xKingsKuan-tweet-vs-adr",
+        "Pearl",
+        "Research-gnekt-mybrain-vs-channellab"
+      ],
+      "returned_slugs": [
+        "Chart-Knowledge-Graph-Optimization",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "-5267778636:relay-msg|Bella|1740",
+        "Research-0xKingsKuan-tweet-vs-adr",
+        "tg-20260413-5034023909-relay-msg|anya|12842",
+        "-5267778636:relay-msg|anya|1750",
+        "Research-AI-Memory-Systems-Benchmark",
+        "tg-20260413-1003634255226-relay-msg|anya|12760",
+        "1050312492:111",
+        "Research-gnekt-mybrain-vs-channellab"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 178,
+      "question": "Sprint 驗證流程",
+      "scene": "cross_language",
+      "query_terms": "sprint 驗證 流程",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Currents-GitHub-claude-telegram-bots-shared-mistakes",
+        "Chart-Bot-System-shared-mistakes",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-Bot-System-bots-Bella-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Currents-NOXCAT-Product-NOX-Wallet-PRD-v1-2-33f89caea48e81b9bd17f38d1932b888",
+        "Currents-NOXCAT-Product-NOX_Wallet_Visual_PRD_v1-0",
+        "Chart-Architecture-channellab-bot-framework",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "-5267778636:relay-msg|Bella|1218",
+        "Chart-Bot-System-shared-mistakes",
+        "Currents-NOXCAT-meetings-2026-04-09-NOXCAT",
+        "-5267778636:relay-msg|Bella|1154",
+        "Currents-NOXCAT-Product-Phase-1-EVM-Arbitrum-33d89caea48e816cb5eee7f0b4f349f6",
+        "-5267778636:relay-msg|anya|1959"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 179,
+      "question": "inotify event routing 怎麼做？",
+      "scene": "cross_language",
+      "query_terms": "inotify event routing",
+      "expected_slugs": [
+        "Currents-ChannelLab-Events-TBOS-2025-TBOS-Index",
+        "Currents-ChannelLab-Events-TBOS-2026-TBOS-Plan-Draft",
+        "Chart-Bot-System-bots-anya-blocks-block-sub-agent-routing",
+        "Chart-Bot-System-bots-CLAUDE",
+        "Chart-FATQ"
+      ],
+      "returned_slugs": [
+        "Chart-Bot-System-bots-CLAUDE",
+        "tg-20260413-5034023909-relay-msg|anya|12812",
+        "1050312492:5221",
+        "Chart-FATQ",
+        "Seabed-chats-clsc",
+        "1050312492:5217",
+        "Currents-ChannelLab-Events-TBOS-2025-TBOS-Index",
+        "Currents-NOXCAT-Product-NOXCAT_infi-flow",
+        "1050312492:5218",
+        "Currents-ChannelLab-Events-TBOS-2026-TBOS-Plan-Draft"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 180,
+      "question": "progressive disclosure 在 skill 設計裡是什麼？",
+      "scene": "cross_language",
+      "query_terms": "progressive disclosure skill",
+      "expected_slugs": [
+        "claude-skills-obsidian-cli-SKILL",
+        "claude-skills-defuddle-SKILL",
+        "claude-skills-obsidian-bases-SKILL",
+        "Research-kepano-obsidian-skills",
+        "claude-skills-json-canvas-SKILL"
+      ],
+      "returned_slugs": [
+        "Research-ApifySkills-WebScraping-2026-04-14",
+        "Research-RyanLi-SurfSkill-ClaudeCode-Crypto-2026-04-14",
+        "Research-kepano-obsidian-skills",
+        "Currents-NOXCAT-Product-33a89caea48e80ee9a14cd24c7cadde1",
+        "1050312492:6094",
+        "Chart-crypto-ai-skills-shortlist",
+        "1050312492:7814",
+        "Currents-GitHub-claude-telegram-plugin-skills-access-SKILL",
+        "Currents-NOXCAT-Product-33d89caea48e81b491a3fa71191717ae",
+        "1050312492:5363"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 182,
+      "question": "那個用檔案系統做任務排隊的東西叫什麼？",
+      "scene": "semantic_fuzzy",
+      "query_terms": "檔案系統 任務 排隊",
+      "expected_slugs": [
+        "Pearl-FATQ-File-Atomic-Task-Queue",
+        "Chart-Bot-System-bots-anna-CLAUDE",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-Bot-System-bots-Bella-CLAUDE",
+        "Chart-Bot-System-bots-anya-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Pearl-FATQ-File-Atomic-Task-Queue",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-dispatch",
+        "1050312492:9112",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-Bot-System-automation-registry",
+        "1050312492:5812",
+        "Chart-Bot-System-bots-anya-blocks-block-section9-external-comms",
+        "tg-20260413-5034023909-relay-msg|anya|12881",
+        "1050312492:10193",
+        "Chart-Bot-System-claude-bots-CLAUDE"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 183,
+      "question": "AI 幫忙看品牌有沒有被提到的服務",
+      "scene": "semantic_fuzzy",
+      "query_terms": "品牌 被提到 AI 檢測",
+      "expected_slugs": [
+        "Currents-GitHub-geo-analyzer-README",
+        "Currents-GitHub-geo-analyzer-demo-README",
+        "Currents-ChannelLab-GEO-GEO-Analyzer-PRD",
+        "Currents-ChannelLab-GEO-PRD",
+        "claude-skills-json-canvas-SKILL"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "Currents-ChannelLab-GEO-GEO-Analyzer-PRD",
+        "1050312492:5625",
+        "Currents-ChannelLab-GEO-PRD",
+        "Currents-ChannelLab-Meetings-2026-04-13-AI",
+        "1050312492:8747",
+        "-5267778636:relay-msg|nicky-builder|123",
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy",
+        "-5267778636:relay-msg|anya|2200"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 184,
+      "question": "怎麼讓 AI 搜尋引擎更容易找到我們？",
+      "scene": "semantic_fuzzy",
+      "query_terms": "AI 搜尋 容易找到",
+      "expected_slugs": [
+        "Chart-MemOcean-MemOcean-Vector-Search-Consensus-20260412",
+        "Chart-MemOcean-RnD-Vector-Quantization",
+        "Chart-MemOcean-MemOcean-README",
+        "Chart-MemOcean-RnD-Reranker-Pipeline",
+        "Currents-ChannelLab-GEO-ChannelLab-GEO-Pricing"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-ChannelLab-GEO-Pricing",
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "Chart-MemOcean-MemOcean-Vector-Search-Consensus-20260412",
+        "1050312492:10283",
+        "Chart-MemOcean-RnD-Vector-Quantization",
+        "Currents-ChannelLab-Product-GEO-Bonk-AIO-Strategy",
+        "1050312492:10769",
+        "Currents-ChannelLab-GEO-ChannelLab-GEO-Pricing",
+        "1050312492:8277"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 185,
+      "question": "那個把長文變短的壓縮技術",
+      "scene": "semantic_fuzzy",
+      "query_terms": "長文 變短 壓縮",
+      "expected_slugs": [
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Depth-CLSC-Spec",
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec",
+        "Chart-Bot-System-bots-lilai-fengfeng-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "Currents-NOXCAT-Product-NOX_Wallet_Chat_PRD_v1_1",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "tg-20260413-1003634255226-relay-msg|anya|12777",
+        "1050312492:7742",
+        "Chart-MemOcean-CLSC-CLSC-Test-Spec",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:7335",
+        "Chart-MemOcean-MemOcean",
+        "tg-20260413-5034023909-relay-msg|anya|12842"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 186,
+      "question": "有沒有一個東西能讓所有 bot 共享記憶？",
+      "scene": "semantic_fuzzy",
+      "query_terms": "bot 共享 記憶 搜尋",
+      "expected_slugs": [
+        "Chart-MemOcean",
+        "Chart-MemOcean-FTS5-bot",
+        "Chart-Bot-System-claude-bots-CLAUDE",
+        "Chart-MemOcean-MemOcean",
+        "Chart-FATQ"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Chart-Bot-System-claude-bots-CLAUDE",
+        "tg-20260413-1003634255226-relay-msg|anya|12753",
+        "1050312492:7637",
+        "Chart-FATQ",
+        "Chart-MemOcean-MemOcean-Benchmark-2026-04-14",
+        "-1003634255226:relay-msg|anna|2705",
+        "Chart-MemOcean-FTS5-bot",
+        "Seabed-chats-clsc",
+        "-1003634255226:relay-msg|Bella|3281"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 187,
+      "question": "紡織業老公司想轉型的案子",
+      "scene": "semantic_fuzzy",
+      "query_terms": "紡織 老公司 轉型",
+      "expected_slugs": [
+        "Currents-ChannelLab-Org-Companies-NanLiang",
+        "Chart-Bot-System-bots-chltao-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Org-Companies-NanLiang",
+        "Currents-ChannelLab-Meetings-2026-04-13-AI",
+        "1050312492:5590",
+        "Chart-Bot-System-bots-chltao-CLAUDE",
+        "Currents-ChannelLab-Product-GEO-GWIN-RWA",
+        "1050312492:9023",
+        "Chart-Bot-System-bots-anya-blocks-block-daily-log",
+        "1050312492:9756",
+        "Currents-NOXCAT-Product-Phase-1-EVM-Arbitrum-33d89caea48e816cb5eee7f0b4f349f6",
+        "1050312492:9613"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 188,
+      "question": "那個做茶葉代幣化的白皮書",
+      "scene": "semantic_fuzzy",
+      "query_terms": "茶葉 代幣化",
+      "expected_slugs": [
+        "Currents-ChannelLab-GEO-GWIN-RWA"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-GWIN-RWA",
+        "Currents-NOXCAT-Product-NOX_Wallet_Visual_PRD_v1-0",
+        "Currents-NOXCAT-Product-NOX-Wallet-PRD-v1-2-33f89caea48e81b9bd17f38d1932b888",
+        "Currents-ChannelLab-GEO-GWIN-RWA",
+        "-5180494548:relay-msg|caijie-zhuchu|2468",
+        "Currents-NOXCAT-meetings-2026-04-09-NOXCAT",
+        "-5180494548:relay-msg|sancai|1655",
+        "Currents-NOXCAT-Product-V1-5-UID-33d89caea48e81a082c7e5dec697be8d",
+        "1050312492:7146",
+        "Currents-NOXCAT-Product-33d89caea48e81339745ebfea63f3e1e"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 189,
+      "question": "量化基金 APY 很高的那個公司",
+      "scene": "semantic_fuzzy",
+      "query_terms": "量化 APY 高",
+      "expected_slugs": [
+        "Currents-ChannelLab-BD-Media-Pricing",
+        "Currents-ChannelLab-BD-Media-Resource-List",
+        "Chart-Architecture-channellab-bot-framework",
+        "Chart-MemOcean-RnD-Vector-Quantization",
+        "Research-TurboQuant-Google-Compression"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-RnD-Vector-Quantization",
+        "Research-ApifySkills-WebScraping-2026-04-14",
+        "1050312492:5470",
+        "Research-TurboQuant-Google-Compression",
+        "tg-20260413-5034023909-relay-msg|anya|12812",
+        "-5175060310:relay-msg|anya|11262",
+        "Chart-Architecture-channellab-bot-framework",
+        "tg-20260413-1003634255226-relay-msg|anya|12760",
+        "1050312492:10143",
+        "Currents-ChannelLab-BD-Media-Pricing"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 190,
+      "question": "不用分類靠連結的那個筆記法",
+      "scene": "semantic_fuzzy",
+      "query_terms": "不分類 連結 筆記",
+      "expected_slugs": [
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Depth-CLSC-Spec",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh",
+        "Pearl",
+        "Chart-SOP-Google-Calendar-MCP-Setup-SOP"
+      ],
+      "returned_slugs": [
+        "Depth-CLSC-Spec",
+        "tg-20260413-5034023909-relay-msg|anya|12803",
+        "1050312492:5936",
+        "Pearl",
+        "Research-ApifySkills-WebScraping-2026-04-14",
+        "1050312492:8348",
+        "Chart-Architecture-ChannelLab-AI-Architecture",
+        "Currents-NOXCAT-Product-OTC-PRD-v2-2-32d89caea48e8097a94adbf36b2ec634",
+        "1050312492:10385",
+        "Chart-MemOcean-CLSC-CLSC-Technical-Spec-zh"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 191,
+      "question": "那種丟進去就不用管的分身",
+      "scene": "semantic_fuzzy",
+      "query_terms": "丟進去 分身 不用管",
+      "expected_slugs": [
+        "Pearl-Ops-background-agent",
+        "Chart-Bot-System-bots-anya-blocks-block-sub-agent-routing",
+        "Pearl-MCP-background-agent"
+      ],
+      "returned_slugs": [
+        "tg-20260413-5034023909-10450",
+        "1050312492:7167",
+        "tg-20260413-5034023909-relay-msg|anya|12842",
+        "1050312492:9994",
+        "tg-20260413-5034023909-relay-msg|anya|12856",
+        "1050312492:6419",
+        "tg-20260413-5034023909-10448",
+        "1050312492:5793",
+        "tg-20260413-5034023909-relay-msg|anya|12812",
+        "1050312492:8181"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "hit@10": 0
+    },
+    {
+      "id": 193,
+      "question": "把知識變成圖的工具",
+      "scene": "semantic_fuzzy",
+      "query_terms": "知識 圖 工具",
+      "expected_slugs": [
+        "Currents-GitHub-geo-analyzer-demo-README",
+        "Chart-Bot-System-bots-chltao-CLAUDE",
+        "Chart-Bot-System-global-CLAUDE",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Chart-Bot-System-bots-interns-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Chart-MemOcean-MemOcean-BlindBenchmark-Wutung-2026-04-14",
+        "Chart-ADR-Knowledge-Infra-ADR-2026-04-08",
+        "Research-ApifySkills-WebScraping-2026-04-14",
+        "1050312492:10283",
+        "Chart-Bot-System-global-CLAUDE",
+        "Seabed-chats-clsc",
+        "1050312492:7256",
+        "Currents-GitHub-geo-analyzer-demo-README",
+        "tg-20260413-5034023909-10429",
+        "1050312492:9078"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 194,
+      "question": "可以自己學新技能的 AI 框架",
+      "scene": "semantic_fuzzy",
+      "query_terms": "AI 自己 學 新技能",
+      "expected_slugs": [
+        "Chart-SOP-Team-Onboarding-SOP",
+        "Chart-Bot-System-bots-chltao-CLAUDE",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-CLAUDE",
+        "Chart-Bot-System-global-CLAUDE",
+        "Chart-Bot-System-bots-interns-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-PRD",
+        "Chart-Bot-System-global-CLAUDE",
+        "tg-20260413-5034023909-relay-msg|anya|12893",
+        "1050312492:10283",
+        "Chart-SOP-Team-Onboarding-SOP",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:8747",
+        "Currents-ChannelLab-GEO-PRD",
+        "Research-ApifySkills-WebScraping-2026-04-14",
+        "1050312492:5202"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 195,
+      "question": "那個日本招人的 JD",
+      "scene": "semantic_fuzzy",
+      "query_terms": "日本 招人 JD",
+      "expected_slugs": [
+        "Currents-ChannelLab-BD-Media-Pricing",
+        "Research-CZ-Memoir-Strategy-Lessons",
+        "Currents-ChannelLab-Org-Companies-Meta-Assets-MSP",
+        "Currents-NOXCAT-People-JD_BD_Japan_Web3_2026-04"
+      ],
+      "returned_slugs": [
+        "Currents-NOXCAT-People-JD_BD_Japan_Web3_2026-04",
+        "Currents-NOXCAT-Product-CK-Demo-33d89caea48e8141b592ffbfcf59562f",
+        "2114307569:1454",
+        "Currents-ChannelLab-BD-Media-Pricing",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "2114307569:1452",
+        "Currents-ChannelLab-Org-Companies-Meta-Assets-MSP",
+        "Currents-NOXCAT-Product-OTC-PRD-v2-2-32d89caea48e8097a94adbf36b2ec634",
+        "1050312492:7203",
+        "Research-CZ-Memoir-Strategy-Lessons"
+      ],
+      "hit@1": 1,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 196,
+      "question": "有個人說整理不是人的工作是 AI 的工作",
+      "scene": "semantic_fuzzy",
+      "query_terms": "整理 不是人的工作 AI",
+      "expected_slugs": [
+        "Chart-Bot-System-bots-ron-assistant-CLAUDE",
+        "Chart-Bot-System-bots-chltao-CLAUDE",
+        "Chart-Bot-System-bots-anya-blocks-block-daily-cron",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-CLAUDE",
+        "Chart-Bot-System-bots-caijie-zhuchu-CLAUDE"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Meetings-2026-04-13-AI",
+        "Chart-SOP-Local-Setup-AI-SOP",
+        "Chart-Bot-System-automation-registry",
+        "1050312492:10283",
+        "Chart-SOP-Team-Onboarding-SOP",
+        "tg-20260413-1003634255226-relay-msg|anya|12776",
+        "1050312492:9258",
+        "Currents-GitHub-claude-telegram-bots-shared-templates-assistant-CLAUDE",
+        "1050312492:10769",
+        "Chart-Bot-System-bots-nicky-zhanglinghe-blocks-block-daily-log"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 0,
+      "hit@10": 0
+    },
+    {
+      "id": 197,
+      "question": "智慧工廠 AI SaaS 天使輪方案",
+      "scene": "semantic_fuzzy",
+      "query_terms": "智慧工廠 SaaS 天使輪",
+      "expected_slugs": [
+        "Currents-ChannelLab-GEO-GEO-Analyzer-PRD"
+      ],
+      "returned_slugs": [
+        "Currents-ChannelLab-Product-GEO-GEO-Analyzer-PRD",
+        "Currents-ChannelLab-GEO-GEO-Analyzer-PRD",
+        "Chart-Bot-System-bots-caijie-zhuchu-blocks-block-sub-agent-routing",
+        "-5267778636:relay-msg|nicky-builder|401",
+        "Currents-NOXCAT-Product-Phase-3-Bridge-Aggregator-33d89caea48e81349d0aceebd343e622",
+        "-5267778636:relay-msg|anya|2492",
+        "Currents-NOXCAT-meetings-2026-04-13",
+        "-1003634255226:relay-msg|anya|6775",
+        "Research-ApifySkills-WebScraping-2026-04-14",
+        "1050312492:11114"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 199,
+      "question": "有人提到知識庫不是圖書館",
+      "scene": "semantic_fuzzy",
+      "query_terms": "知識庫 不是圖書館",
+      "expected_slugs": [
+        "Chart-MemOcean",
+        "Depth-CLSC-Spec",
+        "Chart-Bot-System-claude-bots-CLAUDE",
+        "Chart-chart-clsc",
+        "Depth-CLSC-Dictionary"
+      ],
+      "returned_slugs": [
+        "tg-20260413-5034023909-10450",
+        "Chart-Bot-System-claude-bots-CLAUDE",
+        "1050312492:5957",
+        "Chart-MemOcean-FTS5-bot",
+        "Research-ApifySkills-WebScraping-2026-04-14",
+        "1050312492:8991",
+        "Chart-MemOcean-MemOcean-TideDoc",
+        "Research-RyanLi-SurfSkill-ClaudeCode-Crypto-2026-04-14",
+        "-5034023909:10450",
+        "Chart-MemOcean-MemOcean"
+      ],
+      "hit@1": 0,
+      "hit@3": 1,
+      "hit@5": 1,
+      "hit@10": 1
+    },
+    {
+      "id": 200,
+      "question": "全世界最溫暖的金融體驗是哪個項目說的？",
+      "scene": "semantic_fuzzy",
+      "query_terms": "最溫暖 金融 體驗",
+      "expected_slugs": [
+        "Currents-NOXCAT-NOXCAT",
+        "Research-CZ-Memoir-Strategy-Lessons"
+      ],
+      "returned_slugs": [
+        "Currents-NOXCAT-Product-NOX-Wallet-PRD-v1-1-33d89caea48e81a2a4c5dc50562f4f84",
+        "Currents-NOXCAT-Product-NOX_Wallet_PRD_v1-1",
+        "Currents-NOXCAT-Product-33a89caea48e80ee9a14cd24c7cadde1",
+        "Research-CZ-Memoir-Strategy-Lessons",
+        "Currents-NOXCAT-Product-NOX_Wallet_Visual_PRD_v1-0",
+        "1050312492:7916",
+        "Research-RAG-Benchmark-Standards-2026-04-14",
+        "Currents-NOXCAT-Product-NOX-Wallet-PRD-v1-2-33f89caea48e81b9bd17f38d1932b888",
+        "-5180494548:relay-msg|sancai|2110",
+        "Currents-NOXCAT-Product-NOXCAT_"
+      ],
+      "hit@1": 0,
+      "hit@3": 0,
+      "hit@5": 1,
+      "hit@10": 1
+    }
+  ]
+}
