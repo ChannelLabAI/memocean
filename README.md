@@ -5,7 +5,7 @@
 > A memory system built for CJK developers.
 > 為中文開發者而建的 AI 記憶系統。
 
-[English](#why-memocean) | [繁體中文](#為什麼做-memocean)
+[Why MemOcean](#why-memocean--為什麼做-memocean) | [What is MemOcean](#what-is-memocean--memocean-是什麼) | [Multi-Agent Design](#multi-agent-design--多-agent-協作設計)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
@@ -13,7 +13,7 @@
 
 ---
 
-## Why MemOcean
+## Why MemOcean / 為什麼做 MemOcean
 
 We were excited when we first saw [MemPalace](https://github.com/milla-jovovich/mempalace) — finally, someone building long-term memory for LLMs, and it was Milla Jovovich's team no less.
 
@@ -33,11 +33,7 @@ This isn't a prompting problem — it's an architecture problem: **we needed a s
 
 MemOcean is what we built to solve these two things.
 
----
-
-*繁體中文*
-
-## 為什麼做 MemOcean
+<br>
 
 第一次看到 [MemPalace](https://github.com/milla-jovovich/mempalace) 的時候我們非常興奮——終於有人做 LLM 的 long-term memory，而且還是那個蜜拉喬娃。
 
@@ -57,7 +53,7 @@ MemOcean 就是我們為了解決這兩件事而做的。
 
 ---
 
-## What is MemOcean
+## What is MemOcean / MemOcean 是什麼
 
 MemOcean is a Chinese fork of MemPalace, with three core changes:
 
@@ -75,11 +71,7 @@ The knowledge base is built on [Obsidian](https://obsidian.md) vaults — everyt
 - Temporal knowledge graph with non-destructive invalidation
 - Cross-bot memory sharing via a single shared `memory.db`
 
----
-
-*繁體中文*
-
-## MemOcean 是什麼
+<br>
 
 MemOcean 是 MemPalace 的中文 fork，核心改動有三：
 
@@ -101,7 +93,7 @@ MemOcean 是 MemPalace 的中文 fork，核心改動有三：
 
 ---
 
-## Multi-Agent Design
+## Multi-Agent Design / 多 Agent 協作設計
 
 This is the most fundamental difference between MemOcean and MemPalace. MemPalace is designed for a single LLM session; MemOcean was built for multi-agent scenarios from day one.
 
@@ -144,11 +136,7 @@ MemOcean strictly separates two kinds of memory:
 
 This separation is key to solving memory drift. Agents' session memories can differ, but the underlying factual foundation (Ocean) is unified.
 
----
-
-*繁體中文*
-
-## 多 Agent 協作設計
+<br>
 
 這是 MemOcean 跟 MemPalace 最根本的差異。MemPalace 設計給單一 LLM session 用；MemOcean 從第一天就是為多 Agent 場景設計的。
 
