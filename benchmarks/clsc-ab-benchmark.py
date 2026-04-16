@@ -2,8 +2,8 @@
 """
 CLSC A/B Benchmark
 Compare two indexing strategies:
-  Group A — Stripped skeleton (no structure tags)
-  Group B — Production CLSC skeleton (with tags, current baseline)
+  Group A — Stripped sonar (no structure tags)
+  Group B — Production CLSC sonar (with tags, current baseline)
 """
 
 import json
@@ -27,7 +27,7 @@ K_VALUES = [1, 3, 5, 10]
 # Group A: build stripped in-memory FTS5 table
 # ─────────────────────────────────────────────
 def strip_clsc(clsc: str) -> str:
-    """Remove structure tags from CLSC skeleton."""
+    """Remove structure tags from CLSC sonar."""
     # Remove [SLUG|TITLE] prefix
     stripped = re.sub(r'^\[.*?\]\s*', '', clsc)
     # Remove label prefixes like ENT:, KEY:, TAG:
@@ -39,7 +39,7 @@ def strip_clsc(clsc: str) -> str:
 
 def build_group_a_db(snapshot_conn) -> sqlite3.Connection:
     """Build in-memory SQLite FTS5 table with stripped CLSC content."""
-    print("Building Group A in-memory DB (stripped skeletons)...")
+    print("Building Group A in-memory DB (stripped sonars)...")
 
     cur = snapshot_conn.cursor()
     cur.execute("SELECT slug, clsc FROM radar")
@@ -123,7 +123,7 @@ def evaluate_hit_at_k(questions, search_fn, k_values, label=""):
 # Token analysis (live DB)
 # ─────────────────────────────────────────────
 def analyze_tokens():
-    """Analyze token compression ratio between skeleton and raw files."""
+    """Analyze token compression ratio between sonar and raw files."""
     print("\nAnalyzing token compression ratios (live DB)...")
 
     # Try tiktoken, fall back to approximation
@@ -154,7 +154,7 @@ def analyze_tokens():
     ratios = []
     n_missing = 0
 
-    for slug, skeleton_tokens, drawer_path in rows:
+    for slug, sonar_tokens, drawer_path in rows:
         if not drawer_path or not os.path.exists(drawer_path):
             n_missing += 1
             continue
@@ -178,7 +178,7 @@ def analyze_tokens():
         if raw_tokens == 0:
             continue
 
-        ratio = skeleton_tokens / raw_tokens
+        ratio = sonar_tokens / raw_tokens
         ratios.append(ratio)
 
     if not ratios:
@@ -296,7 +296,7 @@ def make_token_chart(token_data, out_path):
     ax.axvline(median_r, color="green", linestyle="-", linewidth=2, label=f"Median={median_r:.3f}")
 
     ax.set_title(f"CLSC Token Compression Distribution (n={len(ratios)}, tiktoken cl100k_base)", fontsize=14, fontweight="bold", pad=15)
-    ax.set_xlabel("Compression Ratio (skeleton tokens / raw tokens)", fontsize=12)
+    ax.set_xlabel("Compression Ratio (sonar tokens / raw tokens)", fontsize=12)
     ax.set_ylabel("Count", fontsize=12)
     ax.yaxis.grid(True, linestyle="--", alpha=0.5)
     ax.set_axisbelow(True)
@@ -342,7 +342,7 @@ def main():
         return search_group_b(snap_conn, query, k)
 
     # Evaluate Group A
-    print(f"\nEvaluating Group A (stripped skeleton)...")
+    print(f"\nEvaluating Group A (stripped sonar)...")
     group_a_scores = evaluate_hit_at_k(questions, search_a, K_VALUES, "Group A")
     print("  Group A results:")
     for k in K_VALUES:
@@ -380,14 +380,14 @@ def main():
         "dataset": "work-scenario-200",
         "n_questions": len(questions),
         "group_a": {
-            "name": "stripped skeleton（去結構 tag）",
+            "name": "stripped sonar（去結構 tag）",
             "hit_at_1": round(group_a_scores[1], 4),
             "hit_at_3": round(group_a_scores[3], 4),
             "hit_at_5": round(group_a_scores[5], 4),
             "hit_at_10": round(group_a_scores[10], 4),
         },
         "group_b": {
-            "name": "CLSC skeleton（生產，含 tag）",
+            "name": "CLSC sonar（生產，含 tag）",
             "hit_at_1": round(group_b_scores[1], 4),
             "hit_at_3": round(group_b_scores[3], 4),
             "hit_at_5": round(group_b_scores[5], 4),

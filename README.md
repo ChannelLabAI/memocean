@@ -294,7 +294,7 @@ EN query   ──→  _search_fts5() (FTS5 BM25)
 
 ## CLSC Engine / CLSC 中文 Sonar 萃取引擎
 
-**CLSC** (Chinese Lossy Skeleton Codec) is MemOcean's core engine, forked from MemPalace's AAAK skeleton format (MemPalace calls it Closet), with the entire NER + search pipeline rewritten for Chinese.
+**CLSC** (ChannelLab Lossy Summary for Chinese) is MemOcean's core engine, forked from MemPalace's AAAK skeleton format (MemPalace calls it Closet), with the entire NER + search pipeline rewritten for Chinese.
 
 CLSC 是 MemOcean 的核心引擎，fork 自 MemPalace 的 AAAK skeleton 格式，針對中文場景重寫了整條 NER + 搜尋 pipeline。
 
@@ -354,7 +354,7 @@ MemPalace is designed for English; MemOcean is designed for Chinese work scenari
 | BEIR SciFact | English | **70.7%** | gap −22.2%, language limitation — MemOcean is not optimized for English |
 | CLSC A/B | — | tag vs no-tag **+1.9pp** at Hit@5 | Confirms tag format contributes to recall |
 
-CLSC token compression: 1,716,211 raw tokens → 129,529 skeleton tokens = **13x compression (92.5% reduction)**. Median per-entry ratio: 18.9%.
+CLSC token compression: 1,716,211 raw tokens → 129,529 sonar tokens = **13x compression (92.5% reduction)**. Median per-entry ratio: 18.9%.
 
 ### Known limitations / 已知限制
 
@@ -566,7 +566,7 @@ Tide 是 MemOcean 的第三層輸出格式。資料流向：Seabed 存原始素�
 - **Search pipeline finalized**: CJK queries use pure SQLite `INSTR()` on `radar.clsc` (not FTS5 — FTS5 trigram performs poorly on Chinese). English queries use FTS5 BM25, fallback to INSTR.
 - **All AI components disabled by default**: Query Expansion (`ENABLE_QUERY_EXPANSION=1`), KNN vector search (`KNN_ENABLED=true`), Haiku reranker (`ENABLE_HAIKU_RERANKER=1`), MiniLM reranker (`ENABLE_MINIML_RERANKER=1`) all require explicit env var. Benchmarks confirm all hurt performance.
 - **Benchmark update**: internal Hit@5=92.9%; DRCD Traditional Chinese=91.9%; CMRC Simplified Chinese=93.3%; BEIR SciFact English=70.7%.
-- **CLSC compression confirmed**: 1,716,211 raw tokens → 129,529 skeleton tokens = 13x (92.5% reduction), median per-entry 18.9%.
+- **CLSC compression confirmed**: 1,716,211 raw tokens → 129,529 sonar tokens = 13x (92.5% reduction), median per-entry 18.9%.
 
 ### 2026-04-14
 - **MEMO-003: messages_vec Phase 2** — Hybrid search over TG messages. `messages_vec` virtual table (vec0, 7,234 rows). Note: KNN components are now disabled by default.

@@ -21,7 +21,7 @@ _CONTENT_TRIGGER_KEYWORDS = re.compile(
     re.IGNORECASE
 )
 
-# Trigger tags in CLSC skeleton
+# Trigger tags in CLSC Sonar
 _TAG_TRIGGER_PATTERN = re.compile(
     r'TAG:[^|\n]*\b(sop|spec|guide|procedure)\b',
     re.IGNORECASE
