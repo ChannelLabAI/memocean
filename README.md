@@ -188,10 +188,6 @@ MemOcean 嚴格區分兩種記憶：
 | **AI dependency** / AI 依賴 | Varies | Varies | **Zero** (all AI components disabled by default) |
 | **License** / 授權 | MIT | MIT | MIT |
 
-> **Note / 說明：** MemPalace and GBrain hit rates are estimated from their benchmark methodology, not direct comparison. MemOcean numbers come from benchmarks run 2026-04-16: internal query set + DRCD (Traditional Chinese) + CMRC (Simplified Chinese) external validation.
->
-> MemPalace/GBrain 的命中率為根據其 benchmark 方法估算，非直接比較。MemOcean 數字來自 2026-04-16 實測：內部查詢集 + DRCD（繁中）+ CMRC（簡中）外部驗證。
-
 ---
 
 ## Architecture / 架構
