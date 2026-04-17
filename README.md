@@ -310,13 +310,13 @@ Each piece of material is extracted into a single-line sonar entry, stored as `.
 
 ### Performance data / 效果數據
 
-Measured on real Chinese corpora (148 Obsidian vault documents):
+Measured on real Chinese corpora (148 internal Obsidian vault documents for compression metrics; search accuracy validated externally on DRCD + CMRC):
 
-在真實中文語料上的實測表現（148 篇 Obsidian vault 文件）：
+在真實中文語料上的實測表現（壓縮指標：148 篇內部 Obsidian vault 文件；搜尋準確率：另以 DRCD + CMRC 外部資料集完整驗證）：
 
 | Metric / 指標 | Value / 數值 |
 |--------------|-------------|
-| Test scale / 測試規模 | 148 documents |
+| Test scale / 測試規模 | 148 docs (internal) + DRCD / CMRC (external) |
 | Original tokens / 原始 token 總量 | 459,490 |
 | Sonar tokens / Sonar token 總量 | 43,392 |
 | Sonar reduction / Sonar 精簡率 | **9.4%** |
