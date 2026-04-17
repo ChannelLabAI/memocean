@@ -498,6 +498,43 @@ Returns (error): `{ "error": "File not found: /path/to/file", "code": "FILE_NOT_
 
 ---
 
+### `memocean_report_store`
+
+Store a verbatim markdown report into `Ocean/Chart/MemOcean/Reports/{group}/`. Designed for **§11 Subagent Return Slimming**: when a subagent produces >2000 tokens of content that shouldn't bloat the main agent's context, store it here and pass the `slug` back via `_raw_if_needed.path`. The main agent can later retrieve verbatim content with `memocean_seabed_get`.
+
+將 subagent 產生的大型 verbatim 報告存入 Obsidian Ocean Vault 的 Reports 資料夾。主 agent 不需要直接讀取全文，只拿到 slug 後需要時再取。
+
+```json
+{
+  "title": "Anna Phase1 Findings",
+  "content": "# 報告內容\n...",
+  "group": "subagent-reports",
+  "bot": "anna",
+  "ttl_days": 7
+}
+```
+
+Returns (success): `{ "path": "/abs/path/to/file.md", "relative_path": "Ocean/Chart/MemOcean/Reports/subagent-reports/2026-04-17-1630-Anna-Phase1-Findings.md", "slug": "2026-04-17-1630-Anna-Phase1-Findings", "size_bytes": 12345, "tokens_estimate": 3086, "expires_at": "2026-04-24T00:00:00Z" }`
+
+Returns (error): `{ "error": "content_too_large: ...", "code": "CONTENT_TOO_LARGE" }`
+
+**Parameters:**
+| Param | Required | Default | Notes |
+|---|---|---|---|
+| `title` | ✅ | — | ≤60 chars, used in filename slug |
+| `content` | ✅ | — | Verbatim markdown, max 500 KB |
+| `group` | ❌ | `subagent-reports` | Must match `[a-z0-9-]+` |
+| `bot` | ❌ | auto-detected | Bot name for frontmatter |
+| `ttl_days` | ❌ | null (permanent) | Sets `expires_at` in frontmatter |
+
+**Error codes:**
+| Code | Meaning |
+|---|---|
+| `CONTENT_TOO_LARGE` | content exceeds 500 KB |
+| `INVALID_GROUP` | group contains invalid characters |
+
+---
+
 ## Security model / 安全模型
 
 **Data locality / 資料本地性。** Your data never leaves your machine. The MCP server runs as a local subprocess over stdio — no outbound network connections, no telemetry, no cloud sync. The code is open source; your data is not.

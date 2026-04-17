@@ -11,6 +11,7 @@ Registered tools:
   memocean_skill_list    — List/get approved learned skills
   memocean_task_create   — Create task in pending queue
   memocean_ingest_file   — Ingest local file (PDF/PPT/Word/Excel/HTML/CSV/JSON) into MemOcean
+  memocean_report_store  — Store verbatim subagent report into Ocean/Chart/MemOcean/Reports/
 Run via:
   python -m memocean_mcp
   memocean-mcp
@@ -134,6 +135,16 @@ def tool_task_create(
         )
     except Exception as e:
         return {"error": f"Task creation failed: {e}"}
+
+
+def tool_report_store(title: str, content: str, group: str = "subagent-reports",
+                      bot: str = None, ttl_days: int = None):
+    """Store verbatim subagent report into Ocean/Chart/MemOcean/Reports/."""
+    try:
+        from .tools.report_store import memocean_report_store
+        return memocean_report_store(title, content, group=group, bot=bot, ttl_days=ttl_days)
+    except Exception as e:
+        return {"error": str(e)}
 
 
 # ==================== MCP PROTOCOL ====================
@@ -366,6 +377,45 @@ TOOLS = {
             "required": ["title", "description", "assigned_to"],
         },
         "handler": tool_task_create,
+    },
+    "memocean_report_store": {
+        "description": (
+            "Store a verbatim markdown report into MemOcean's Reports folder "
+            "(Ocean/Chart/MemOcean/Reports/{group}/). "
+            "Use this when a subagent produces content >2000 tokens that the main agent shouldn't see inline "
+            "(it returns a slug; main agent can retrieve with memocean_seabed_get later). "
+            "Primarily for §11 Subagent Return Slimming: when subagent return hits oversize threshold, "
+            "store verbatim here and put path in `_raw_if_needed.path`. "
+            "Returns path, relative_path, slug, size_bytes, tokens_estimate, expires_at. "
+            "Max content: 500 KB. group must match [a-z0-9-]+. Default group: 'subagent-reports'."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "description": "Report title ≤60 chars (used in filename slug). E.g. 'Anna Phase1 Findings'",
+                },
+                "content": {
+                    "type": "string",
+                    "description": "Verbatim markdown content to store (max 500 KB)",
+                },
+                "group": {
+                    "type": "string",
+                    "description": "Sub-folder group name matching [a-z0-9-]+ (default: 'subagent-reports')",
+                },
+                "bot": {
+                    "type": "string",
+                    "description": "Bot name for frontmatter (auto-detected from env if omitted)",
+                },
+                "ttl_days": {
+                    "type": "integer",
+                    "description": "Days until expiry — sets expires_at in frontmatter. Omit for permanent.",
+                },
+            },
+            "required": ["title", "content"],
+        },
+        "handler": tool_report_store,
     },
 }
 

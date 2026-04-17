@@ -13,3 +13,8 @@ TASKS_ROOT = BOTS_ROOT / "tasks"
 CLOSET_ROOT = BOTS_ROOT / "seabed"
 LEARNED_SKILLS_DIR = BOTS_ROOT / "shared" / "learned-skills" / "approved"
 SHARED_ROOT = BOTS_ROOT / "shared"
+
+OCEAN_VAULT_ROOT = Path(os.environ.get(
+    "CHANNELLAB_OCEAN_VAULT_ROOT",
+    str(HOME / "Documents" / "Obsidian Vault")
+))
