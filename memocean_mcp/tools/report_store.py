@@ -64,13 +64,16 @@ def memocean_report_store(
             "code": "INVALID_GROUP",
         }
 
-    # Bot name resolution
+    # Bot name resolution — enforce [a-z0-9_-]+ whitelist for YAML safety
+    _BOT_PATTERN = re.compile(r"^[a-z0-9_-]+$")
     if bot is None:
         state_dir = os.environ.get("TELEGRAM_STATE_DIR", "")
         if state_dir:
             bot = Path(state_dir).name
         else:
             bot = os.environ.get("BOT_NAME", "unknown")
+    if not _BOT_PATTERN.match(str(bot)):
+        bot = "unknown"
 
     # Paths
     reports_dir = OCEAN_VAULT_ROOT / _REPORTS_BASE / group
@@ -79,9 +82,11 @@ def memocean_report_store(
     slug = _make_slug(title)
     out_path = reports_dir / f"{slug}.md"
 
-    # Handle rare timestamp collision → append -dupN
+    # Handle rare timestamp collision → append -dupN (cap at 100)
     dup_n = 1
     while out_path.exists():
+        if dup_n > 100:
+            return {"error": "too_many_duplicates", "code": "SLUG_COLLISION"}
         out_path = reports_dir / f"{slug}-dup{dup_n}.md"
         dup_n += 1
 
@@ -93,17 +98,18 @@ def memocean_report_store(
     else:
         expires_at = None
 
-    tokens_estimate = len(content_bytes) // 3  # conservative char/3.5 ≈ char/3
+    tokens_estimate = len(content) // 4  # conservative: char_count / 3.5 ≈ / 4
 
     # Write
     expires_yaml = f'"{expires_at}"' if expires_at else "null"
+    title_yaml = title.replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ").replace("\r", "")
     file_content = (
         f"---\n"
         f"type: subagent-report\n"
         f"created: {now_iso}\n"
         f"bot: {bot}\n"
         f"group: {group}\n"
-        f'title: "{title}"\n'
+        f'title: "{title_yaml}"\n'
         f"size_bytes: {len(content_bytes)}\n"
         f"tokens_estimate: {tokens_estimate}\n"
         f"expires_at: {expires_yaml}\n"

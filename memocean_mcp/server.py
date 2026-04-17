@@ -138,7 +138,7 @@ def tool_task_create(
 
 
 def tool_report_store(title: str, content: str, group: str = "subagent-reports",
-                      bot: str = None, ttl_days: int = None):
+                      bot: str | None = None, ttl_days: int | None = None):
     """Store verbatim subagent report into Ocean/Chart/MemOcean/Reports/."""
     try:
         from .tools.report_store import memocean_report_store
@@ -435,7 +435,7 @@ def handle_request(request: dict):
             "result": {
                 "protocolVersion": "2024-11-05",
                 "capabilities": {"tools": {}},
-                "serverInfo": {"name": "memocean-mcp", "version": "0.1.0"},
+                "serverInfo": {"name": "memocean-mcp", "version": "0.2.1"},
             },
         }
 
