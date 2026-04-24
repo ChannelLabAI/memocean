@@ -23,11 +23,14 @@ _PEARL_SAFE_NAME_RE = re.compile(r'^[A-Za-z0-9_\-\.]{1,200}$')
 
 def _validate_name(name: str) -> None:
     """Reject names that could escape the sandbox via path traversal."""
-    # Strip pearl: prefix before validation
-    bare = name[6:] if name.startswith("pearl:") else name
-    stem = bare.removesuffix(".md")
-    if not _SAFE_NAME_RE.match(stem) and not _PEARL_SAFE_NAME_RE.match(stem):
-        raise ValueError(f"Invalid skill name '{name}': must match [A-Za-z0-9_-]{{1,100}}")
+    if name.startswith("pearl:"):
+        stem = name[6:].removesuffix(".md")
+        if not _PEARL_SAFE_NAME_RE.match(stem):
+            raise ValueError(f"Invalid pearl skill name '{name}': must match [A-Za-z0-9_-.]{{1,200}}")
+    else:
+        stem = name.removesuffix(".md")
+        if not _SAFE_NAME_RE.match(stem):
+            raise ValueError(f"Invalid skill name '{name}': must match [A-Za-z0-9_-]{{1,100}}")
 
 
 def _scan_dir(directory: Path) -> list[str]:
