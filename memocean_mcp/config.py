@@ -18,3 +18,4 @@ OCEAN_VAULT_ROOT = Path(os.environ.get(
     "CHANNELLAB_OCEAN_VAULT_ROOT",
     str(HOME / "Documents" / "Obsidian Vault")
 ))
+PEARL_SKILLS_DIR = OCEAN_VAULT_ROOT / "Ocean" / "Pearl" / "skills"
