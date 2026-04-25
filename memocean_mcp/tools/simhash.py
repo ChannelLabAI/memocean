@@ -47,7 +47,7 @@ def _get_projections_path() -> Path:
         from ..config import SHARED_ROOT
         return SHARED_ROOT / "simhash_projections.npz"
     except Exception:
-        return Path.home() / ".claude-bots" / "shared" / "simhash_projections.npz"
+        return Path.home() / ".memocean" / "shared" / "simhash_projections.npz"
 
 
 def get_projections() -> np.ndarray:

@@ -3,12 +3,12 @@ import sqlite3
 import sys
 from pathlib import Path
 
-# Use config.FTS_DB so CHANNELLAB_BOTS_ROOT env var is respected
+# Use config.FTS_DB so MEMOCEAN_DATA_DIR env var is respected
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 try:
     from memocean_mcp.config import FTS_DB as DB_PATH
 except ImportError:
-    DB_PATH = Path.home() / ".claude-bots" / "memory.db"
+    DB_PATH = Path.home() / ".memocean" / "memory.db"
 
 def migrate():
     conn = sqlite3.connect(str(DB_PATH))

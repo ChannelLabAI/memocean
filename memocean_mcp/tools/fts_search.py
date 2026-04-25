@@ -1,6 +1,6 @@
 """
 fts_search.py — FTS5 cross-bot message search wrapper.
-Delegates to ~/.claude-bots/shared/fts5/search.py.
+Delegates to fts5/search.py (under MEMOCEAN_DATA_DIR/shared/).
 """
 import sys
 from pathlib import Path

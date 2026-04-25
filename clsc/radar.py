@@ -5,7 +5,10 @@ Changes from v0.6: adds group_from_path() for auto-grouping by wiki subdir.
 """
 from pathlib import Path
 
-RADAR_DIR = Path.home() / ".claude-bots" / "seabed"
+try:
+    from memocean_mcp.config import CLOSET_ROOT as RADAR_DIR
+except Exception:
+    RADAR_DIR = Path.home() / ".memocean" / "seabed"
 
 def radar_path(group: str) -> Path:
     RADAR_DIR.mkdir(parents=True, exist_ok=True)
@@ -30,7 +33,10 @@ def store_sonar(group: str, slug: str, sonar: str) -> None:
         _source_hash = hashlib.sha256(sonar.encode()).hexdigest()
         _tokens = len(sonar) // 4
         _drawer_path = str(path)
-        _db_path = Path.home() / ".claude-bots" / "memory.db"
+        try:
+            from memocean_mcp.config import FTS_DB as _db_path
+        except Exception:
+            _db_path = Path.home() / ".memocean" / "memory.db"
         _conn = _sqlite3.connect(str(_db_path))
         _conn.execute(
             "INSERT OR REPLACE INTO radar (slug, clsc, tokens, drawer_path, source_hash) VALUES (?, ?, ?, ?, ?)",

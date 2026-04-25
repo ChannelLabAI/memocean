@@ -1,6 +1,6 @@
 """
 kg_query.py — Temporal Knowledge Graph query wrapper.
-Delegates to ~/.claude-bots/shared/kg/kg_helper.py.
+Delegates to kg/kg_helper.py (under MEMOCEAN_DATA_DIR/shared/).
 """
 import sys
 from pathlib import Path
