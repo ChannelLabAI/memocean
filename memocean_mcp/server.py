@@ -11,7 +11,7 @@ Registered tools:
   memocean_skill_list    — List/get approved learned skills
   memocean_task_create   — Create task in pending queue
   memocean_ingest_file   — Ingest local file (PDF/PPT/Word/Excel/HTML/CSV/JSON) into MemOcean
-  memocean_report_store  — Store verbatim subagent report into Ocean/Chart/MemOcean/Reports/
+  memocean_report_store  — Store verbatim subagent report into Ocean/技術海圖/MemOcean/Reports/
 Run via:
   python -m memocean_mcp
   memocean-mcp
@@ -139,7 +139,7 @@ def tool_task_create(
 
 def tool_report_store(title: str, content: str, group: str = "subagent-reports",
                       bot: str | None = None, ttl_days: int | None = None):
-    """Store verbatim subagent report into Ocean/Chart/MemOcean/Reports/."""
+    """Store verbatim subagent report into Ocean/技術海圖/MemOcean/Reports/."""
     try:
         from .tools.report_store import memocean_report_store
         return memocean_report_store(title, content, group=group, bot=bot, ttl_days=ttl_days)
@@ -152,7 +152,7 @@ def tool_report_store(title: str, content: str, group: str = "subagent-reports",
 TOOLS = {
     "memocean_search": {
         "description": (
-            "Radar-First unified search across ChannelLab knowledge layers. "
+            "Radar-First unified search across your team's knowledge layers. "
             "Default (source='all'): searches Radar sonar index (CLSC summaries) + Message history. "
             "Ocean vault full-text scan is opt-in only (source='ocean'). "
             "Results ranked by source priority: ocean > radar > messages. "
@@ -165,7 +165,7 @@ TOOLS = {
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "3-5 keywords separated by spaces (not a question sentence). E.g. 'ChannelLab GEO 服務', 'MemOcean 架構'",
+                    "description": "3-5 keywords separated by spaces (not a question sentence). E.g. 'project documentation', 'MemOcean 架構'",
                 },
                 "source": {
                     "type": "string",
@@ -182,9 +182,9 @@ TOOLS = {
     },
     "memocean_messages_search": {
         "description": (
-            "BM25 full-text search over ChannelLab cross-bot Telegram message history. "
+            "BM25 full-text search over cross-agent message history. "
             "Pass 3-5 keywords separated by spaces (not a question sentence). "
-            "Supports keyword queries ('OTC 討論'), boolean operators (AND/OR/NOT), "
+            "Supports keyword queries, boolean operators (AND/OR/NOT), "
             "phrase search (\"quoted\"), and NEAR proximity. "
             "KNN vector search disabled by default (set KNN_ENABLED=true to re-enable BGE-m3)."
         ),
@@ -242,7 +242,7 @@ TOOLS = {
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "Search terms (space-separated AND). E.g. 'Knowledge Infra', 'ChannelLab GEO'",
+                    "description": "Search terms (space-separated AND). E.g. 'Knowledge Infra', 'project docs'",
                 },
                 "limit": {
                     "type": "integer",
@@ -255,7 +255,7 @@ TOOLS = {
     },
     "memocean_ocean_search": {
         "description": (
-            "Full-text search over ChannelLab Ocean vault .md files using ripgrep. "
+            "Full-text search over Ocean vault .md files using ripgrep. "
             "Searches wiki pages, Pearl cards, Research notes, specs, and all Obsidian docs "
             "under Ocean/ (excludes personal vaults). "
             "Returns title, [[wikilink]], excerpt (~200 chars), and relative path. "
@@ -266,7 +266,7 @@ TOOLS = {
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "Natural language or keyword query. E.g. 'ChannelLab GEO 服務', 'MemOcean 架構'",
+                    "description": "Natural language or keyword query. E.g. 'project documentation', 'MemOcean 架構'",
                 },
                 "limit": {
                     "type": "integer",
@@ -279,7 +279,7 @@ TOOLS = {
     },
     "memocean_kg_query": {
         "description": (
-            "Query the ChannelLab temporal knowledge graph. Returns typed facts with "
+            "Query the temporal knowledge graph. Returns typed facts with "
             "time validity windows. Filter by date to see what was true at any point in time. "
             "Example: entity='owner' → role=CEO, direction='both' shows all relationships."
         ),
@@ -288,7 +288,7 @@ TOOLS = {
             "properties": {
                 "entity": {
                     "type": "string",
-                    "description": "Entity to query (e.g. 'ProjectName', 'agent-name', 'ChannelLab')",
+                    "description": "Entity to query (e.g. 'ProjectName', 'agent-name', 'MyProject')",
                 },
                 "as_of": {
                     "type": "string",
@@ -341,7 +341,7 @@ TOOLS = {
     },
     "memocean_task_create": {
         "description": (
-            "Create a new task in the ChannelLab FATQ (pending/). "
+            "Create a new task in the FATQ queue (File-Atomic Task Queue, pending/). "
             "Assigns to builder, reviewer, or assistant. Returns task_id and file path. "
             "The task will be picked up by the assigned bot on their next startup scan."
         ),
@@ -381,7 +381,7 @@ TOOLS = {
     "memocean_report_store": {
         "description": (
             "Store a verbatim markdown report into MemOcean's Reports folder "
-            "(Ocean/Chart/MemOcean/Reports/{group}/). "
+            "(Ocean/技術海圖/MemOcean/Reports/{group}/). "
             "Use this when a subagent produces content >2000 tokens that the main agent shouldn't see inline "
             "(it returns a slug; main agent can retrieve with memocean_seabed_get later). "
             "Primarily for §11 Subagent Return Slimming: when subagent return hits oversize threshold, "

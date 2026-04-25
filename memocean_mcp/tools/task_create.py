@@ -1,6 +1,7 @@
 """
 task_create.py — Create a new task JSON file in the pending queue.
-File schema and naming follow the ChannelLab FATQ（File-Atomic Task Queue）protocol.
+File schema and naming follow the FATQ (File-Atomic Task Queue) protocol.
+Tasks move through: pending → in_progress → review → done.
 """
 import json
 import secrets

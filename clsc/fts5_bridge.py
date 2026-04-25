@@ -4,9 +4,14 @@ When bot searches FTS5, returns closet skeleton by default.
 Falls back to raw drawer text on verbatim request.
 """
 import sqlite3
+import sys
 from pathlib import Path
 
-FTS5_DB = Path.home() / ".claude-bots" / "memory.db"
+try:
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from memocean_mcp.config import FTS_DB as FTS5_DB
+except Exception:
+    FTS5_DB = Path.home() / ".memocean" / "memory.db"
 
 def search_fts5(query: str, limit: int = 5) -> list:
     """Search FTS5 and return results with closet skeletons if available."""
@@ -74,7 +79,7 @@ def search_fts5(query: str, limit: int = 5) -> list:
 
 if __name__ == "__main__":
     import sys
-    query = sys.argv[1] if len(sys.argv) > 1 else "ChannelLab"
+    query = sys.argv[1] if len(sys.argv) > 1 else "MemOcean"
     results = search_fts5(query)
     print(f"Found {len(results)} results for '{query}':")
     for r in results:

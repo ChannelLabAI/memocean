@@ -27,9 +27,11 @@ import shutil
 import subprocess
 from typing import Optional
 
+from ..config import MEMOCEAN_VAULT_PATH
+
 logger = logging.getLogger("memocean_mcp.ocean_search")
 
-OCEAN_PATH = os.path.expanduser("~/Documents/Obsidian Vault/Ocean/")
+OCEAN_PATH = str(MEMOCEAN_VAULT_PATH)
 
 # Known vendor rg paths (Claude Code ships its own ripgrep)
 _RG_CANDIDATES = [

@@ -16,17 +16,18 @@ Returns list of dicts: slug, clsc, tokens, drawer_path, savings_pct (vs verbatim
 import datetime
 import json
 import logging
+import math
 import os
 import re
 import sqlite3
 from pathlib import Path
 from typing import Optional
 
-from ..config import FTS_DB
+from ..config import FTS_DB, MEMOCEAN_DATA_DIR
 
 logger = logging.getLogger("memocean_mcp.radar_search")
 
-_LOG_PATH = os.path.expanduser('~/.claude-bots/logs/clsc-usage.jsonl')
+_LOG_PATH = str(MEMOCEAN_DATA_DIR / "logs" / "clsc-usage.jsonl")
 
 _EXPANSION_CACHE: dict[str, list[str]] = {}
 
@@ -37,21 +38,55 @@ def _has_cjk(text: str) -> bool:
 
 
 def _update_last_accessed(slugs: list[str]) -> None:
-    """Update last_accessed timestamp for slugs that appeared in search results."""
+    """Update last_accessed timestamp and access_count for slugs that appeared in search results.
+
+    D5: If the accessed entry has status='archived', restore it to status='active' and remove
+        from stale_candidates if tracked there.
+    D7: Increment access_count += 1 for each accessed slug.
+    """
     if not slugs or not FTS_DB.exists():
         return
     now = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
     try:
         conn = sqlite3.connect(str(FTS_DB))
-        # Check if column exists first (migration may not have run yet)
+        # Check if columns exist first (migration may not have run yet)
         cols = {row[1] for row in conn.execute("PRAGMA table_info(radar)")}
         if "last_accessed" not in cols:
             conn.close()
             return
-        conn.executemany(
-            "UPDATE radar SET last_accessed=? WHERE slug=?",
-            [(now, slug) for slug in slugs]
-        )
+
+        has_access_count = "access_count" in cols
+        has_status = "status" in cols
+
+        for slug in slugs:
+            if has_access_count and has_status:
+                conn.execute(
+                    "UPDATE radar SET last_accessed=?, access_count=COALESCE(access_count,0)+1, status=CASE WHEN status='archived' THEN 'active' ELSE COALESCE(status,'active') END WHERE slug=?",
+                    (now, slug)
+                )
+                # D5: If entry was archived, remove from stale_candidates
+                try:
+                    stale_tbl = conn.execute(
+                        "SELECT name FROM sqlite_master WHERE type='table' AND name='stale_candidates'"
+                    ).fetchone()
+                    if stale_tbl:
+                        conn.execute(
+                            "DELETE FROM stale_candidates WHERE slug=? AND reason IN ('cold','archived')",
+                            (slug,)
+                        )
+                except Exception:
+                    pass
+            elif has_access_count:
+                conn.execute(
+                    "UPDATE radar SET last_accessed=?, access_count=COALESCE(access_count,0)+1 WHERE slug=?",
+                    (now, slug)
+                )
+            else:
+                conn.execute(
+                    "UPDATE radar SET last_accessed=? WHERE slug=?",
+                    (now, slug)
+                )
+
         conn.commit()
         conn.close()
     except Exception:
@@ -772,6 +807,43 @@ def radar_search(query: str, limit: int = 10) -> list[dict]:
             results = merged[:limit]
     else:
         results = merged[:limit]
+
+    # D6 + D7: Apply archived score penalty and access_count boost before final sort
+    try:
+        if results and FTS_DB.exists():
+            conn_boost = sqlite3.connect(str(FTS_DB))
+            conn_boost.row_factory = sqlite3.Row
+            slugs_list = [r["slug"] for r in results if r.get("slug")]
+            if slugs_list:
+                placeholders = ",".join("?" for _ in slugs_list)
+                boost_rows = conn_boost.execute(
+                    f"SELECT slug, status, access_count FROM radar WHERE slug IN ({placeholders})",
+                    slugs_list,
+                ).fetchall()
+                slug_meta = {row["slug"]: row for row in boost_rows}
+
+                for r in results:
+                    slug = r.get("slug", "")
+                    meta = slug_meta.get(slug)
+                    if meta is None:
+                        continue
+                    # D7: access_count boost (applied to a synthetic score field)
+                    ac = min(meta["access_count"] or 0, 100)  # cap to prevent runaway boost
+                    boost = 1.0 + math.log(ac + 1) * 0.1
+                    # D6: archived penalty
+                    if meta["status"] == "archived":
+                        boost *= 0.7
+                    r["_rank_boost"] = boost
+
+                # Re-sort by boost (descending): archived entries rank lower
+                results.sort(key=lambda x: x.get("_rank_boost", 1.0), reverse=True)
+                # Clean up internal field
+                for r in results:
+                    r.pop("_rank_boost", None)
+
+            conn_boost.close()
+    except Exception:
+        pass
 
     _log_search(query, results)
     # Update last_accessed for returned slugs

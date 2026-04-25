@@ -2,7 +2,7 @@
 report_store.py — Store verbatim subagent reports into MemOcean Reports folder.
 
 Writes to:
-  {OCEAN_VAULT_ROOT}/Ocean/Chart/MemOcean/Reports/{group}/{YYYY-MM-DD-HHMM}-{slug}.md
+  {OCEAN_VAULT_ROOT}/Ocean/技術海圖/MemOcean/Reports/{group}/{YYYY-MM-DD-HHMM}-{slug}.md
 
 Returns:
   {"path", "relative_path", "slug", "size_bytes", "tokens_estimate", "expires_at"}
@@ -44,7 +44,7 @@ def memocean_report_store(
     bot: str | None = None,
     ttl_days: int | None = None,
 ) -> dict:
-    """Store a verbatim report into Ocean/Chart/MemOcean/Reports/{group}/."""
+    """Store a verbatim report into Ocean/技術海圖/MemOcean/Reports/{group}/."""
 
     # Validation
     if len(title) > _MAX_TITLE_CHARS:

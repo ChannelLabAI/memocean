@@ -117,7 +117,7 @@ def memocean_search(
 
     Args:
         query:  3-5 keywords separated by spaces (not a question sentence).
-                Example: 'ChannelLab GEO 服務' not 'CHL 現在在推什麼業務？'
+                Example: 'project documentation' not 'what is the project about?'
         source: Which layer(s) to search:
                 "all"      — Radar + Messages (default, no Ocean full-text scan)
                 "ocean"    — Ocean vault .md files only (full-text ripgrep/walk)

@@ -23,8 +23,12 @@ from encoder import parse_wiki_note, encode_to_skeleton
 
 enc = tiktoken.get_encoding("cl100k_base")
 
-VAULT_ROOT = Path.home() / "Documents" / "Obsidian Vault"
-DB_PATH = Path.home() / ".claude-bots" / "memory.db"
+try:
+    sys.path.insert(0, str(_HERE.parent))
+    from memocean_mcp.config import MEMOCEAN_VAULT_ROOT as VAULT_ROOT, FTS_DB as DB_PATH
+except Exception:
+    VAULT_ROOT = Path.home() / "Documents" / "Obsidian Vault"
+    DB_PATH = Path.home() / ".memocean" / "memory.db"
 
 
 def get_conn():
@@ -47,7 +51,7 @@ def get_conn():
 def make_slug(path: Path, vault_root: Path) -> str:
     """
     Generate a collision-resistant slug from vault-relative path.
-    e.g. Ocean/Chart/Knowledge-Infra-ADR-2026-04-08.md
+    e.g. Ocean/技術海圖/Knowledge-Infra-ADR-2026-04-08.md
       → Wiki-Concepts-Knowledge-Infra-ADR-2026-04-08
     Separator: hyphen. Max length: 200 chars.
     """
@@ -269,8 +273,8 @@ if __name__ == "__main__":
     elif args.sample:
         rows = run_backfill(limit=args.sample)
         # Token comparison
-        queries = ["股權結構", "學習筆記", "Bonk GEO", "CLSC", "Knowledge Infra",
-                   "ChannelLab", "任務", "CEO", "builder", "bot"]
+        queries = ["知識結構", "學習筆記", "CLSC", "Knowledge Infra",
+                   "任務", "CEO", "builder", "bot", "架構決策", "project"]
         print("\n" + "="*60)
         print("TOKEN COMPARISON: Verbatim vs Closet (top-5 per query)")
         print("="*60)

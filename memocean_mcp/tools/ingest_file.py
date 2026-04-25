@@ -23,7 +23,32 @@ logger = logging.getLogger("memocean_mcp.ingest_file")
 _MAX_FILE_BYTES = 50 * 1024 * 1024   # 50 MB
 _MAX_CONTENT_CHARS = 50_000
 _MIN_CONTENT_CHARS = 100
-_GROUP = "files"
+_GROUP = "files"  # fallback / legacy; new ingests use _classify_group()
+
+_EXT_TO_GROUP: dict[str, str] = {
+    ".pdf": "docs-pdf",
+    ".md": "docs-spec",
+    ".txt": "docs-spec",
+    ".docx": "docs-spec",
+    ".doc": "docs-spec",
+}
+_RELEASE_NOTE_KEYWORDS = ("release", "changelog", "relnote", "release-note")
+_SPEC_KEYWORDS = ("spec", "design", "rfc", "proposal", "plan", "sop")
+
+
+def _classify_group(path: Path) -> str:
+    """Classify file into Seabed radar group based on extension and filename keywords."""
+    stem_lower = path.stem.lower()
+    ext = path.suffix.lower()
+    if any(kw in stem_lower for kw in _RELEASE_NOTE_KEYWORDS):
+        return "docs-release-note"
+    if ext == ".pdf":
+        return "docs-pdf"
+    if ext in (".md", ".txt", ".docx", ".doc"):
+        if any(kw in stem_lower for kw in _SPEC_KEYWORDS):
+            return "docs-spec"
+        return "docs-spec"
+    return "raw"
 
 
 # ── slug helper ──────────────────────────────────────────────────────────────
@@ -189,13 +214,14 @@ def ingest_file(file_path: str) -> dict:
     drawer_path = str(path)
     tokens = len(content) // 4
     fmt = path.suffix.lstrip(".").lower() or "unknown"
+    group = _classify_group(path)
 
     # 6. Dedup: check if path already exists
-    radar_id = _upsert_by_path(slug, content, drawer_path, tokens, group=_GROUP)
+    radar_id = _upsert_by_path(slug, content, drawer_path, tokens, group=group)
 
     if radar_id is None:
         # New entry — use store_from_string (store_sonar)
-        radar_id = store_from_string(content, slug, _GROUP)
+        radar_id = store_from_string(content, slug, group)
         # Update drawer_path in radar (store_sonar sets it to the .clsc.md file path)
         try:
             conn = sqlite3.connect(str(FTS_DB))
@@ -209,7 +235,7 @@ def ingest_file(file_path: str) -> dict:
 
     return {
         "slug": slug,
-        "group": _GROUP,
+        "group": group,
         "chars": len(content),
         "radar_id": radar_id,
         "format": fmt,

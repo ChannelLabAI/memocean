@@ -2,9 +2,9 @@
 slug_mapper.py — Bidirectional Ocean vault path ↔ GBrain slug mapping.
 
 Slug convention (Phase 1 spec section 6):
-  Ocean/Chart/Bot System/MemOcean.md  ->  chart/bot-system/memocean
-  Ocean/Pearl/old-notes.md            ->  pearl/old-notes
-  Ocean/Pearl/2026-04-20 v1.2.md      ->  pearl/2026-04-20-v1.2
+  Ocean/技術海圖/Bot System/MemOcean.md  ->  chart/bot-system/memocean
+  Ocean/珍珠卡/old-notes.md            ->  pearl/old-notes
+  Ocean/珍珠卡/2026-04-20 v1.2.md      ->  pearl/2026-04-20-v1.2
 
 Rules:
   1. Strip "Ocean/" prefix
@@ -20,7 +20,9 @@ import os
 import re
 from pathlib import Path
 
-OCEAN_VAULT_ROOT = Path.home() / "Documents" / "Obsidian Vault" / "Ocean"
+from .config import MEMOCEAN_VAULT_PATH
+
+OCEAN_VAULT_ROOT = MEMOCEAN_VAULT_PATH
 ALIAS_MAP_PATH = Path(__file__).parent.parent / "slug_alias_map.json"
 
 _KNOWN_EXTS = {".md", ".canvas", ".base"}

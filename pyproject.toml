@@ -3,13 +3,25 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "memocean"
-version = "0.2.1"
-description = "MemOcean MCP server — library mode, local only"
-requires-python = ">=3.10"
+name = "memocean-mcp"
+version = "0.5.0"
+description = "Local-first AI memory MCP server for Obsidian vaults. CJK-optimized."
+requires-python = ">=3.11"
+license = {text = "MIT"}
+keywords = ["mcp", "obsidian", "memory", "ai", "claude", "cjk", "chinese"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Database :: Database Engines/Servers",
+]
 dependencies = [
     "mcp>=1.0.0",
 ]
+
+[project.urls]
+homepage = "https://github.com/ChannelLabAI/memocean"
 
 [project.scripts]
 memocean-mcp = "memocean_mcp.server:main"

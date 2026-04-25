@@ -1,6 +1,6 @@
 """
-knowledge_graph.py — Temporal Entity-Relationship Graph for ChannelLab
-=======================================================================
+knowledge_graph.py — Temporal Entity-Relationship Graph
+========================================================
 
 Real knowledge graph with:
   - Entity nodes (people, projects, tools, concepts)
@@ -11,39 +11,44 @@ Real knowledge graph with:
 Storage: SQLite (local, no dependencies, no subscriptions)
 Query: entity-first traversal with time filtering
 
-ChannelLab Temporal KG replaces cloud-based graph solutions with a local
-SQLite store. Facts are immutable once written; invalidation sets valid_to
-non-destructively so the full history is preserved.
+Replaces cloud-based graph solutions with a local SQLite store. Facts are
+immutable once written; invalidation sets valid_to non-destructively so the
+full history is preserved.
 
 Usage:
     from knowledge_graph import KnowledgeGraph
 
     kg = KnowledgeGraph()
-    kg.add_triple("<OWNER>", "role", "CEO", valid_from="2020-01-01")
-    kg.add_triple("<PARTNER>", "role", "shareholder", valid_from="2024-01-01")
+    kg.add_triple("Alice", "role", "CEO", valid_from="2020-01-01")
+    kg.add_triple("Bob", "role", "investor", valid_from="2024-01-01")
 
-    # Query: everything about <OWNER>
-    kg.query_entity("<OWNER>")
+    # Query: everything about Alice
+    kg.query_entity("Alice")
 
-    # Query: what was true about <PARTNER> in mid-2024?
-    kg.query_entity("<PARTNER>", as_of="2024-06-01")
+    # Query: what was true about Bob in mid-2024?
+    kg.query_entity("Bob", as_of="2024-06-01")
 
     # Query: who has a "role" relationship?
     kg.query_relationship("role")
 
-    # Invalidate: <PARTNER>'s shareholder role ended
-    kg.invalidate("<PARTNER>", "role", "shareholder", ended="2025-06-01")
+    # Invalidate: Bob's investor role ended
+    kg.invalidate("Bob", "role", "investor", ended="2025-06-01")
 """
 
 import hashlib
 import json
 import os
 import sqlite3
+import sys
 from datetime import date, datetime
 from pathlib import Path
 
-
-DEFAULT_KG_PATH = os.path.expanduser("~/.claude-bots/kg.db")
+try:
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from memocean_mcp.config import KG_DB as _KG_DB
+    DEFAULT_KG_PATH = str(_KG_DB)
+except Exception:
+    DEFAULT_KG_PATH = os.path.expanduser("~/.memocean/kg.db")
 
 
 class KnowledgeGraph:
@@ -124,9 +129,9 @@ class KnowledgeGraph:
         Add a relationship triple: subject → predicate → object.
 
         Examples:
-            add_triple("<OWNER>", "role", "CEO", valid_from="2020-01-01")
-            add_triple("<PARTNER>", "role", "shareholder", valid_from="2024-01-01")
-            add_triple("ChannelLab", "product", "GEO服務", valid_from="2026-01-01")
+            add_triple("Alice", "role", "CEO", valid_from="2020-01-01")
+            add_triple("Bob", "role", "investor", valid_from="2024-01-01")
+            add_triple("MyProject", "product", "CoreService", valid_from="2024-01-01")
         """
         sub_id = self._entity_id(subject)
         obj_id = self._entity_id(obj)

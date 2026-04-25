@@ -357,10 +357,10 @@ REAL_SEABED = OCEAN_SEABED
 
 @pytest.mark.skipif(
     not REAL_SEABED.exists() or not any(REAL_SEABED.rglob("*.md")),
-    reason="Real Ocean/Seabed not populated (run backfill first)"
+    reason="Real Ocean/原檔海床 not populated (run backfill first)"
 )
 def test_integration_seabed_has_files():
-    """Integration: Ocean/Seabed should have at least one .md file after backfill."""
+    """Integration: Ocean/原檔海床 should have at least one .md file after backfill."""
     md_files = list(REAL_SEABED.rglob("*.md"))
     # Filter out chats.clsc.md
     seabed_files = [f for f in md_files if "chats.clsc" not in f.name]
@@ -369,7 +369,7 @@ def test_integration_seabed_has_files():
 
 @pytest.mark.skipif(
     not REAL_SEABED.exists() or not any(REAL_SEABED.rglob("*.md")),
-    reason="Real Ocean/Seabed not populated"
+    reason="Real Ocean/原檔海床 not populated"
 )
 def test_integration_seabed_frontmatter_valid():
     """Integration: All Seabed .md files should have valid frontmatter."""
@@ -402,7 +402,7 @@ def test_integration_seabed_coverage():
 
 @pytest.mark.skipif(
     not REAL_SEABED.exists(),
-    reason="Real Ocean/Seabed not populated"
+    reason="Real Ocean/原檔海床 not populated"
 )
 def test_integration_rebuild_roundtrip():
     """Integration: rebuild_messages_list reads back what backfill wrote."""

@@ -15,9 +15,9 @@ import sqlite3
 from pathlib import Path
 from typing import Literal
 
-from ..config import CLOSET_ROOT, FTS_DB
+from ..config import CLOSET_ROOT, FTS_DB, MEMOCEAN_DATA_DIR
 
-_LOG_PATH = os.path.expanduser('~/.claude-bots/logs/clsc-usage.jsonl')
+_LOG_PATH = str(MEMOCEAN_DATA_DIR / "logs" / "clsc-usage.jsonl")
 
 
 def _log_verbatim_get(slug: str, content: str) -> None:

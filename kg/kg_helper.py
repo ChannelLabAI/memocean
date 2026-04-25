@@ -1,21 +1,21 @@
 """
-kg_helper.py — ChannelLab Temporal Knowledge Graph convenience API.
+kg_helper.py — Temporal Knowledge Graph convenience API.
 Thin wrapper around knowledge_graph.py for common bot operations.
 
 Usage:
     from kg_helper import kg_add, kg_query, kg_invalidate, kg_query_all
 
     # Add a fact
-    kg_add("<OWNER>", "role", "CEO", started="2020-01-01", source="team-config")
+    kg_add("Alice", "role", "CEO", started="2020-01-01", source="team-config")
 
     # Query current facts about an entity
-    kg_query("<OWNER>")
+    kg_query("Alice")
 
     # Query facts as of a past date
-    kg_query("<PARTNER>", as_of="2024-06-01")
+    kg_query("Bob", as_of="2024-06-01")
 
     # Invalidate (mark ended, non-destructive)
-    kg_invalidate("<PARTNER>", "role", "shareholder", ended="2025-06-01")
+    kg_invalidate("Bob", "role", "investor", ended="2025-06-01")
 """
 from pathlib import Path
 from datetime import date
@@ -24,8 +24,12 @@ import sys
 sys.path.insert(0, str(Path(__file__).parent))
 from knowledge_graph import KnowledgeGraph
 
-# Default DB path — shared across all bots
-KG_DB = Path.home() / ".claude-bots" / "kg.db"
+# Default DB path — resolved via config, shared across all bots
+try:
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from memocean_mcp.config import KG_DB
+except Exception:
+    KG_DB = Path.home() / ".memocean" / "kg.db"
 
 
 def _kg() -> KnowledgeGraph:

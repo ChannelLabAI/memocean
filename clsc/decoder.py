@@ -6,14 +6,20 @@ Changes from v0.6: narrative_expand() now supports real LLM call with auto-detec
 """
 import os
 import re
+import sys
 from pathlib import Path
 
-# Drawer root — Obsidian Wiki
-OBSIDIAN_WIKI = Path.home() / "Documents" / "Obsidian Vault" / "Wiki"
-# Fallback drawer
-FALLBACK_DRAWERS = [
-    Path.home() / ".claude-bots" / "bots" / "builder" / "research",
-]
+# Resolve vault root via config when available
+try:
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from memocean_mcp.config import MEMOCEAN_VAULT_ROOT as _VAULT_ROOT, MEMOCEAN_DATA_DIR as _DATA_DIR
+    # Drawer root — Obsidian Wiki subdirectory
+    OBSIDIAN_WIKI = _VAULT_ROOT / "Wiki"
+    # Fallback drawer under data dir
+    FALLBACK_DRAWERS = [_DATA_DIR / "bots" / "builder" / "research"]
+except Exception:
+    OBSIDIAN_WIKI = Path.home() / "Documents" / "Obsidian Vault" / "Wiki"
+    FALLBACK_DRAWERS = [Path.home() / ".memocean" / "bots" / "builder" / "research"]
 
 def find_drawer(slug: str) -> Path:
     """Find the original markdown file for a slug."""

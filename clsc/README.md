@@ -19,7 +19,7 @@ cd ~/.claude-bots/shared/clsc/v0.7
 python3 tests/test_v0_7.py
 
 # Sync a wiki note to closet
-~/.claude-bots/shared/hooks/clsc-sync.sh "/path/to/Ocean/Research/note.md"
+~/.claude-bots/shared/hooks/clsc-sync.sh "/path/to/Ocean/調研指南/note.md"
 
 # Watch mode (requires inotify-tools)
 ~/.claude-bots/shared/hooks/clsc-sync.sh --watch

@@ -9,10 +9,17 @@ import json
 import os
 import re
 import sqlite3
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-DB_PATH = Path(os.path.expanduser('~/.claude-bots/memory.db'))
+# Resolve DB_PATH via config when available; fall back to legacy default otherwise.
+try:
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from memocean_mcp.config import FTS_DB as DB_PATH
+except Exception:
+    DB_PATH = Path(os.path.expanduser('~/.memocean/memory.db'))
+
 SCHEMA_PATH = Path(__file__).parent / 'schema.sql'
 
 

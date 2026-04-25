@@ -16,6 +16,7 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from lib import (  # noqa: E402
     DB_PATH,
     ingest_all_memory_md,
@@ -24,7 +25,11 @@ from lib import (  # noqa: E402
     open_db,
 )
 
-STATE_DIR = Path(os.path.expanduser('~/.claude-bots/state'))
+try:
+    from memocean_mcp.config import MEMOCEAN_DATA_DIR as _DATA_DIR
+    STATE_DIR = _DATA_DIR / "state"
+except Exception:
+    STATE_DIR = Path(os.path.expanduser('~/.memocean/state'))
 
 
 def main() -> int:
