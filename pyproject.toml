@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "memocean-mcp"
 version = "0.5.0"
 description = "Local-first AI memory MCP server for Obsidian vaults. CJK-optimized."
+readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 keywords = ["mcp", "obsidian", "memory", "ai", "claude", "cjk", "chinese"]
